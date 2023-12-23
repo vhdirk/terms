@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Terms
+GenericName=Tiling terminal emulator
+Comment=A terminal where conditions apply
+TryExec=terms
+Exec=terms %u
+Icon=@icon@
+Terminal=false
+Type=Application
+Categories=System;TerminalEmulator;X-GNOME-Utilities;
+Keywords=shell;prompt;command;commandline;cmd;
+DBusActivatable=true

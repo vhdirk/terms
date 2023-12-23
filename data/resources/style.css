@@ -1,0 +1,127 @@
+/* libadwaita does 0.85, but 0.8 looks better */
+@define-color fixed-borders mix(@window_fg_color, @window_bg_color, 0.8);
+
+@define-color root_context_color shade(@red_1, 1.38);
+@define-color ssh_context_color shade(@purple_1, 1.28);
+
+/* #terms-main-window.with-borders:not(.fullscreen):backdrop {
+  border-color: alpha(@borders, 0.5);
+} */
+
+#terms-main-window {
+  background: transparent;
+}
+
+window:not(.about) headerbar,
+.custom-headerbar {
+  background-color: @window_bg_color;
+}
+
+#terms-main-window.context-root .custom-headerbar {
+  background-color: @root_context_color;
+}
+
+#terms-main-window.context-ssh .custom-headerbar {
+  background-color: @ssh_context_color;
+}
+
+.custom-headerbar windowhandle>box {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.custom-headerbar windowcontrols:not(.empty).start {
+  margin-right: 6px;
+}
+
+.custom-headerbar windowcontrols.start.empty~tabbar {
+  margin-left: -6px;
+}
+
+.custom-headerbar windowcontrols:not(.empty).end {
+  margin-left: 6px;
+}
+
+/**
+ * Add space on the left when "Drag Area" is enabled.
+ */
+.custom-headerbar.with-dragarea:not(.single-tab-mode) windowcontrols.start.empty~tabbar {
+  margin-left: 34px;
+}
+
+.toolbar {
+  background-color: @headerbar_bg_color;
+}
+
+.toolbar>* {
+  padding: 2px 8px;
+}
+
+.thumbnail picture {
+  border: 2px solid transparent;
+}
+
+.thumbnail picture.selected {
+  border-color: @accent_bg_color;
+}
+
+.thumbnail image {
+  background-color: @accent_bg_color;
+  border-radius: 9999px;
+  padding: 2px;
+  color: white;
+  margin: 8px;
+}
+
+.shortcut-row {
+  padding: 12px;
+}
+
+themeswitcher {
+  padding: 6px;
+}
+
+themeswitcher .check {
+  background: @accent_bg_color;
+  color: @accent_fg_color;
+  padding: 2px;
+  border-radius: 17px;
+  margin: 3px;
+}
+
+/* Adapted from https://gitlab.gnome.org/GNOME/gnome-text-editor/-/blob/bf8c0c249f06a0be69e65aed3b786ba02a9f999e/src/TextEditor.css#L51 */
+
+themeswitcher checkbutton {
+  outline-offset: 1px;
+  transition: none;
+}
+
+themeswitcher checkbutton radio {
+  -gtk-icon-source: none;
+  background: none;
+  padding: 12px;
+  min-height: 24px;
+  min-width: 24px;
+  border: none;
+  outline-color: currentColor;
+  transition: none;
+  box-shadow: inset 0 0 0 1px @borders;
+}
+
+themeswitcher checkbutton radio:checked {
+  box-shadow: inset 0 0 0 2px @accent_bg_color;
+}
+
+themeswitcher checkbutton.system radio {
+  background: linear-gradient(-45deg, #1e1e1e 49.99%, white 50.01%);
+}
+
+themeswitcher checkbutton.light radio {
+  color: alpha(black, 0.8);
+  background-color: white;
+}
+
+themeswitcher checkbutton.dark radio {
+  color: white;
+  background-color: #1e1e1e;
+}

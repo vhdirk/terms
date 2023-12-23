@@ -1,0 +1,70 @@
+[package]
+name = "terms"
+version = "0.1.0"
+authors = ["Dirk Van Haerenborgh <vhdirk@gmail.com>"]
+edition = "2021"
+
+[profile.release]
+lto = true
+
+[dependencies]
+gettext-rs = { version = "0.7", features = ["gettext-system"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+serde = { version = "1.0.126", features = ["derive"] }
+rust-embed = { version = "8.1.0", features = ["debug-embed"] }
+i18n-embed = { version = "0.14.1", features = [
+    "fluent-system",
+    "desktop-requester",
+] }
+i18n-embed-fl = "0.7.0"
+once_cell = "1.13.0"
+anyhow = "1.0.56"
+
+relm4 = { version = "0.7.0-alpha.2", features = [
+    "macros",
+    "libadwaita",
+    "gnome_45",
+] }
+relm4-icons = { version = "0.7.0-alpha.2", features = [
+    "menu",
+    "loupe",
+    "floppy",
+    "computer",
+    "star-filled-rounded",
+    "dock-left",
+    "task",
+    "sonar",
+    "check-round-outline2",
+    "checkmark",
+    "check-round-outline-whole",
+    "left",
+    "warning",
+    "flag-outline-thin",
+    "flag-outline-thick",
+    "flag-filled",
+    "work-week",
+    "alarm",
+    "plus",
+    "x-circular",
+    "small-x",
+    "info",
+    "editor",
+    "pencil-and-paper",
+    "update",
+    "clipboard",
+    "image-adjust-brightness",
+    "file-cabinet",
+    "star-outline-rounded",
+    "controls",
+    "dark-mode",
+    "list-large",
+    "dock-left",
+] }
+relm4-components = { version = "0.7.0-alpha.2"}
+vte = { package = "zoha-vte4" }
+
+
+[build-dependencies]
+glib-build-tools = "0.18.0"
+
