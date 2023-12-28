@@ -10,3 +10,4 @@ Type=Application
 Categories=System;TerminalEmulator;X-GNOME-Utilities;
 Keywords=shell;prompt;command;commandline;cmd;
 DBusActivatable=true
+StartupNotify=true

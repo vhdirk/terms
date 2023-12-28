@@ -1,5 +1,6 @@
 subdir('icons')
 subdir('resources')
+
 # Desktop file
 desktop_conf = configuration_data()
 desktop_conf.set('icon', application_id)
@@ -31,6 +32,7 @@ endif
 appdata_conf = configuration_data()
 appdata_conf.set('app-id', application_id)
 appdata_conf.set('gettext-package', gettext_package)
+# appdata_conf.set('development-release', development_release)
 appdata_file = i18n.merge_file(
   input: configure_file(
     input: '@0@.metainfo.xml.in.in'.format(base_id),
@@ -56,6 +58,7 @@ endif
 # GSchema
 gschema_conf = configuration_data()
 gschema_conf.set('app-id', application_id)
+gschema_conf.set('profile', profile)
 gschema_conf.set('gettext-package', gettext_package)
 configure_file(
   input: '@0@.gschema.xml.in'.format(base_id),
@@ -65,7 +68,7 @@ configure_file(
   install_dir: datadir / 'glib-2.0' / 'schemas'
 )
 
-# Validata GSchema
+# Validate GSchema
 if glib_compile_schemas.found()
   test(
     'validate-gschema', glib_compile_schemas,

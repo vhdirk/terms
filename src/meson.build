@@ -1,36 +1,35 @@
 global_conf = configuration_data()
-global_conf.set_quoted('APP_NAME', application_id)
+global_conf.set_quoted('APP_NAME', application_name)
 global_conf.set_quoted('APP_ID', application_id)
 global_conf.set_quoted('PKGDATADIR', pkgdatadir)
-global_conf.set_quoted('PROFILE', profile)
-global_conf.set_quoted('VERSION', version + version_suffix)
+global_conf.set('PROFILE', profile)
+global_conf.set_quoted('VERSION', full_version)
 global_conf.set_quoted('GETTEXT_PACKAGE', gettext_package)
 global_conf.set_quoted('LOCALEDIR', localedir)
 
 config = configure_file(
-  input: 'info.rs.in',
-  output: 'info.rs',
+  input: 'config.rs.in',
+  output: 'config.rs',
   configuration: global_conf
 )
-
-# Copy the info.rs output to the source directory.
+# Copy the config.rs output to the source directory.
 run_command(
   'cp',
-  meson.project_build_root() / 'src' / 'app' / 'config' / 'info.rs',
-  meson.project_source_root() / 'src' / 'app'/ 'config' / 'info.rs',
+  meson.project_build_root() / 'src' / 'config.rs',
+  meson.project_source_root() / 'src' / 'config.rs',
   check: true
 )
 
 cargo_options = [ '--manifest-path', meson.project_source_root() / 'Cargo.toml' ]
 cargo_options += [ '--target-dir', meson.project_build_root() / 'src' ]
 
-if get_option('profile') == 'default'
+if profile == 'Devel'
+  rust_target = 'debug'
+  message('Building in debug mode')
+else
   cargo_options += [ '--release' ]
   rust_target = 'release'
   message('Building in release mode')
-else
-  rust_target = 'debug'
-  message('Building in debug mode')
 endif
 
 cargo_env = [ 'CARGO_HOME=' + meson.project_build_root() / 'cargo-home' ]

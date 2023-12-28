@@ -3,8 +3,10 @@ option(
   type: 'combo',
   choices: [
     'default',
-    'development'
+    'beta',
+    'development',
+    'hack',
   ],
   value: 'default',
-  description: 'The build profile for GTK Rust Template. One of "default" or "development".'
+  description: 'The build profile for Terms. One of "default", "beta", "development" or "hack".'
 )

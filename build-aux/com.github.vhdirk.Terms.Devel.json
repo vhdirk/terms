@@ -5,7 +5,7 @@
     "sdk": "org.gnome.Sdk",
     "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.rust-stable",
-        "org.freedesktop.Sdk.Extension.llvm15"
+        "org.freedesktop.Sdk.Extension.llvm16"
     ],
     "command": "terms",
     "finish-args": [
@@ -19,17 +19,17 @@
         "--env=RUST_BACKTRACE=1"
     ],
     "build-options": {
-        "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm15/bin",
-        "prepend-ld-library-path": "/usr/lib/sdk/llvm15/lib",
+        "append-path": "/usr/lib/sdk/llvm16/bin:/usr/lib/sdk/rust-stable/bin",
+        "append-ld-library-path": "/usr/lib/sdk/llvm16/lib",
         "build-args": [
             "--share=network"
         ],
         "env": {
             "CARGO_REGISTRIES_CRATES_IO_PROTOCOL": "sparse",
             "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER": "clang",
-            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold",
+            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\"",
             "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER": "clang",
-            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
+            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\""
         },
         "test-args": [
             "--socket=x11",

@@ -36,7 +36,7 @@
     ],
     "modules": [
         {
-            "name": "terms",
+            "name": "s",
             "builddir": true,
             "buildsystem": "meson",
             "sources": [

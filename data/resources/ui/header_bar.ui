@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0" />
-  <requires lib="libadwaita" version="1.2" />
-
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
 
   <menu id="new_tab_menu">
     <!-- <section>
