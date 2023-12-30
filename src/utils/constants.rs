@@ -7,55 +7,44 @@ pub const USERCHARS: &'static str = "-[:alnum:]";
 pub const USERCHARS_CLASS: &'static str = concat!("[", USERCHARS, "]");
 pub const PASSCHARS_CLASS: &'static str = "[-[:alnum:]\\Q,?;.:/!%$^*&~\"#'\\E]";
 pub const HOSTCHARS_CLASS: &'static str = "[-[:alnum:]]";
-pub const HOST: &'static str =
-	concat!(HOSTCHARS_CLASS, "+(\\.", HOSTCHARS_CLASS, "+)*");
+pub const HOST: &'static str = concat!(HOSTCHARS_CLASS, "+(\\.", HOSTCHARS_CLASS, "+)*");
 pub const PORT: &'static str = "(?:\\:[[:digit:]]{1,5})?";
 pub const PATHCHARS_CLASS: &'static str = "[-[:alnum:]\\Q_$.+!*,;:@&=?/~#%\\E]";
 pub const PATHTERM_CLASS: &'static str = "[^\\Q]'.}>) \t\r\n,\"\\E]";
 pub const SCHEME: &'static str = concat!(
-	"(?:news:|telnet:|nntp:|file:\\/|https?:|ftps?:|sftp:|webcal:",
-	"|irc:|sftp:|ldaps?:|nfs:|smb:|rsync:|ssh:|rlogin:|telnet:|git:",
-	"|git\\+ssh:|bzr:|bzr\\+ssh:|svn:|svn\\+ssh:|hg:|mailto:|magnet:)"
+    "(?:news:|telnet:|nntp:|file:\\/|https?:|ftps?:|sftp:|webcal:",
+    "|irc:|sftp:|ldaps?:|nfs:|smb:|rsync:|ssh:|rlogin:|telnet:|git:",
+    "|git\\+ssh:|bzr:|bzr\\+ssh:|svn:|svn\\+ssh:|hg:|mailto:|magnet:)"
 );
 
-pub const USERPASS: &'static str =
-	concat!(USERCHARS_CLASS, "+(?:", PASSCHARS_CLASS, "+)?");
+pub const USERPASS: &'static str = concat!(USERCHARS_CLASS, "+(?:", PASSCHARS_CLASS, "+)?");
 pub const URLPATH: &'static str = concat!(
-	"(?:(/",
-	PATHCHARS_CLASS,
-	"+(?:[(]",
-	PATHCHARS_CLASS,
-	"*[)])*",
-	PATHCHARS_CLASS,
-	"*)*",
-	PATHTERM_CLASS,
-	")?"
+    "(?:(/",
+    PATHCHARS_CLASS,
+    "+(?:[(]",
+    PATHCHARS_CLASS,
+    "*[)])*",
+    PATHCHARS_CLASS,
+    "*)*",
+    PATHTERM_CLASS,
+    ")?"
 );
 
 pub const URL_REGEX_STRINGS: [&str; 5] = [
-	concat!(SCHEME, "//(?:", USERPASS, "\\@)?", HOST, PORT, URLPATH),
-	concat!("(?:www|ftp)", HOSTCHARS_CLASS, "*\\.", HOST, PORT, URLPATH),
-	concat!(
-		"(?:callto:|h323:|sip:)",
-		USERCHARS_CLASS,
-		"[",
-		USERCHARS,
-		".]*(?:",
-		PORT,
-		"/[a-z0-9]+)?\\@",
-		HOST
-	),
-	concat!(
-		"(?:mailto:)?",
-		USERCHARS_CLASS,
-		"[",
-		USERCHARS,
-		".]*\\@",
-		HOSTCHARS_CLASS,
-		"+\\.",
-		HOST
-	),
-	"(?:news:|man:|info:)[[:alnum:]\\Q^_{|}~!\"#$%&'()*+,./;:=?`\\E]+",
+    concat!(SCHEME, "//(?:", USERPASS, "\\@)?", HOST, PORT, URLPATH),
+    concat!("(?:www|ftp)", HOSTCHARS_CLASS, "*\\.", HOST, PORT, URLPATH),
+    concat!(
+        "(?:callto:|h323:|sip:)",
+        USERCHARS_CLASS,
+        "[",
+        USERCHARS,
+        ".]*(?:",
+        PORT,
+        "/[a-z0-9]+)?\\@",
+        HOST
+    ),
+    concat!("(?:mailto:)?", USERCHARS_CLASS, "[", USERCHARS, ".]*\\@", HOSTCHARS_CLASS, "+\\.", HOST),
+    "(?:news:|man:|info:)[[:alnum:]\\Q^_{|}~!\"#$%&'()*+,./;:=?`\\E]+",
 ];
 
 // pub const MENU_BUTTON_ALTERNATIVE: &'static str =

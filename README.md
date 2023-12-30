@@ -9,7 +9,7 @@ A tiling terminal emulator for GNOME on Linux using GTK4, written in Rust.
 
 ## Goal
 
-Terms is an experiment. I like [Tilix](Tilix) and I like [Black Box](BlackBox). Why can't I have both?
+Terms is an experiment. I like [Tilix][Tilix] and I like [BlackBox]. Why can't I have both?
 
 ## Status
 
@@ -54,10 +54,16 @@ Join the GNOME and gtk-rs community!
 
 Lots of ideas and code from these projects:
 
-- [Podcasts](https://gitlab.gnome.org/World/podcasts)
-- [Shortwave](https://gitlab.gnome.org/World/Shortwave)
-- [BlackBox](https://gitlab.gnome.org/raggesilver/blackbox)
-- [Tilix](https://github.com/gnunn1/tilix)
-- [Fractal](https://gitlab.gnome.org/World/fractal)
-- [Zoha](https://github.com/hkoosha/zoha4)
+- [Podcasts]
+- [Shortwave]
+- [BlackBox]
+- [Tilix]
+- [Fractal]
+- [Zoha]
 
+[Podcasts]: https://gitlab.gnome.org/World/podcasts
+[Shortwave]: https://gitlab.gnome.org/World/Shortwave
+[BlackBox]: https://gitlab.gnome.org/raggesilver/blackbox
+[Tilix]: https://github.com/gnunn1/tilix
+[Fractal]: https://gitlab.gnome.org/World/fractal
+[Zoha]: https://github.com/hkoosha/zoha4

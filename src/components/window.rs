@@ -9,107 +9,100 @@ use super::{HeaderBar, Session, Terminal, TerminalInitArgs, TerminalPanel};
 
 mod imp {
 
-	use super::*;
+    use super::*;
 
-	// var builder = new Gtk.Builder.from_resource ("/com/raggesilver/BlackBox/gtk/tab-menu.ui");
-	// this.tab_view.menu_model = builder.get_object ("tab-menu") as GLib.Menu;
+    // var builder = new Gtk.Builder.from_resource ("/com/raggesilver/BlackBox/gtk/tab-menu.ui");
+    // this.tab_view.menu_model = builder.get_object ("tab-menu") as GLib.Menu;
 
-	// this.layout_box.append (this.header_bar_revealer);
-	// this.layout_box.append (this.tab_view);
+    // this.layout_box.append (this.header_bar_revealer);
+    // this.layout_box.append (this.tab_view);
 
-	// this.overlay = new Gtk.Overlay ();
-	// this.overlay.child = this.layout_box;
+    // this.overlay = new Gtk.Overlay ();
+    // this.overlay.child = this.layout_box;
 
-	// this.content = this.overlay;
+    // this.content = this.overlay;
 
-	// this.set_name ("blackbox-main-window");
+    // this.set_name ("blackbox-main-window");
 
-	#[derive(Debug, Default, gtk::CompositeTemplate)]
-	#[template(resource = "/com/github/vhdirk/Terms/gtk/window.ui")]
-	pub struct Window {
-		pub init_args: RefCell<TerminalInitArgs>,
+    #[derive(Debug, Default, gtk::CompositeTemplate)]
+    #[template(resource = "/com/github/vhdirk/Terms/gtk/window.ui")]
+    pub struct Window {
+        pub init_args: RefCell<TerminalInitArgs>,
 
-		#[template_child]
-		pub header_bar: TemplateChild<HeaderBar>,
+        #[template_child]
+        pub header_bar: TemplateChild<HeaderBar>,
 
-		#[template_child]
-		pub tab_view: TemplateChild<adw::TabView>,
-	}
+        #[template_child]
+        pub tab_view: TemplateChild<adw::TabView>,
+    }
 
-	#[glib::object_subclass]
-	impl ObjectSubclass for Window {
-		const NAME: &'static str = "TermsWindow";
-		type Type = super::Window;
-		type ParentType = adw::ApplicationWindow;
+    #[glib::object_subclass]
+    impl ObjectSubclass for Window {
+        const NAME: &'static str = "TermsWindow";
+        type Type = super::Window;
+        type ParentType = adw::ApplicationWindow;
 
-		fn class_init(klass: &mut Self::Class) {
-			klass.bind_template();
-		}
+        fn class_init(klass: &mut Self::Class) {
+            klass.bind_template();
+        }
 
-		fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
-			obj.init_template();
-		}
-	}
+        fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
+            obj.init_template();
+        }
+    }
 
-	impl ObjectImpl for Window {
-		fn constructed(&self) {
-			self.parent_constructed();
+    impl ObjectImpl for Window {
+        fn constructed(&self) {
+            self.parent_constructed();
 
-			self.setup_widgets();
-		}
-	}
+            self.setup_widgets();
+        }
+    }
 
-	impl WidgetImpl for Window {}
-	impl WindowImpl for Window {}
-	impl ApplicationWindowImpl for Window {}
-	impl AdwApplicationWindowImpl for Window {}
-	// impl WorkspaceImpl for Window {}
+    impl WidgetImpl for Window {}
+    impl WindowImpl for Window {}
+    impl ApplicationWindowImpl for Window {}
+    impl AdwApplicationWindowImpl for Window {}
+    // impl WorkspaceImpl for Window {}
 
-	impl Window {
-		fn setup_widgets(&self) {
-			let session = Session::new(self.init_args.borrow().clone());
-			self.tab_view.append(&session);
+    impl Window {
+        fn setup_widgets(&self) {
+            let session = Session::new(self.init_args.borrow().clone());
+            self.tab_view.append(&session);
 
-			session.connect_close(
-				clone!(@weak self as this => move |session: &Session| {
-                    this.tab_view.close_page(&this.tab_view.page(session));
+            session.connect_close(clone!(@weak self as this => move |session: &Session| {
+                                    this.tab_view.close_page(&this.tab_view.page(session));
 
-                    if this.tab_view.n_pages() == 0 {
-                        this.obj().close();
-                    }
-				}),
-			);
+                                    if this.tab_view.n_pages() == 0 {
+                                            this.obj().close();
+                                    }
+            }));
 
-			self.connect_signals();
-		}
+            self.connect_signals();
+        }
 
-		fn connect_signals(&self) {}
+        fn connect_signals(&self) {}
 
-		pub fn set_init_args(&self, init_args: TerminalInitArgs) {
-			let mut args = self.init_args.borrow_mut();
-			*args = init_args;
-		}
-	}
+        pub fn set_init_args(&self, init_args: TerminalInitArgs) {
+            let mut args = self.init_args.borrow_mut();
+            *args = init_args;
+        }
+    }
 }
 
 glib::wrapper! {
-		pub struct Window(ObjectSubclass<imp::Window>)
-				@extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow, //, panel::Workspace,
-				@implements gio::ActionGroup, gio::ActionMap; //, gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
+        pub struct Window(ObjectSubclass<imp::Window>)
+                @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow, //, panel::Workspace,
+                @implements gio::ActionGroup, gio::ActionMap; //, gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
 }
 
 impl Window {
-	pub fn new<P: glib::IsA<gtk::Application>>(
-		application: &P,
-		init_args: TerminalInitArgs,
-	) -> Self {
-		let this: Self = glib::Object::builder()
-			.property("application", application)
-			.build();
-		this.imp().set_init_args(init_args);
+    pub fn new<P: glib::IsA<gtk::Application>>(application: &P, init_args: TerminalInitArgs) -> Self {
+        let this: Self = glib::Object::builder().property("application", application).build();
+        this.imp().set_init_args(init_args);
 
-		this
-	}
+        this
+    }
 }
 
 // use super::{app_header::AppHeaderModel, session::SessionModel};
