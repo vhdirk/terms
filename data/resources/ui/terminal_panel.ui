@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.3" />
+  <template class="TermsTerminalPanel" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="spacing">0</property>
+    <property name="vexpand">true</property>
+
+    <child>
+      <object class="AdwBanner" id="banner">
+        <property name="revealed">false</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkScrolledWindow" id="scrolled">
+        <property name="vexpand">true</property>
+        <child>
+          <object class="TermsTerminal" id="terminal">
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="TermsSearchToolbar" id="search_toolbar"></object>
+      <!-- <object class="TerminalSearchToolbar" id="search_toolbar">
+        <!- <binding name="terminal">
+          <lookup name="terminal">TerminalTerminalTab</lookup>
+        </binding> ->
+
+        <property name="terminal" bind-source="TerminalTerminalTab" bind-property="terminal"
+          bind-flags="sync-create" />
+      </object> -->
+    </child>
+  </template>
+</interface>

@@ -3,11 +3,12 @@
   <requires lib="gio" version="2.40" />
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
+  <requires lib="libpanel" version="1.4" />
 
-  <template class="TermsWindow" parent="AdwApplicationWindow">
+  <template class="TermsWorkspace" parent="PanelWorkspace">
     <property name="default-height">400</property>
     <property name="default-width">600</property>
-    <property name="name">terms_main_window</property>
+    <!-- <property name="name">terms_main_window</property> -->
 
     <property name="content">
       <object class="GtkOverlay">

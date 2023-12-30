@@ -1,13 +1,20 @@
 use adw::subclass::prelude::*;
-use glib::{clone, closure_local, RustClosure};
 use gtk::prelude::*;
 use gtk::{gio, glib};
 use panel::subclass::prelude::*;
-use std::cell::RefCell;
 
-use super::{HeaderBar, Session, Terminal, TerminalInitArgs, TerminalPanel};
+use super::terminal::TerminalInitArgs;
 
 mod imp {
+	use std::cell::RefCell;
+
+	use glib::{clone, closure_local, RustClosure};
+
+	use crate::components::{
+		header_bar::HeaderBar,
+		terminal::{Terminal, TerminalInitArgs},
+		terminal_panel::TerminalPanel,
+	};
 
 	use super::*;
 
@@ -22,11 +29,11 @@ mod imp {
 
 	// this.content = this.overlay;
 
-	// this.set_name ("blackbox-main-window");
+	// this.set_name ("blackbox-main-Workspace");
 
 	#[derive(Debug, Default, gtk::CompositeTemplate)]
-	#[template(resource = "/com/github/vhdirk/Terms/gtk/window.ui")]
-	pub struct Window {
+	#[template(resource = "/com/github/vhdirk/Terms/gtk/workspace.ui")]
+	pub struct Workspace {
 		pub init_args: RefCell<TerminalInitArgs>,
 
 		#[template_child]
@@ -37,10 +44,10 @@ mod imp {
 	}
 
 	#[glib::object_subclass]
-	impl ObjectSubclass for Window {
-		const NAME: &'static str = "TermsWindow";
-		type Type = super::Window;
-		type ParentType = adw::ApplicationWindow;
+	impl ObjectSubclass for Workspace {
+		const NAME: &'static str = "TermsWorkspace";
+		type Type = super::Workspace;
+		type ParentType = panel::Workspace;
 
 		fn class_init(klass: &mut Self::Class) {
 			klass.bind_template();
@@ -51,7 +58,7 @@ mod imp {
 		}
 	}
 
-	impl ObjectImpl for Window {
+	impl ObjectImpl for Workspace {
 		fn constructed(&self) {
 			self.parent_constructed();
 
@@ -59,26 +66,34 @@ mod imp {
 		}
 	}
 
-	impl WidgetImpl for Window {}
-	impl WindowImpl for Window {}
-	impl ApplicationWindowImpl for Window {}
-	impl AdwApplicationWindowImpl for Window {}
-	// impl WorkspaceImpl for Window {}
+	impl WidgetImpl for Workspace {}
+	impl WindowImpl for Workspace {}
+	impl ApplicationWindowImpl for Workspace {}
+	impl AdwApplicationWindowImpl for Workspace {}
+	impl WorkspaceImpl for Workspace {}
 
-	impl Window {
+	impl Workspace {
 		fn setup_widgets(&self) {
-			let session = Session::new(self.init_args.borrow().clone());
-			self.tab_view.append(&session);
+			let panel = TerminalPanel::new(self.init_args.borrow().clone());
+			self.tab_view.append(&panel);
 
-			session.connect_close(
-				clone!(@weak self as this => move |session: &Session| {
-                    this.tab_view.close_page(&this.tab_view.page(session));
+			panel.connect_exit(
+				clone!(@weak self as this => move |panel: &TerminalPanel| {
+                    this.tab_view.close_page(&this.tab_view.page(panel));
 
                     if this.tab_view.n_pages() == 0 {
-                        this.obj().close();
+                            this.obj().close();
                     }
 				}),
 			);
+
+			// panel.connect_closure(
+			// 	"exit",
+			// 	false,
+			// 	RustClosure::new_local(clone!(@weak self as this, move |_terminal: TerminalPanel| {
+
+			// 	})),
+			// );
 
 			self.connect_signals();
 		}
@@ -93,12 +108,12 @@ mod imp {
 }
 
 glib::wrapper! {
-		pub struct Window(ObjectSubclass<imp::Window>)
-				@extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow, //, panel::Workspace,
-				@implements gio::ActionGroup, gio::ActionMap; //, gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
+		pub struct Workspace(ObjectSubclass<imp::Workspace>)
+				@extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow, panel::Workspace,
+				@implements gio::ActionGroup, gio::ActionMap, gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
 }
 
-impl Window {
+impl Workspace {
 	pub fn new<P: glib::IsA<gtk::Application>>(
 		application: &P,
 		init_args: TerminalInitArgs,
@@ -114,7 +129,7 @@ impl Window {
 
 // use super::{app_header::AppHeaderModel, session::SessionModel};
 
-// pub struct Window {
+// pub struct Workspace {
 //     app_header_controller: AsyncController<AppHeaderModel>,
 //     session_factory: AsyncFactoryVecDeque<SessionModel>,
 //     // services_sidebar_controller: AsyncController<ServicesSidebarModel>,
@@ -123,38 +138,38 @@ impl Window {
 //     // about_dialog: Controller<AboutDialog>,
 // }
 
-// new_action_group!(pub(crate) WindowActionGroup, "win");
-// new_stateless_action!(pub(crate) AboutAction, WindowActionGroup, "about");
-// new_stateless_action!(pub(crate) QuitAction, WindowActionGroup, "quit");
+// new_action_group!(pub(crate) WorkspaceActionGroup, "win");
+// new_stateless_action!(pub(crate) AboutAction, WorkspaceActionGroup, "about");
+// new_stateless_action!(pub(crate) QuitAction, WorkspaceActionGroup, "quit");
 
 // #[derive(Debug)]
-// pub enum WindowInput {
+// pub enum WorkspaceInput {
 //     NewSession,
 //     Quit,
 // }
 
 // #[relm4::factory(pub async)]
-// impl AsyncFactoryComponent for Window {
+// impl AsyncFactoryComponent for Workspace {
 //     type Init = TermsArgs;
-//     type Input = WindowInput;
+//     type Input = WorkspaceInput;
 //     type Output = ();
 //     type CommandOutput = ();
 //     type ParentWidget = adw::Application;
 
 //     view! {
 //         #[root]
-//         adw::ApplicationWindow {
-//             set_widget_name: "Window-main-window",
+//         adw::ApplicationWorkspace {
+//             set_widget_name: "Workspace-main-Workspace",
 //             set_size_request: (200, 300),
 //             // connect_close_request[sender] => move |_| {
-//             //     sender.input(WindowInput::Quit);
+//             //     sender.input(WorkspaceInput::Quit);
 //             //     Propagation::Stop
 //             // },
 
 //             // #[wrap(Some)]
 //             // set_help_overlay: shortcuts = &gtk::Builder::from_resource(
-//             // 		"/com/github/vhdirk/Window/ui/gtk/help-overlay.ui"
-//             // ).object::<gtk::ShortcutsWindow>("help_overlay").unwrap() -> gtk::ShortcutsWindow {
+//             // 		"/com/github/vhdirk/Workspace/ui/gtk/help-overlay.ui"
+//             // ).object::<gtk::ShortcutsWorkspace>("help_overlay").unwrap() -> gtk::ShortcutsWorkspace {
 //             // 	set_transient_for: Some(&root),
 //             // 	set_application: Some(&main_adw_application()),
 //             // },
@@ -210,7 +225,7 @@ impl Window {
 //     async fn init_model(init: Self::Init, _index: &DynamicIndex, sender: AsyncFactorySender<Self>) -> Self {
 
 //         // let about_dialog = ComponentBuilder::default()
-//         //     .launch(adw::ApplicationWindow::default())
+//         //     .launch(adw::ApplicationWorkspace::default())
 //         //     .detach();
 
 //         Self {
@@ -218,10 +233,10 @@ impl Window {
 //                 .launch(())
 //                 .forward(sender.input_sender(), |message| match message {
 //                     // ServicesSidebarOutput::ServiceSelected(service) => {
-//                     // 	WindowInput::ServiceSelected(service)
+//                     // 	WorkspaceInput::ServiceSelected(service)
 //                     // },
 //                     // ServicesSidebarOutput::ServiceDisabled(service) => {
-//                     // 	WindowInput::ServiceDisabled(service)
+//                     // 	WorkspaceInput::ServiceDisabled(service)
 //                     // },
 //                 }),
 //             session_factory: AsyncFactoryVecDeque::builder()
@@ -233,9 +248,9 @@ impl Window {
 //             // 		.launch(Service::Computer)
 //             // 		.forward(sender.input_sender(), |message| match message {
 //             // 			TaskListSidebarOutput::SelectList(list, service) => {
-//             // 				WindowInput::ListSelected(list, service)
+//             // 				WorkspaceInput::ListSelected(list, service)
 //             // 			},
-//             // 			TaskListSidebarOutput::CleanContent => WindowInput::CleanContent,
+//             // 			TaskListSidebarOutput::CleanContent => WorkspaceInput::CleanContent,
 //             // 		}),
 //             // 	content_controller: ContentModel::builder().launch(None).detach(),
 //             // about_dialog,
@@ -244,8 +259,8 @@ impl Window {
 
 //     async fn update(&mut self, message: Self::Input, _sender: AsyncFactorySender<Self>) {
 //         match message {
-//             WindowInput::NewSession => (),
-//             WindowInput::Quit => {
+//             WorkspaceInput::NewSession => (),
+//             WorkspaceInput::Quit => {
 //                 // self.
 //             }
 //         }
@@ -258,20 +273,20 @@ impl Window {
 //     // ) -> AsyncComponentParts<Self> {
 
 //     //     let about_dialog = ComponentBuilder::default()
-//     //         .launch(root.upcast_ref::<gtk::Window>().clone())
+//     //         .launch(root.upcast_ref::<gtk::Workspace>().clone())
 //     //         .detach();
 
 //     //     let widgets = view_output!();
 
-//     //     let mut model = Window {
+//     //     let mut model = Workspace {
 //     //         app_header_controller: AppHeaderModel::builder()
 //     //             .launch(())
 //     //             .forward(sender.input_sender(), |message| match message {
 //     //                 // ServicesSidebarOutput::ServiceSelected(service) => {
-//     //                 // 	WindowInput::ServiceSelected(service)
+//     //                 // 	WorkspaceInput::ServiceSelected(service)
 //     //                 // },
 //     //                 // ServicesSidebarOutput::ServiceDisabled(service) => {
-//     //                 // 	WindowInput::ServiceDisabled(service)
+//     //                 // 	WorkspaceInput::ServiceDisabled(service)
 //     //                 // },
 //     //             }),
 //     //         session_factory: AsyncFactoryVecDeque::builder()
@@ -283,9 +298,9 @@ impl Window {
 //     //         // 		.launch(Service::Computer)
 //     //         // 		.forward(sender.input_sender(), |message| match message {
 //     //         // 			TaskListSidebarOutput::SelectList(list, service) => {
-//     //         // 				WindowInput::ListSelected(list, service)
+//     //         // 				WorkspaceInput::ListSelected(list, service)
 //     //         // 			},
-//     //         // 			TaskListSidebarOutput::CleanContent => WindowInput::CleanContent,
+//     //         // 			TaskListSidebarOutput::CleanContent => WorkspaceInput::CleanContent,
 //     //         // 		}),
 //     //         // 	content_controller: ContentModel::builder().launch(None).detach(),
 //     //         about_dialog,
@@ -299,7 +314,7 @@ impl Window {
 //     //     widgets.header_revealer.set_child(Some(model.app_header_controller.widget()));
 //     //     //     model.app_header_controller.widget()
 
-//     //     let mut actions = RelmActionGroup::<WindowActionGroup>::new();
+//     //     let mut actions = RelmActionGroup::<WorkspaceActionGroup>::new();
 
 //     //     // let shortcuts_action = {
 //     //     // 	let shortcuts = widgets.shortcuts.clone();
@@ -331,7 +346,7 @@ impl Window {
 //     //     actions.add_action(about_action);
 //     //     actions.add_action(quit_action);
 
-//     //     root.insert_action_group(WindowActionGroup::NAME, Some(&actions.into_action_group()));
+//     //     root.insert_action_group(WorkspaceActionGroup::NAME, Some(&actions.into_action_group()));
 
 //     //     AsyncComponentParts { model, widgets }
 //     // }
@@ -343,8 +358,8 @@ impl Window {
 //     //     _root: &Self::Root,
 //     // ) {
 //     //     match message {
-//     //         WindowInput::NewSession => (),
-//     //         WindowInput::Quit => main_adw_application().quit(),
+//     //         WorkspaceInput::NewSession => (),
+//     //         WorkspaceInput::Quit => main_adw_application().quit(),
 //     //     }
 //     // }
 // }

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gio" version="2.40" />
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
+
+  <template class="TermsSession" parent="AdwBin">
+
+
+  </template>
+
+</interface>

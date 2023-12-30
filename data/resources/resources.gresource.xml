@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/github/vhdirk/Terms">
-    <file compressed="true" preprocess="xml-stripblanks" alias="gtk/help-overlay.ui">ui/shortcuts.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="gtk/header_bar.ui">ui/header_bar.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="gtk/shortcuts.ui">ui/shortcuts.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="gtk/main_menu.ui">ui/main_menu.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="gtk/window.ui">ui/window.ui</file>
+  <gresource prefix="/com/github/vhdirk/Terms/gtk">
+    <file compressed="true" preprocess="xml-stripblanks" alias="help-overlay.ui">ui/help_overlay.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="header_bar.ui">ui/header_bar.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="main_menu.ui">ui/main_menu.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="window.ui">ui/window.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="workspace.ui">ui/workspace.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="terminal.ui">ui/terminal.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="terminal_menu.ui">ui/terminal_menu.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="terminal_panel.ui">ui/terminal_panel.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="search_toolbar.ui">ui/search_toolbar.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="session.ui">ui/session.ui</file>
     <file compressed="true">style-dark.css</file>
     <file compressed="true">style.css</file>
   </gresource>

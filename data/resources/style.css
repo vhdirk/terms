@@ -4,11 +4,11 @@
 @define-color root_context_color shade(@red_1, 1.38);
 @define-color ssh_context_color shade(@purple_1, 1.28);
 
-/* #terms-main-window.with-borders:not(.fullscreen):backdrop {
+/* terms_main_windowwith-borders:not(.fullscreen):backdrop {
   border-color: alpha(@borders, 0.5);
 } */
 
-#terms-main-window {
+#terms_main_window {
   background: transparent;
 }
 
@@ -17,11 +17,11 @@ window:not(.about) headerbar,
   background-color: @window_bg_color;
 }
 
-#terms-main-window.context-root .custom-headerbar {
+#terms_main_window.context-root .custom-headerbar {
   background-color: @root_context_color;
 }
 
-#terms-main-window.context-ssh .custom-headerbar {
+#terms_main_window.context-ssh .custom-headerbar {
   background-color: @ssh_context_color;
 }
 

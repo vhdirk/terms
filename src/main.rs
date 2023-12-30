@@ -5,8 +5,38 @@ use serde::{Deserialize, Serialize};
 mod application;
 mod components;
 mod config;
+mod services;
+mod utils;
 
 use application::Application;
+
+
+// #[doc(hidden)]
+// pub fn resources_register_include_impl(bytes: &'static [u8]) -> Result<(), glib::Error> {
+//     let bytes = glib::Bytes::from_static(bytes);
+//     let resource = Resource::from_data(&bytes)?;
+//     resources_register(&resource);
+//     Ok(())
+// }
+
+// // rustdoc-stripper-ignore-next
+// /// Include gresources generated with `glib_build_tools::compile_resources` and register with glib. `path` is
+// /// relative to `OUTDIR`.
+// ///
+// /// ```ignore
+// /// gio::resources_register_include!("compiled.gresource").unwrap();
+// /// ```
+// #[macro_export]
+// macro_rules! resources_register_include {
+//     ($path:expr) => {
+//         $crate::resources_register_include_impl(include_bytes!(concat!(
+//             env!("OUT_DIR"),
+//             "/",
+//             $path
+//         )))
+//     };
+// }
+
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ColorScheme {
@@ -53,7 +83,7 @@ fn init_resource() -> Result<(), glib::Error> {
 	glib::set_application_name(&gettext("Terms"));
 	gio::resources_register_include!("resources.gresource")?;
 	let provider = gtk::CssProvider::new();
-	provider.load_from_resource("/com/github/vhdirk/Terms/style.css");
+	provider.load_from_resource("/com/github/vhdirk/Terms/gtk/style.css");
 	if let Some(display) = gdk::Display::default() {
 		gtk::style_context_add_provider_for_display(
 			&display,
