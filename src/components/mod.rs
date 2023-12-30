@@ -1,8 +1,7 @@
 mod header_bar;
+mod search_toolbar;
 mod session;
 mod terminal;
-// mod terminal_args;
-mod search_toolbar;
 mod terminal_panel;
 mod window;
 mod workspace;

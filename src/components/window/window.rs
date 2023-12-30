@@ -21,7 +21,7 @@ use super::*;
 // this.set_name ("blackbox-main-window");
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
-#[template(resource = "/com/github/vhdirk/Terms/gtk/window.ui")]
+#[template(resource = "/io/github/vhdirk/Terms/gtk/window.ui")]
 pub struct Window {
     pub init_args: RefCell<TerminalInitArgs>,
 
@@ -126,7 +126,7 @@ impl Window {
 
 //             // #[wrap(Some)]
 //             // set_help_overlay: shortcuts = &gtk::Builder::from_resource(
-//             // 		"/com/github/vhdirk/Window/ui/gtk/help-overlay.ui"
+//             // 		"/io/github/vhdirk/Window/ui/gtk/help-overlay.ui"
 //             // ).object::<gtk::ShortcutsWindow>("help_overlay").unwrap() -> gtk::ShortcutsWindow {
 //             // 	set_transient_for: Some(&root),
 //             // 	set_application: Some(&main_adw_application()),

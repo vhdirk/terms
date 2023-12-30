@@ -9,9 +9,9 @@ flatpak:
     - flatpak
   variables:
     BUNDLE: "terms-nightly.flatpak"
-    MANIFEST_PATH: "build-aux/com.github.vhdirk.Terms.Devel.json"
+    MANIFEST_PATH: "build-aux/io.github.vhdirk.Terms.Devel.json"
     FLATPAK_MODULE: "terms"
-    APP_ID: "com.github.vhdirk.Terms.Devel"
+    APP_ID: "io.github.vhdirk.Terms.Devel"
     RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
   script:
     - flatpak install --user --noninteractive org.freedesktop.Sdk.Extension.llvm15//22.08

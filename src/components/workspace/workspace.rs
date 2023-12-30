@@ -29,7 +29,7 @@ use super::*;
 // this.set_name ("blackbox-main-Workspace");
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
-#[template(resource = "/com/github/vhdirk/Terms/gtk/workspace.ui")]
+#[template(resource = "/io/github/vhdirk/Terms/gtk/workspace.ui")]
 pub struct Workspace {
     pub init_args: RefCell<TerminalInitArgs>,
 
@@ -142,7 +142,7 @@ impl Workspace {
 
 //             // #[wrap(Some)]
 //             // set_help_overlay: shortcuts = &gtk::Builder::from_resource(
-//             // 		"/com/github/vhdirk/Workspace/ui/gtk/help-overlay.ui"
+//             // 		"/io/github/vhdirk/Workspace/ui/gtk/help-overlay.ui"
 //             // ).object::<gtk::ShortcutsWorkspace>("help_overlay").unwrap() -> gtk::ShortcutsWorkspace {
 //             // 	set_transient_for: Some(&root),
 //             // 	set_application: Some(&main_adw_application()),

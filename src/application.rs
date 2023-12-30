@@ -198,7 +198,7 @@ impl Application {
         glib::Object::builder()
             .property("application-id", Some(config::APP_ID))
             .property("flags", ApplicationFlags::default())
-            .property("resource-base-path", Some("/com/github/vhdirk/Terms/"))
+            .property("resource-base-path", Some("/io/github/vhdirk/Terms/"))
             .build()
     }
 

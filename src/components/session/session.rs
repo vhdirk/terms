@@ -10,7 +10,7 @@ use super::TerminalInitArgs;
 use crate::components::terminal_panel::TerminalPanel;
 
 #[derive(Debug, Default, CompositeTemplate)]
-#[template(resource = "/com/github/vhdirk/Terms/gtk/session.ui")]
+#[template(resource = "/io/github/vhdirk/Terms/gtk/session.ui")]
 // #[properties(wrapper_type = super::Session)]
 pub struct Session {
     pub init_args: RefCell<TerminalInitArgs>,

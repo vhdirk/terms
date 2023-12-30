@@ -7,7 +7,7 @@ use gtk::prelude::*;
 use super::*;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
-#[template(resource = "/com/github/vhdirk/Terms/gtk/search_toolbar.ui")]
+#[template(resource = "/io/github/vhdirk/Terms/gtk/search_toolbar.ui")]
 pub struct SearchToolbar {}
 
 #[glib::object_subclass]

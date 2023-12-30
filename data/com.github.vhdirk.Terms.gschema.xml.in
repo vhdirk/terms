@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<schemalist gettext-domain="@gettext-package@">
-  <schema id="@app-id@" path="/com/github/vhdirk/Terms/" >
-    <key name="enable-recoloring" type="b">
-	    <default>true</default>
-	  </key>
-  </schema>
-</schemalist>

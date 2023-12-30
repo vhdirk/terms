@@ -7,7 +7,7 @@ use gtk::prelude::*;
 use super::*;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
-#[template(resource = "/com/github/vhdirk/Terms/gtk/header_bar.ui")]
+#[template(resource = "/io/github/vhdirk/Terms/gtk/header_bar.ui")]
 pub struct HeaderBar {
     #[template_child]
     pub revealer: TemplateChild<gtk::Revealer>,

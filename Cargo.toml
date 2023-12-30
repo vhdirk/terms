@@ -19,8 +19,10 @@ async-channel = "2.1.1"
 
 glib = { git = "https://github.com/gtk-rs/gtk-rs-core", version = "0.18", branch = "0.18" }
 gio = { git = "https://github.com/gtk-rs/gtk-rs-core", version = "0.18", branch = "0.18"  }
+pango = { git = "https://github.com/gtk-rs/gtk-rs-core", version = "0.18", branch = "0.18"  }
 gdk = { git = "https://github.com/gtk-rs/gtk4-rs", package = "gdk4", version = "0.7", branch = "0.7", features = ["v4_6"]}
 gtk = { git = "https://github.com/gtk-rs/gtk4-rs", package = "gtk4", version = "0.7", branch = "0.7"  }
+
 adw = { git = "https://gitlab.gnome.org/World/Rust/libadwaita-rs", package = "libadwaita", version = "0.5", branch = "v0.5", features = ["v1_4"] }
 panel = { git = "https://gitlab.gnome.org/World/Rust/libpanel-rs", package = "libpanel", version="0.3", branch="v0.3"}
 vte = { git = "https://gitlab.gnome.org/World/Rust/vte4-rs", package = "vte4", version = "0.7", branch = "0.7", features=["v0_70"]  }
@@ -28,6 +30,7 @@ async-std = "1.12.0"
 shell-quote = "0.5.0"
 constcat = "0.4.0"
 pcre2 = {package = "pcre2-sys", version = "0.2.6" }
+gsettings-macro = "0.1.20"
 
 [build-dependencies]
 glib-build-tools = "0.18.0"

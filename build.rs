@@ -46,7 +46,7 @@ pub fn compile_schemas<P: AsRef<Path>>(gschemas: &[P]) {
 fn compile_glib() {
     glib_build_tools::compile_resources(&["data/resources/"], "data/resources/resources.gresource.xml", "resources.gresource");
 
-    compile_schemas(&["data/com.github.vhdirk.Terms.gschema.xml.in"]);
+    compile_schemas(&["data/io.github.vhdirk.Terms.gschema.xml.in"]);
 }
 
 fn main() {

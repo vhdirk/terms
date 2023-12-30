@@ -10,7 +10,7 @@ use glib::{clone, subclass::Signal};
 use once_cell::sync::Lazy;
 
 #[derive(Debug, Default, CompositeTemplate)]
-#[template(resource = "/com/github/vhdirk/Terms/gtk/terminal_panel.ui")]
+#[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_panel.ui")]
 // #[properties(wrapper_type = super::TerminalPanel)]
 pub struct TerminalPanel {
     pub init_args: RefCell<TerminalInitArgs>,

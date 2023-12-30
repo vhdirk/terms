@@ -1,8 +1,8 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
-data/com.github.vhdirk.Terms.desktop.in.in
-data/com.github.vhdirk.Terms.appdata.xml.in.in
-data/com.github.vhdirk.Terms.gschema.xml.in
-data/com.github.vhdirk.Terms.metainfo.xml.in.in
+data/io.github.vhdirk.Terms.desktop.in.in
+data/io.github.vhdirk.Terms.appdata.xml.in.in
+data/io.github.vhdirk.Terms.gschema.xml.in
+data/io.github.vhdirk.Terms.metainfo.xml.in.in
 
 data/resources/ui/header_bar.ui

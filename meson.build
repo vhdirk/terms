@@ -10,7 +10,7 @@ i18n = import('i18n')
 gnome = import('gnome')
 
 application_name = 'Terms'
-base_id = 'com.github.vhdirk.' + application_name
+base_id = 'io.github.vhdirk.' + application_name
 application_id = base_id
 full_version = '0.1.0'
 

@@ -34,6 +34,6 @@ jobs:
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
       with:
         bundle: my-terms.flatpak
-        manifest-path: build-aux/com.github.vhdirk.MyTerms.Devel.json
+        manifest-path: build-aux/io.github.vhdirk.MyTerms.Devel.json
         run-tests: true
         cache-key: flatpak-builder-${{ github.sha }}

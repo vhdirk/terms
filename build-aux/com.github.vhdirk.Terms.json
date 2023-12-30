@@ -1,5 +1,5 @@
 {
-    "id": "com.github.vhdirk.Terms",
+    "id": "io.github.vhdirk.Terms",
     "runtime": "org.gnome.Platform",
     "runtime-version": "45",
     "sdk": "org.gnome.Sdk",
