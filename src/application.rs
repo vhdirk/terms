@@ -1,6 +1,6 @@
 use std::{borrow::Cow, fmt};
 
-use crate::config::{self, APP_ID, VERSION};
+use crate::config::{self, APP_ID, APP_NAME, VERSION};
 use adw;
 use gettextrs::gettext;
 use gio::{ApplicationFlags, Settings};
@@ -223,7 +223,7 @@ impl Application {
             .transient_for(&window)
             .icon_name(APP_ID)
             .application_icon(APP_ID)
-            .application_name("Terms")
+            .application_name(APP_NAME)
             .developer_name("Dirk Van Haerenborgh")
             .website("Website")
             .copyright("© 2022 Dirk Van Haerenborgh")

@@ -1,6 +1,8 @@
 use constcat::concat;
 use gettextrs::gettext;
 
+pub const PCRE_MULTILINE: u32 = 1024;
+
 // Copyright (c) 2011-2017 elementary LLC. (https://elementary.io)
 // From: https://github.com/elementary/terminal/blob/c3e36fb2ab64c18028ff2b4a6da5bfb2171c1c04/src/Widgets/TerminalWidget.vala
 pub const USERCHARS: &'static str = "-[:alnum:]";

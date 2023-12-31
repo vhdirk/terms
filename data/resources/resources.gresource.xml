@@ -2,9 +2,9 @@
 <gresources>
   <gresource prefix="/io/github/vhdirk/Terms/gtk">
     <file compressed="true" preprocess="xml-stripblanks" alias="help-overlay.ui">ui/help_overlay.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="main_menu.ui">ui/main_menu.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="header_bar.ui">../../src/components/header_bar/header_bar.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="window.ui">../../src/components/window/window.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="preferences_window.ui">../../src/components/preferences_window/preferences_window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="workspace.ui">../../src/components/workspace/workspace.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal.ui">../../src/components/terminal/terminal.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal_panel.ui">../../src/components/terminal_panel/terminal_panel.ui</file>

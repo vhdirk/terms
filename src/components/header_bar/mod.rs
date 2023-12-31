@@ -7,7 +7,7 @@ use crate::{application::AppProfile, config::PROFILE};
 glib::wrapper! {
         pub struct HeaderBar(ObjectSubclass<imp::HeaderBar>)
                 @extends gtk::Widget, gtk::Window, gtk::HeaderBar,
-                @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
+                @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Actionable;
 }
 
 impl HeaderBar {

@@ -14,6 +14,11 @@
     </enum>
 
   <schema id="@app-id@" path="/io/github/vhdirk/Terms/">
+    <key name="remember-window-size" type="b">
+      <default>false</default>
+      <summary>Whether or not to remember window size</summary>
+    </key>
+
     <key name="window-width" type="u">
       <default>600</default>
       <summary>Window width</summary>
@@ -22,6 +27,14 @@
     <key name="window-height" type="u">
       <default>350</default>
       <summary>Window height</summary>
+    </key>
+
+    <key name="was-maximized" type="b">
+      <default>false</default>
+    </key>
+
+    <key name="was-fullscreened" type="b">
+      <default>false</default>
     </key>
 
     <key name="font" type="s">

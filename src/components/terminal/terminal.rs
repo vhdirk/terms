@@ -28,10 +28,12 @@ use shell_quote::Sh;
 use vte::{PopoverExt, PtyFlags, TerminalExt, TerminalExtManual, WidgetExt};
 
 use crate::components::search_toolbar::SearchToolbar;
+use crate::services::sandbox;
 use crate::services::settings;
 use crate::services::settings::Settings;
-use crate::{services::sandbox, utils::constants::URL_REGEX_STRINGS};
 
+use super::constants::PCRE_MULTILINE;
+use super::constants::URL_REGEX_STRINGS;
 use super::*;
 
 struct SpawnArgs {
@@ -229,7 +231,7 @@ impl Terminal {
 
     fn setup_regexes(&self) {
         for reg_str in URL_REGEX_STRINGS {
-            if let Ok(reg) = vte::Regex::for_match(reg_str, G_REGEX_MULTILINE) {
+            if let Ok(reg) = vte::Regex::for_match(reg_str, PCRE_MULTILINE) {
                 let id = self.term.match_add_regex(&reg, 0);
                 self.term.match_set_cursor_name(id, "pointer")
             }

@@ -5,8 +5,6 @@ use once_cell::sync::OnceCell;
 use std::path::{Path, PathBuf};
 use vte::CursorBlinkMode;
 
-static SETTINGS: OnceCell<bool> = OnceCell::new();
-
 #[derive(Debug, Default, Clone)]
 #[repr(u8)]
 pub enum TerminalApplicationStyle {

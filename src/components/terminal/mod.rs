@@ -1,3 +1,4 @@
+mod constants;
 mod terminal;
 use std::path::PathBuf;
 

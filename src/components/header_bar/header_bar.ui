@@ -4,6 +4,30 @@
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
 
+  <menu id='main-menu'>
+    <!-- <section>
+      <item>
+        <attribute name="custom">theme_selector</attribute>
+      </item>
+    </section> -->
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Preferences</attribute>
+        <attribute name="action">win.edit-preferences</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>About Terms</attribute>
+        <attribute name='action'>app.about</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Quit</attribute>
+        <attribute name='action'>app.quit</attribute>
+      </item>
+    </section>
+  </menu>
+
   <template class="TermsHeaderBar" parent="AdwBin">
     <property name="valign">start</property>
     <property name="vexpand">false</property>
@@ -39,6 +63,29 @@
                                 <property name="title">Terms</property>
                               </object>
                             </property>
+
+                            <child type="end">
+                              <object class="GtkMenuButton">
+                                <property name="tooltip-text" translatable="yes">Menu</property>
+                                <property name="icon-name">open-menu-symbolic</property>
+
+                                <property name="popover">
+                                  <object class="GtkPopoverMenu">
+                                    <property name="menu-model">main-menu</property>
+                                    <!-- <child type="style-switcher">
+                                      <object class="TerminalStyleSwitcher" />
+                                    </child> -->
+                                  </object>
+                                </property>
+
+                                <!--<binding name="visible">
+                                  <lookup name="show-menu-button">
+                                    <lookup name="settings">TerminalHeaderBar</lookup>
+                                  </lookup>
+                                </binding> -->
+                              </object>
+                            </child>
+
                           </object>
                         </property>
                         <property name="name">single-tab-page</property>

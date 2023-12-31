@@ -13,7 +13,7 @@
         <property name="icon-name">settings-symbolic</property>
         <child>
           <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Window</property>
+            <property name="title" translatable="yes">Behavior</property>
             <child>
               <object class="AdwActionRow" id="remember_window_size_row">
                 <property name="activatable-widget">remember_window_size_switch</property>
@@ -25,21 +25,9 @@
                 </child>
               </object>
             </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Theme settings have been moved to Terminal
-                  &gt; Appearance.</property>
-                <property name="wrap">true</property>
-                <property name="xalign">0</property>
-                <property name="margin-top">16</property>
-                <style>
-                  <class name="dim-label" />
-                </style>
-              </object>
-            </child>
           </object>
         </child>
-        <child>
+        <!-- <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Tabs</property>
             <child>
@@ -54,8 +42,8 @@
               </object>
             </child>
           </object>
-        </child>
-        <child>
+        </child> -->
+        <!-- <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Header Bar</property>
             <child>
@@ -124,8 +112,8 @@
                 </child>
                 <child>
                   <object class="AdwActionRow">
-                    <!-- <property name="sensitive" bind-source="floating_controls_switch"
-                      bind-property="active" bind-flags="sync-create" /> -->
+                    <!- <property name="sensitive" bind-source="floating_controls_switch"
+                      bind-property="active" bind-flags="sync-create" /> ->
                     <property name="title" translatable="yes">Floating Controls Hover Area</property>
                     <property name="subtitle" translatable="yes">Hoverable area (in pixels) at the
                       top of the window to trigger floating controls.</property>
@@ -139,8 +127,8 @@
                 </child>
                 <child>
                   <object class="AdwActionRow">
-                    <!-- <property name="sensitive" bind-source="floating_controls_switch"
-                      bind-property="active" bind-flags="sync-create" /> -->
+                    <!- <property name="sensitive" bind-source="floating_controls_switch"
+                      bind-property="active" bind-flags="sync-create" /> ->
                     <property name="title" translatable="yes">Delay Before Show Floating Controls</property>
                     <property name="subtitle" translatable="yes">Delay time (ms) before show
                       floating controls.</property>
@@ -155,7 +143,7 @@
               </object>
             </child>
           </object>
-        </child>
+        </child> -->
       </object>
     </child>
     <child>
@@ -163,7 +151,7 @@
         <property name="name">terminal</property>
         <property name="title" translatable="yes">Terminal</property>
         <property name="icon-name">utilities-terminal-symbolic</property>
-        <!-- Text section -->
+        <!--- Text section -->
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Text</property>
@@ -171,7 +159,7 @@
               <object class="AdwActionRow">
                 <property name="activatable">True</property>
                 <property name="title" translatable="yes">Font</property>
-                <signal name="activated" handler="on_font_row_activated" swapped="no" />
+                <signal name="activated" handler="on_font_row_activated" swapped="true" />
                 <child>
                   <object class="GtkLabel" id="font_label">
                     <property name="valign">center</property>
@@ -221,7 +209,7 @@
                 </child>
               </object>
             </child>
-            <child>
+            <!-- <child>
               <object class="AdwActionRow" id="easy_copy_paste_action_row">
                 <property name="activatable-widget">easy_copy_paste_switch</property>
                 <property name="title" translatable="yes">Easy Copy &amp;amp; Paste</property>
@@ -232,7 +220,7 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </child> -->
           </object>
         </child>
         <child>
@@ -242,8 +230,7 @@
             <child>
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Audible Bell</property>
-                <property name="subtitle" translatable="yes">If enabled, terminals might use an
-                  audible bell to indicate events.</property>
+                <property name="subtitle" translatable="yes">If enabled, terminals might use an audible bell to indicate events.</property>
                 <property name="activatable-widget">terminal_bell_switch</property>
                 <child>
                   <object class="GtkSwitch" id="terminal_bell_switch">
@@ -275,8 +262,7 @@
                 <child>
                   <object class="AdwComboRow" id="cursor_blink_mode_combo_row">
                     <property name="title" translatable="yes">Cursor Blinking</property>
-                    <property name="subtitle" translatable="yes">Whether or not the cursor should
-                      blink.</property>
+                    <property name="subtitle" translatable="yes">Whether or not the cursor should blink.</property>
                     <property name="model">
                       <object class="GtkStringList">
                         <items>
@@ -323,12 +309,13 @@
           </object>
         </child>
 
+        <!--
         <child>
           <object class="AdwPreferencesGroup">
-            <!-- This is too repetitive. Keep commented for now. -->
-            <!-- <property name="title" translatable="yes">Working Directory</property> -->
-            <!-- <property name="description" translatable="yes">Set a directory to be used for new
-            tabs and windows.</property> -->
+            <!- This is too repetitive. Keep commented for now. ->
+            <!- <property name="title" translatable="yes">Working Directory</property> ->
+            <!- <property name="description" translatable="yes">Set a directory to be used for new
+            tabs and windows.</property> ->
             <child>
               <object class="AdwComboRow" id="working_directory_mode_combo_row">
                 <property name="title" translatable="yes">Working Directory</property>
@@ -480,10 +467,10 @@
 
         <child>
           <object class="AdwPreferencesGroup">
-            <!-- This is too repetitive. Keep commented for now. -->
-            <!-- <property name="title" translatable="yes">Desktop Integration</property> -->
-            <!-- <property name="description" translatable="yes">Integrate Black Box with your
-            desktop environment.</property> -->
+            <!- This is too repetitive. Keep commented for now. ->
+            <!- <property name="title" translatable="yes">Desktop Integration</property> ->
+            <!- <property name="description" translatable="yes">Integrate Black Box with your
+            desktop environment.</property> ->
             <child>
               <object class="AdwActionRow">
                 <property name="activatable-widget">notify_process_completion_switch</property>
@@ -627,17 +614,17 @@
               </object>
             </child>
           </object>
-        </child>
+        </child> -->
       </object>
     </child>
 
-    <child>
+    <!-- <child>
       <object class="TerminalShortcutEditor">
         <property name="app" bind-source="TermsPreferencesWindow" bind-property="application"
           bind-flags="default" />
       </object>
-    </child>
-    <child>
+    </child> -->
+    <!-- <child>
       <object class="AdwPreferencesPage">
         <property name="name">advanced</property>
         <property name="title" translatable="yes">Advanced</property>
@@ -704,7 +691,7 @@
           </object>
         </child>
       </object>
-    </child>
+    </child> -->
   </template>
   <object class="GtkAdjustment" id="floating_controls_hover_area_adjustment">
     <property name="lower">2</property>

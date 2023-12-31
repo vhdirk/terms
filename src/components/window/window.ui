@@ -5,8 +5,8 @@
   <requires lib="libadwaita" version="1.4" />
 
   <template class="TermsWindow" parent="AdwApplicationWindow">
-    <property name="default-height">400</property>
-    <property name="default-width">600</property>
+    <property name="default-width">700</property>
+    <property name="default-height">450</property>
     <property name="name">terms_main_window</property>
 
     <property name="content">

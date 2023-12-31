@@ -72,7 +72,7 @@
     <section>
       <item>
         <attribute name="label" translatable="yes">Preferences</attribute>
-        <attribute name="action">win.edit_preferences</attribute>
+        <attribute name="action">win.edit-preferences</attribute>
       </item>
     </section>
 
