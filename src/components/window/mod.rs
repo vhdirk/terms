@@ -2,11 +2,11 @@ mod window;
 use glib::subclass::prelude::*;
 use window as imp;
 
-use super::{HeaderBar, Session, Terminal, TerminalInitArgs, TerminalPanel};
+use super::{HeaderBar, Session, TerminalInitArgs};
 
 glib::wrapper! {
         pub struct Window(ObjectSubclass<imp::Window>)
-                @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow, //, panel::Workspace,
+                @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::Window, adw::ApplicationWindow, //, panel::Workspace,
                 @implements gio::ActionGroup, gio::ActionMap; //, gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
 }
 

@@ -57,9 +57,9 @@ impl ObjectImpl for Window {
 
 impl WidgetImpl for Window {}
 impl WindowImpl for Window {}
+impl AdwWindowImpl for Window {}
 impl ApplicationWindowImpl for Window {}
 impl AdwApplicationWindowImpl for Window {}
-// impl WorkspaceImpl for Window {}
 
 impl Window {
     fn setup_widgets(&self) {

@@ -1,9 +1,11 @@
 use adw::subclass::prelude::*;
 use gio::prelude::*;
 use gio::SettingsBindFlags;
+use glib::ffi::G_REGEX_MULTILINE;
 use glib::translate::FromGlib;
 use glib::translate::IntoGlib;
 use glib::ObjectExt;
+use glib::ParamSpec;
 use glib::Variant;
 use gtk::glib;
 use gtk::CompositeTemplate;
@@ -92,19 +94,32 @@ impl ObjectImpl for Terminal {
     }
 
     fn signals() -> &'static [Signal] {
-        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| vec![Signal::builder("exit").param_types([i32::static_type()]).build()]);
+        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| vec![Signal::builder("exit").param_types([i64::static_type()]).build()]);
         SIGNALS.as_ref()
     }
 
     fn properties() -> &'static [glib::ParamSpec] {
-        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| {
-            let mut scrollback = glib::ParamSpecInt::builder("user-scrollback-lines");
-            scrollback.set_flags(glib::ParamFlags::READWRITE);
-
-            vec![scrollback.build()]
-        });
+        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| vec![glib::ParamSpecInt64::builder("user-scrollback-lines").readwrite().build()]);
 
         PROPERTIES.as_ref()
+    }
+
+    fn set_property(&self, id: usize, value: &Value, pspec: &glib::ParamSpec) {
+        match pspec.name() {
+            "user-scrollback-lines" => {
+                if let Ok(lines) = value.get::<i64>() {
+                    self.term.set_scrollback_lines(lines)
+                }
+            },
+            _ => unimplemented!(),
+        }
+    }
+
+    fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
+        match pspec.name() {
+            "user-scrollback-lines" => self.term.scrollback_lines().to_value(),
+            _ => unimplemented!(),
+        }
     }
 
     fn dispose(&self) {
@@ -214,7 +229,7 @@ impl Terminal {
 
     fn setup_regexes(&self) {
         for reg_str in URL_REGEX_STRINGS {
-            if let Ok(reg) = vte::Regex::for_match(reg_str, pcre2::PCRE2_MULTILINE) {
+            if let Ok(reg) = vte::Regex::for_match(reg_str, G_REGEX_MULTILINE) {
                 let id = self.term.match_add_regex(&reg, 0);
                 self.term.match_set_cursor_name(id, "pointer")
             }
@@ -241,6 +256,7 @@ impl Terminal {
 
         self.obj()
             .bind_property("user-scrollback-lines", &self.term.clone(), "scrollback-lines")
+            .sync_create()
             .build();
 
         // Fallback scrolling makes it so that VTE handles scrolling on its own. We
@@ -308,9 +324,6 @@ impl Terminal {
 
         // TODO: customize menu based on match_str
         dbg!("match {:?}, {:?}", match_str, tag);
-
-        // let builder = gtk::Builder::from_resource("/io/github/vhdirk/Terms/gtk/terminal_menu.ui");
-        // let pop = builder.object::<gtk::PopoverMenu>("popover").unwrap();
 
         let coords = self.term.translate_coordinates(self.obj().as_ref(), x, y).unwrap();
 

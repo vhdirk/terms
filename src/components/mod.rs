@@ -1,4 +1,5 @@
 mod header_bar;
+mod preferences_window;
 mod search_toolbar;
 mod session;
 mod terminal;
@@ -7,6 +8,7 @@ mod window;
 mod workspace;
 
 pub use header_bar::*;
+pub use preferences_window::*;
 pub use search_toolbar::*;
 pub use session::*;
 pub use terminal::*;
