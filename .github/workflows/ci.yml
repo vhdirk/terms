@@ -23,6 +23,45 @@ jobs:
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
 
+  build:
+    name: check
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/gtk-rs/gtk4-rs/gtk4:latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+    env:
+      DISPLAY: ":99.0"
+    steps:
+      - name: Install dependencies
+        run: |
+          yum install -y \
+            gtk4-devel \
+            libadwaita-devel \
+            libpanel-devel \
+            gtksourceview5-devel \
+            poppler-glib-devel
+
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy
+
+      - name: Clippy
+        run: cargo clippy -- --deny warnings
+
+      - name: Build
+        run: cargo build
+
+      - name: Test
+        run: cargo test
+
   flatpak:
     name: Flatpak
     runs-on: ubuntu-latest
