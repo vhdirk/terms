@@ -115,7 +115,7 @@ impl Window {
 
     fn setup_gactions(&self) {
         let preferences_action = gio::ActionEntry::builder("edit-preferences")
-            .activate(clone!(@weak self as this => move |win: &super::Window, _, _| {
+            .activate(clone!(@weak self as this => move |_win: &super::Window, _, _| {
                 println!("open preferences");
                 this.open_preferences();
             }))

@@ -1,36 +1,29 @@
 use adw::subclass::prelude::*;
+use ashpd::flatpak::HostCommandFlags;
+use async_std::stream::StreamExt;
 use gio::prelude::*;
 use gio::SettingsBindFlags;
-use glib::ffi::G_REGEX_MULTILINE;
 use glib::translate::FromGlib;
 use glib::translate::IntoGlib;
 use glib::ObjectExt;
-use glib::ParamSpec;
-use glib::Variant;
 use gtk::glib;
 use gtk::CompositeTemplate;
-use std::borrow::Borrow;
-use std::path::PathBuf;
 use tracing::*;
 use vte::CursorBlinkMode;
 use vte::CursorShape;
 use vte::StyleContextExt;
 
-use std::{
-    cell::{Cell, RefCell},
-    collections::HashMap,
-    env,
-};
+use std::{cell::RefCell, collections::HashMap, env};
 
-use glib::{clone, subclass::Signal, JoinHandle, Pid, Properties, SignalHandlerId, SpawnFlags, StaticType, Type, Value};
+use glib::{clone, subclass::Signal, JoinHandle, Pid, SignalHandlerId, SpawnFlags, StaticType, Type, Value};
 use once_cell::sync::Lazy;
 use shell_quote::Sh;
 use vte::{PopoverExt, PtyFlags, TerminalExt, TerminalExtManual, WidgetExt};
 
 use crate::components::search_toolbar::SearchToolbar;
-use crate::services::sandbox;
-use crate::services::settings;
 use crate::services::settings::Settings;
+use crate::services::theme_provider::Theme;
+use crate::services::theme_provider::ThemeProvider;
 
 use super::constants::PCRE_MULTILINE;
 use super::constants::URL_REGEX_STRINGS;
@@ -42,11 +35,18 @@ struct SpawnArgs {
     pub envv: HashMap<String, String>,
 }
 
+#[derive(Debug)]
+enum SpawnCtx {
+    Native,
+    Flatpak,
+}
+
 #[derive(Debug, Default)]
-struct TerminalCtx {
+struct TerminalContext {
     pub pid: Option<Pid>,
     pub exit_handler: Option<SignalHandlerId>,
     pub spawn_handle: Option<JoinHandle<()>>,
+    pub spawn_ctx: Option<SpawnCtx>,
     pub drop_handler_id: Option<SignalHandlerId>,
 
     pub original_scrollback_lines: Option<i64>,
@@ -59,7 +59,7 @@ struct TerminalCtx {
 pub struct Terminal {
     pub init_args: RefCell<TerminalInitArgs>,
 
-    ctx: RefCell<TerminalCtx>,
+    ctx: RefCell<TerminalContext>,
 
     #[template_child]
     term: TemplateChild<vte::Terminal>,
@@ -71,6 +71,7 @@ pub struct Terminal {
     popover_menu: TemplateChild<gtk::PopoverMenu>,
 
     pub settings: Settings,
+    theme_provider: ThemeProvider,
 }
 
 #[glib::object_subclass]
@@ -150,7 +151,12 @@ impl Terminal {
     fn setup_widgets(&self) {
         self.ctx.borrow_mut().original_scrollback_lines = Some(self.term.scrollback_lines());
 
-        // ThemeProvider.get_default ().notify ["current-theme"].connect (this.on_theme_changed);
+        self.theme_provider.connect_notify_local(
+            Some("current-theme"),
+            clone!(@weak self as this => move |_, _| {
+               this.on_theme_changed();
+            }),
+        );
 
         self.settings.connect_font_changed(clone!(@weak self as this => move |_| {
             this.on_font_changed();
@@ -200,7 +206,7 @@ impl Terminal {
                                         envv: HashMap::new(),
                                 };
 
-                                let spawn_result = if sandbox::is_sandboxed().await {
+                                let spawn_result = if ashpd::is_sandboxed().await {
                                         this.spawn_sandboxed(spawn_args).await
                                 } else {
                                         this.spawn_native(spawn_args).await
@@ -217,7 +223,7 @@ impl Terminal {
 
     fn connect_signals(&self) {
         let handler = self.term.connect_child_exited(clone!(@weak self as this => move |_, status| {
-                                this.on_child_exited(status)
+                this.on_child_exited(status as u32)
         }));
         self.ctx.borrow_mut().exit_handler = Some(handler);
 
@@ -319,7 +325,35 @@ impl Terminal {
         self.ctx.borrow_mut().padding_provider = Some(provider);
     }
 
-    fn on_theme_changed(&self) {}
+    fn background_color(&self, theme: &Theme) -> Option<gdk::RGBA> {
+        theme.background_color.as_ref().cloned().map(|mut color| {
+            color.set_alpha(self.settings.opacity() as f32 * 0.01);
+            color
+        })
+    }
+
+    fn on_theme_changed(&self) {
+        if let Some(theme) = self.theme_provider.current_theme() {
+            let bg = self.background_color(&theme);
+
+            if let Some(palette) = theme.palette {
+                self.term.set_colors(
+                    theme.foreground_color.as_ref(),
+                    bg.as_ref(),
+                    palette.iter().collect::<Vec<&gdk::RGBA>>().as_slice(),
+                );
+            } else {
+                if let Some(color) = bg.as_ref() {
+                    self.term.set_color_background(color)
+                }
+                if let Some(color) = theme.foreground_color.as_ref() {
+                    self.term.set_color_foreground(color)
+                }
+            }
+        } else {
+            warn!("No theme set")
+        }
+    }
 
     fn show_menu(&self, x: f64, y: f64) {
         let (match_str, tag) = self.term.check_match_at(x, y);
@@ -344,7 +378,7 @@ impl Terminal {
         }
     }
 
-    fn on_child_exited(&self, status: i32) {
+    fn on_child_exited(&self, status: u32) {
         dbg!("Terminal child exited with status {}", status);
         self.ctx.borrow_mut().pid = None;
         let handler = self.ctx.borrow_mut().exit_handler.take();
@@ -396,7 +430,28 @@ impl Terminal {
             .await
     }
 
-    async fn spawn_sandboxed(&self, _spawn_args: SpawnArgs) -> Result<Pid, glib::Error> {
+    async fn spawn_sandboxed(&self, spawn_args: SpawnArgs) -> Result<Pid, glib::Error> {
+        let SpawnArgs { cwd_path, argv, envv } = spawn_args;
+
+        let proxy = ashpd::flatpak::Development::new().await.unwrap();
+        let fds = HashMap::new();
+        let envs: HashMap<&str, &str> = envv.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
+        let flags = HostCommandFlags::WatchBus;
+
+        let pid = proxy.host_command(cwd_path, &argv, fds, envs, flags.into()).await.unwrap();
+        let mut spawn_exit = proxy.receive_spawn_exited().await.unwrap();
+
+        // proxy.host_command_signal(pid, signal, to_process_group)
+        let spawn_handle = glib::spawn_future_local(clone!(@weak self as this => async move {
+
+            loop {
+                if let Some((pid, exit_status)) = spawn_exit.next().await {
+                    this.on_child_exited(exit_status);
+                }
+            }
+
+        }));
+
         todo!("spawn sandboxed")
     }
 }

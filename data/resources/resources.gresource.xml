@@ -13,6 +13,9 @@
     <file compressed="true">style-dark.css</file>
     <file compressed="true">style.css</file>
   </gresource>
+  <gresource prefix="/io/github/vhdirk/Terms/svg">
+    <file compressed="true" preprocess="xml-stripblanks" alias="theme-thumbnail.svg">svg/theme-thumbnail.svg</file>
+  </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/actions">
   </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/apps">

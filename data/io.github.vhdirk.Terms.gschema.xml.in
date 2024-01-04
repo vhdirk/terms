@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist gettext-domain="@gettext-package@">
 
-    <enum id="@app-id@.ScrollbackMode">
-      <value nick="fixed-size" value="0" />
-      <value nick="unlimited" value="1" />
-      <value nick="disabled" value="2" />
+  <enum id="@app-id@.ScrollbackMode">
+    <value nick="fixed-size" value="0" />
+    <value nick="unlimited" value="1" />
+    <value nick="disabled" value="2" />
     </enum>
 
-    <enum id="@app-id@.WorkingDirectoryMode">
-      <value nick="previous-terminal" value="0" />
-      <value nick="home" value="1" />
-      <value nick="custom" value="2" />
-    </enum>
+  <enum id="@app-id@.WorkingDirectoryMode">
+    <value nick="previous-terminal" value="0" />
+    <value nick="home" value="1" />
+    <value nick="custom" value="2" />
+  </enum>
+
+  <enum id="@app-id@.StylePreference">
+    <value nick="system" value="0" />
+    <value nick="light" value="1" />
+    <value nick="dark" value="2" />
+  </enum>
 
   <schema id="@app-id@" path="/io/github/vhdirk/Terms/">
     <key name="remember-window-size" type="b">
@@ -41,8 +47,11 @@
       <default>'Monospace 12'</default>
       <summary>Font family and size</summary>
     </key>
-
-   <key name="opacity" type="u">
+    <key name="pretty" type="b">
+      <default>true</default>
+      <summary>Whether the window should inherit terminal theme's colors</summary>
+    </key>
+    <key name="opacity" type="u">
       <default>100</default>
       <summary>Terminal window background opacity</summary>
     </key>
@@ -79,6 +88,21 @@
     <key name="scrollback-lines" type="u">
       <default>1000</default>
       <summary>Number of lines stored in scrollback</summary>
+    </key>
+
+    <key name="theme-light" type="s">
+      <default>'Adwaita'</default>
+      <summary>The light color scheme for the terminal</summary>
+    </key>
+
+    <key name="theme-dark" type="s">
+      <default>'Adwaita Dark'</default>
+      <summary>The dark color scheme for the terminal</summary>
+    </key>
+
+    <key name="style-preference" enum="@app-id@.StylePreference">
+      <default>'system'</default>
+      <summary>Style preference</summary>
     </key>
 
     <key name="theme-bold-is-bright" type="b">

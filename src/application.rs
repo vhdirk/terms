@@ -95,6 +95,7 @@ mod imp {
             let app = self.obj();
             app.setup_gactions();
             app.set_accels_for_action("win.show-help-overlay", &["<Control>question"]);
+            app.set_accels_for_action("win.edit-preferences", &["<Control>comma"]);
 
             self.setup_command_line();
         }

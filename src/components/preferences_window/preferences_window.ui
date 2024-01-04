@@ -486,7 +486,7 @@
             </child>
           </object>
         </child>
-
+      -->
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Appearance</property>
@@ -508,8 +508,7 @@
               <object class="AdwActionRow">
                 <property name="activatable-widget">pretty_switch</property>
                 <property name="title" translatable="yes">Theme Integration</property>
-                <property name="subtitle" translatable="yes">Paint the whole app with colors from
-                  your colorscheme.</property>
+                <property name="subtitle" translatable="yes">Paint the whole app with colors from your colorscheme.</property>
                 <child>
                   <object class="GtkSwitch" id="pretty_switch">
                     <property name="valign">center</property>
@@ -524,8 +523,7 @@
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Theme</property>
-            <property name="description" translatable="yes">Set your preferred theme for light and
-              dark styles.</property>
+            <property name="description" translatable="yes">Set your preferred theme for light and dark styles.</property>
             <child type="header-suffix">
               <object class="GtkBox">
                 <property name="valign">center</property>
@@ -538,7 +536,7 @@
                   <object class="GtkButton">
                     <property name="icon-name">folder-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Open themes folder</property>
-                    <signal name="clicked" handler="on_open_themes_folder" swapped="no" />
+                    <!-- <signal name="clicked" handler="on_open_themes_folder" swapped="no" /> -->
                     <style />
                   </object>
                 </child>
@@ -546,7 +544,7 @@
                   <object class="GtkButton">
                     <property name="icon-name">web-browser-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Get more themes online</property>
-                    <signal name="clicked" handler="on_get_more_themes_online" swapped="no" />
+                    <!-- <signal name="clicked" handler="on_get_more_themes_online" swapped="no" /> -->
                     <style />
                   </object>
                 </child>
@@ -580,8 +578,7 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="filter_themes_check_button">
-                    <property name="label" translatable="yes">Only display themes for the current
-                      style</property>
+                    <property name="label" translatable="yes">Only display themes for the current style</property>
                     <property name="active">True</property>
                     <property name="halign">start</property>
                   </object>
@@ -589,12 +586,10 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">To ensure readability, "Theme
-                      Integration" will be disabled if you select a light color scheme while using
-                      the dark app style or a dark color scheme while using the light app style.</property>
+                    <property name="label" translatable="yes">To ensure readability, "Theme Integration" will be disabled if you select a light color scheme while using the dark app style or a dark color scheme while using the light app style.</property>
                     <property name="wrap">True</property>
-                    <property name="visible" bind-source="filter_themes_check_button"
-                      bind-property="active" bind-flags="sync-create|invert-boolean" />
+                    <!-- <property name="visible" bind-source="filter_themes_check_button"
+                      bind-property="active" bind-flags="sync-create|invert-boolean" /> -->
                     <style>
                       <class name="warning" />
                     </style>
@@ -614,7 +609,7 @@
               </object>
             </child>
           </object>
-        </child> -->
+        </child>
       </object>
     </child>
 
