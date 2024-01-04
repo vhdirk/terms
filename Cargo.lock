@@ -50,7 +50,7 @@ checksum = "96d30a06541fbafbc7f82ed10c06164cfbd2c401138f6addd8404629c4b16711"
 [[package]]
 name = "ashpd"
 version = "0.7.0"
-source = "git+https://github.com/bilelmoussaoui/ashpd.git#1da9ed3d85d7cfc4b76f602bbcb597f958e971bd"
+source = "git+https://github.com/bilelmoussaoui/ashpd.git#77bad1b3d99b24a0e212c6f76d9f75b57911e209"
 dependencies = [
  "async-std",
  "enumflags2",
