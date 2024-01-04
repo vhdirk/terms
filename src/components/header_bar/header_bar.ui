@@ -5,11 +5,11 @@
   <requires lib="libadwaita" version="1.4" />
 
   <menu id='main-menu'>
-    <!-- <section>
+    <section>
       <item>
-        <attribute name="custom">theme_selector</attribute>
+        <attribute name="custom">style-switcher</attribute>
       </item>
-    </section> -->
+    </section>
     <section>
       <item>
         <attribute name="label" translatable="yes">Preferences</attribute>
@@ -72,9 +72,9 @@
                                 <property name="popover">
                                   <object class="GtkPopoverMenu">
                                     <property name="menu-model">main-menu</property>
-                                    <!-- <child type="style-switcher">
-                                      <object class="TerminalStyleSwitcher" />
-                                    </child> -->
+                                    <child type="style-switcher">
+                                      <object class="TermsStyleSwitcher" id="style_switcher"></object>
+                                    </child>
                                   </object>
                                 </property>
 

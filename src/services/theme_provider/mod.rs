@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, path::PathBuf};
 
 use glib::{subclass::types::ObjectSubclassIsExt, ObjectExt};
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
@@ -42,5 +42,9 @@ impl ThemeProvider {
 
     pub fn current_theme(&self) -> Option<Theme> {
         self.current_theme_name().and_then(|t| self.themes().get(&t).cloned())
+    }
+
+    pub fn user_themes_dir() -> Option<PathBuf> {
+        imp::ThemeProvider::user_themes_dir()
     }
 }

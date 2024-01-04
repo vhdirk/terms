@@ -49,24 +49,6 @@ impl Default for ColorScheme {
     }
 }
 
-fn init_appearance() -> Result<(), glib::Error> {
-    // let project = Project::open("com", "github", "vhdirk", "terms").unwrap();
-    // match project.get_file_as::<Preferences>("preferences", FileFormat::JSON) {
-    // 	Ok(preferences) => {
-    // 		let color_scheme = match preferences.color_scheme {
-    // 			ColorScheme::Dark => adw::ColorScheme::ForceDark,
-    // 			ColorScheme::Light => adw::ColorScheme::ForceLight,
-    // 			ColorScheme::Default => adw::ColorScheme::Default,
-    // 		};
-    // 		adw::StyleManager::default().set_color_scheme(color_scheme);
-    // 	},
-    // 	Err(err) => {
-    // 		tracing::error!("Failed to open settings: {}", err.to_string())
-    // 	},
-    // }
-    Ok(())
-}
-
 fn init_gettext() {
     gettextrs::setlocale(LocaleCategory::LcAll, "");
     gettextrs::bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR).expect("Unable to bind the text domain");
@@ -97,7 +79,6 @@ pub fn init() -> Result<(), glib::Error> {
         .with_max_level(tracing::Level::INFO)
         .init();
     init_resource()?;
-    init_appearance()?;
     Ok(())
 }
 

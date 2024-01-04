@@ -51,6 +51,40 @@ impl ObjectSubclass for ThemeThumbnail {
 impl ObjectImpl for ThemeThumbnail {
     fn constructed(&self) {
         self.parent_constructed();
+
+        let img = gtk::Picture::builder()
+            .width_request(110)
+            .height_request(70)
+            .css_classes(["card"])
+            .cursor(&gdk::Cursor::from_name("pointer", None).unwrap())
+            .build();
+        img.set_parent(&self.obj().clone());
+        self.ctx.borrow_mut().picture = Some(img);
+
+        // Icon will show when this.selected is true
+        let check_icon = gtk::Image::builder()
+            .icon_name("object-select-symbolic")
+            .pixel_size(14)
+            .vexpand(true)
+            .valign(gtk::Align::End)
+            .halign(gtk::Align::End)
+            .visible(false)
+            .build();
+
+        check_icon.set_parent(&self.obj().clone());
+        self.ctx.borrow_mut().check_icon = Some(check_icon);
+
+        // Emit activate signal when thumbnail is clicked.
+        let mouse_control = gtk::GestureClick::builder().build();
+        mouse_control.connect_pressed(clone!(@weak self as this => move |_, _, _, _| {
+            if !this.ctx.borrow().selected {
+                this.set_selected(true);
+                this.obj().notify("selected");
+                this.activate();
+            }
+        }));
+
+        self.obj().add_controller(mouse_control);
     }
 
     fn properties() -> &'static [glib::ParamSpec] {
@@ -58,7 +92,7 @@ impl ObjectImpl for ThemeThumbnail {
         PROPERTIES.as_ref()
     }
 
-    fn set_property(&self, id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
+    fn set_property(&self, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
         match pspec.name() {
             "selected" => {
                 if let Ok(selected) = value.get::<bool>() {
@@ -99,47 +133,15 @@ impl ThemeThumbnail {
         self.ctx.borrow_mut().theme = Some(theme.clone());
 
         let paintable: ThemePreviewPaintable = ThemePreviewPaintable::new(theme);
-        let img = gtk::Picture::builder()
-            .paintable(&paintable)
-            .width_request(110)
-            .height_request(70)
-            .css_classes(["card"])
-            .cursor(&gdk::Cursor::from_name("pointer", None).unwrap())
-            .build();
+        if let Some(img) = self.ctx.borrow().picture.as_ref() {
+            img.set_paintable(Some(&paintable));
 
-        if let Some(bg_color) = theme.background_color {
-            let css_provider = gtk::CssProvider::new();
-            css_provider.load_from_data(&format!("picture {{ background-color: {}; }}", bg_color));
-            img.style_context().add_provider(&css_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
-        }
-
-        img.set_parent(&self.obj().clone());
-        self.ctx.borrow_mut().picture = Some(img);
-
-        // Icon will show when this.selected is true
-        let check_icon = gtk::Image::builder()
-            .icon_name("object-select-symbolic")
-            .pixel_size(14)
-            .vexpand(true)
-            .valign(gtk::Align::End)
-            .halign(gtk::Align::End)
-            .visible(false)
-            .build();
-
-        check_icon.set_parent(&self.obj().clone());
-        self.ctx.borrow_mut().check_icon = Some(check_icon);
-
-        // Emit activate signal when thumbnail is clicked.
-        let mouse_control = gtk::GestureClick::builder().build();
-        mouse_control.connect_pressed(clone!(@weak self as this => move |_, _, _, _| {
-            if !this.ctx.borrow().selected {
-                this.set_selected(true);
-                this.obj().notify("selected");
-                this.activate();
+            if let Some(bg_color) = theme.background_color {
+                let css_provider = gtk::CssProvider::new();
+                css_provider.load_from_data(&format!("picture {{ background-color: {}; }}", bg_color));
+                img.style_context().add_provider(&css_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
             }
-        }));
-
-        self.obj().add_controller(mouse_control);
+        }
     }
 
     fn set_selected(&self, selected: bool) {

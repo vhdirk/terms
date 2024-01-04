@@ -1,4 +1,5 @@
 use crate::application::AppProfile;
+use crate::components::StyleSwitcher;
 use crate::config::PROFILE;
 use adw::subclass::prelude::*;
 use gtk::glib;
@@ -14,6 +15,9 @@ pub struct HeaderBar {
 
     #[template_child]
     pub title_widget: TemplateChild<adw::WindowTitle>,
+
+    #[template_child]
+    pub style_switcher: TemplateChild<StyleSwitcher>,
 }
 
 #[glib::object_subclass]

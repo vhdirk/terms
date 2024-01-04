@@ -10,6 +10,7 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal_panel.ui">../../src/components/terminal_panel/terminal_panel.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="search_toolbar.ui">../../src/components/search_toolbar/search_toolbar.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="session.ui">../../src/components/session/session.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="style_switcher.ui">../../src/components/style_switcher/style_switcher.ui</file>
     <file compressed="true">style-dark.css</file>
     <file compressed="true">style.css</file>
   </gresource>

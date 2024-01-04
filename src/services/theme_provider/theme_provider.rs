@@ -39,9 +39,7 @@ pub enum ThemePaletteColorIndex {
 pub struct ThemeProviderContext {
     css_provider: gtk::CssProvider,
     themes: HashMap<String, Theme>,
-    dark: bool,
-    current_theme: String,
-    pretty: bool,
+    theme_integration: bool,
 }
 
 impl Default for ThemeProviderContext {
@@ -49,9 +47,7 @@ impl Default for ThemeProviderContext {
         Self {
             css_provider: Default::default(),
             themes: Default::default(),
-            dark: Default::default(),
-            current_theme: "Adwaita".to_string(),
-            pretty: Default::default(),
+            theme_integration: Default::default(),
         }
     }
 }
@@ -91,8 +87,8 @@ impl ObjectImpl for ThemeProvider {
         static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| {
             vec![
                 glib::ParamSpecBoolean::builder("dark").read_only().build(),
-                glib::ParamSpecString::builder("current-theme").readwrite().build(),
-                glib::ParamSpecBoolean::builder("pretty").readwrite().build(),
+                glib::ParamSpecString::builder("current-theme").read_only().build(),
+                glib::ParamSpecBoolean::builder("theme-integration").readwrite().build(),
             ]
         });
 
@@ -101,25 +97,18 @@ impl ObjectImpl for ThemeProvider {
 
     fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
         match pspec.name() {
-            "dark" => self.ctx.borrow().dark.into(),
-            "current-theme" => self.ctx.borrow().current_theme.clone().into(),
-            "pretty" => self.ctx.borrow().pretty.into(),
+            "dark" => self.style_manager.is_dark().into(),
+            "current-theme" => self.current_theme().into(),
+            "theme-integration" => self.ctx.borrow().theme_integration.into(),
             _ => unimplemented!(),
         }
     }
 
     fn set_property(&self, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
         match pspec.name() {
-            "pretty" => match value.get::<bool>() {
+            "theme-integration" => match value.get::<bool>() {
                 Ok(val) => {
-                    self.ctx.borrow_mut().pretty = val;
-                    self.apply_theming();
-                },
-                Err(err) => eprintln!("Could not set property {}: {}", pspec.name(), err),
-            },
-            "current-theme" => match value.get::<String>() {
-                Ok(val) => {
-                    self.ctx.borrow_mut().current_theme = val;
+                    self.ctx.borrow_mut().theme_integration = val;
                     self.apply_theming();
                 },
                 Err(err) => eprintln!("Could not set property {}: {}", pspec.name(), err),
@@ -130,15 +119,15 @@ impl ObjectImpl for ThemeProvider {
 }
 
 impl ThemeProvider {
-    pub fn user_color_themes_dir() -> Option<PathBuf> {
+    pub fn user_themes_dir() -> Option<PathBuf> {
         dirs::data_local_dir().map(|d| d.join("terms").join("schemes"))
     }
-    pub fn app_color_themes_dir() -> PathBuf {
+    pub fn app_themes_dir() -> PathBuf {
         PathBuf::from(PKGDATADIR).join("schemes")
     }
 
     fn ensure_user_themes_dir_exists() {
-        if let Some(themes_dir) = Self::user_color_themes_dir() {
+        if let Some(themes_dir) = Self::user_themes_dir() {
             if let Err(err) = fs::create_dir_all(&themes_dir) {
                 eprintln!("Error creating directory: {}", err);
             }
@@ -186,10 +175,10 @@ impl ThemeProvider {
     fn load_all_color_themes() -> HashMap<String, Theme> {
         let mut themes = vec![];
 
-        if let Some(themes_dir) = Self::user_color_themes_dir() {
+        if let Some(themes_dir) = Self::user_themes_dir() {
             themes.append(&mut Self::load_color_themes(&themes_dir));
         }
-        themes.append(&mut Self::load_color_themes(&Self::app_color_themes_dir()));
+        themes.append(&mut Self::load_color_themes(&Self::app_themes_dir()));
 
         themes.into_iter().fold(HashMap::new(), |mut acc, theme| {
             acc.insert(theme.name.clone(), theme);
@@ -202,35 +191,30 @@ impl ThemeProvider {
         self.ctx.borrow_mut().themes = Self::load_all_color_themes();
 
         self.settings.connect_theme_light_changed(clone!(@weak self as this => move |_| {
-            if !this.ctx.borrow().dark {
+            if !this.style_manager.is_dark() {
                 this.obj().notify("current-theme");
             }
         }));
 
         self.settings.connect_theme_dark_changed(clone!(@weak self as this => move |_| {
-            if this.ctx.borrow().dark {
+            if this.style_manager.is_dark() {
                 this.obj().notify("current-theme");
             }
         }));
 
         // React to style-preference changes
         self.settings
-            .bind_style_preference(&self.style_manager.clone(), "color-scheme")
-            .get_only()
-            .mapping(|variant, ty| {
-                variant.get::<StylePreference>().map(|pref| {
-                    match pref {
-                        StylePreference::System => adw::ColorScheme::Default,
-                        StylePreference::Light => adw::ColorScheme::ForceLight,
-                        StylePreference::Dark => adw::ColorScheme::ForceDark,
-                    }
-                    .to_value()
+            .bind_style_preference(&self.style_manager, "color-scheme")
+            .mapping(|variant, _ty| variant.get::<StylePreference>().map(|pref| Into::<adw::ColorScheme>::into(pref).to_value()))
+            .set_mapping(|value, _ty| {
+                value.get::<adw::ColorScheme>().ok().map(|scheme| {
+                    println!("style scheme {:?}", scheme);
+                    Into::<StylePreference>::into(scheme).into()
                 })
             })
             .build();
 
-        self.style_manager.connect_dark_notify(clone!(@weak self as this  => move |sm| {
-            this.ctx.borrow_mut().dark = sm.is_dark();
+        self.style_manager.connect_dark_notify(clone!(@weak self as this  => move |_sm| {
             this.obj().notify("dark");
             this.obj().notify("current-theme");
         }));
@@ -239,7 +223,7 @@ impl ThemeProvider {
     }
 
     pub fn current_theme(&self) -> String {
-        if self.ctx.borrow().dark {
+        if self.style_manager.is_dark() {
             self.settings.theme_dark()
         } else {
             self.settings.theme_light()
@@ -249,15 +233,15 @@ impl ThemeProvider {
     // If the current style is dark and a light theme is loaded, all window text
     // and icons will be illegible. Same goes for light style with dark theme
     // selected. In those cases, we need to disable theme integration.
-    fn is_safe_to_be_pretty(&self, theme: &Theme) -> bool {
-        self.ctx.borrow().dark == theme.is_dark()
+    fn is_safe_to_enable_theme_integration(&self, theme: &Theme) -> bool {
+        self.style_manager.is_dark() == theme.is_dark()
     }
 
     fn apply_theming(&self) {
         let themes = self.ctx.borrow().themes.clone();
         let theme = themes.get(&self.current_theme());
 
-        if theme.is_none() || !self.settings.pretty() || !self.is_safe_to_be_pretty(theme.unwrap()) {
+        if theme.is_none() || !self.settings.theme_integration() || !self.is_safe_to_enable_theme_integration(theme.unwrap()) {
             return;
         }
 
@@ -269,13 +253,14 @@ impl ThemeProvider {
             // higher priority
             gtk::style_context_add_provider_for_display(&display, &self.ctx.borrow().css_provider, gtk::STYLE_PROVIDER_PRIORITY_USER + 200);
         }
+
+        self.style_manager.set_color_scheme(self.settings.style_preference().into());
     }
 
     pub fn themes(&self) -> HashMap<String, Theme> {
         self.ctx.borrow().themes.clone()
     }
 
-    ///
     /// generate_gtk_theme
     ///
     /// Copyright 2021 Christian Hergert <chergert@redhat.com>
@@ -314,7 +299,7 @@ impl ThemeProvider {
         // draw
 
         if let Some(palette) = theme.palette {
-            if self.ctx.borrow().dark {
+            if self.style_manager.is_dark() {
                 gtk_theme.push_str(&format!(
                     r#"
                         @define-color headerbar_bg_color    darker(@window_bg_color);

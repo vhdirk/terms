@@ -1,17 +1,12 @@
-use adw::ffi::AdwPreferencesWindow;
 use adw::subclass::prelude::*;
 use gettextrs::gettext;
-use glib::{clone, closure_local, RustClosure};
+use glib::{self, clone};
 use gtk::prelude::*;
-use gtk::{gio, glib};
-use panel::subclass::prelude::*;
-use std::cell::RefCell;
+use once_cell::sync::Lazy;
 
 use crate::components::ThemeThumbnail;
 use crate::services::settings::Settings;
 use crate::services::theme_provider::ThemeProvider;
-
-use super::*;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/preferences_window.ui")]
@@ -23,7 +18,7 @@ pub struct PreferencesWindow {
     #[template_child]
     pub remember_window_size_switch: TemplateChild<gtk::Switch>,
 
-    // Terminal
+    // Terminal - Text
     #[template_child]
     pub font_label: TemplateChild<gtk::Label>,
     #[template_child]
@@ -32,7 +27,10 @@ pub struct PreferencesWindow {
     pub cell_height_spacing_adjustment: TemplateChild<gtk::Adjustment>,
     #[template_child]
     pub bold_is_bright_switch: TemplateChild<gtk::Switch>,
+    #[template_child]
+    pub easy_copy_paste_switch: TemplateChild<gtk::Switch>,
 
+    // Terminal - Terminal
     #[template_child]
     pub terminal_bell_switch: TemplateChild<gtk::Switch>,
     #[template_child]
@@ -44,11 +42,13 @@ pub struct PreferencesWindow {
     #[template_child]
     pub opacity_spin_button_adjustment: TemplateChild<gtk::Adjustment>,
 
-    // Appearance
+    // Terminal - Appearance
     #[template_child]
     pub style_preference_combo_row: TemplateChild<adw::ComboRow>,
     #[template_child]
-    pub pretty_switch: TemplateChild<gtk::Switch>,
+    pub theme_integration_switch: TemplateChild<gtk::Switch>,
+
+    // Terminal - Appearance
     #[template_child]
     pub filter_themes_check_button: TemplateChild<gtk::CheckButton>,
 
@@ -83,6 +83,39 @@ impl ObjectImpl for PreferencesWindow {
 
         self.setup_widgets();
     }
+
+    fn properties() -> &'static [glib::ParamSpec] {
+        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| vec![glib::ParamSpecString::builder("selected-theme").readwrite().build()]);
+
+        PROPERTIES.as_ref()
+    }
+
+    fn set_property(&self, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
+        match pspec.name() {
+            "selected-theme" => {
+                if let Ok(theme) = value.get::<String>() {
+                    if self.light_theme_toggle.is_active() {
+                        self.settings.set_theme_light(&theme);
+                    } else {
+                        self.settings.set_theme_dark(&theme);
+                    }
+                }
+            },
+            _ => unimplemented!(),
+        }
+    }
+
+    fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
+        match pspec.name() {
+            "selected-theme" => if self.light_theme_toggle.is_active() {
+                self.settings.theme_light()
+            } else {
+                self.settings.theme_dark()
+            }
+            .to_value(),
+            _ => unimplemented!(),
+        }
+    }
 }
 
 impl WidgetImpl for PreferencesWindow {}
@@ -98,29 +131,19 @@ impl PreferencesWindow {
         for (name, theme) in self.theme_provider.themes().iter() {
             let thumb = ThemeThumbnail::new(theme);
 
+            let theme_name_to = name.clone();
+            let theme_name_from = name.clone();
+
+            self.obj()
+                .bind_property("selected-theme", &thumb, "selected")
+                .sync_create()
+                .bidirectional()
+                .transform_to(move |_, from: String| Some(from == theme_name_to))
+                .transform_from(move |_, to: bool| if to { Some(theme_name_from.clone()) } else { None })
+                .build();
+
             self.preview_flow_box.append(&thumb);
         }
-
-        // this.window.theme_provider.themes.for_each ((name, scheme) => {
-        //   if (scheme != null) {
-        //     var t = new ColorSchemeThumbnail (scheme);
-
-        //     this.bind_property (
-        //       "selected-theme",
-        //       t,
-        //       "selected",
-        //       BindingFlags.SYNC_CREATE,
-        //       (_, from, ref to) => {
-        //         to = from.get_string () == t.scheme.name;
-        //         return true;
-        //       },
-        //       null
-        //     );
-
-        //     //  model.append (t);
-        //     this.preview_flow_box.append (t);
-        //   }
-        // });
 
         self.bind_data();
     }
@@ -128,9 +151,12 @@ impl PreferencesWindow {
     fn connect_signals(&self) {}
 
     fn bind_data(&self) {
+        // Behavior
         self.settings
             .bind_remember_window_size(&self.remember_window_size_switch.clone(), "active")
             .build();
+
+        // Terminal - Text
         self.settings.bind_font(&self.font_label.clone(), "label").build();
 
         self.settings
@@ -140,7 +166,9 @@ impl PreferencesWindow {
             .bind_terminal_cell_height(&self.cell_height_spacing_adjustment.clone(), "value")
             .build();
         self.settings.bind_theme_bold_is_bright(&self.bold_is_bright_switch.clone(), "active").build();
+        self.settings.bind_easy_copy_paste(&self.easy_copy_paste_switch.clone(), "active").build();
 
+        // Terminal - Terminal
         self.settings.bind_terminal_bell(&self.terminal_bell_switch.clone(), "active").build();
         self.settings.bind_cursor_shape(&self.cursor_shape_combo_row.clone(), "selected").build();
         self.settings
@@ -168,37 +196,122 @@ impl PreferencesWindow {
             .mapping(|variant, _ty| variant.get::<u32>().map(|value| (value as f64).to_value()))
             .set_mapping(|value, _ty| value.get::<f64>().ok().map(|value| (value as u32).to_variant()))
             .build();
+
+        // settings.notify ["custom-working-directory"].connect (() => {
+        //   if (this.is_custom_working_directory_valid ()) {
+        //     this.custom_working_directory_entry_row.remove_css_class ("error");
+        //   }
+        //   else {
+        //     this.custom_working_directory_entry_row.add_css_class ("error");
+        //   }
+        // });
+        // settings.notify_property ("custom-working-directory");
+
+        // Terminal - Appearance
+        self.settings.bind_theme_integration(&self.theme_integration_switch.clone(), "active").build();
+
+        self.light_theme_toggle.connect_active_notify(clone!(@weak self as this => move|_| {
+            this.obj().notify("selected-theme");
+            this.set_themes_filter_func();
+        }));
+
+        self.settings.connect_theme_light_changed(clone!(@weak self as this => move|_| {
+            if this.light_theme_toggle.is_active() {
+                this.obj().notify("selected-theme");
+            }
+        }));
+
+        self.settings.connect_theme_dark_changed(clone!(@weak self as this => move|_| {
+            if this.dark_theme_toggle.is_active() {
+                this.obj().notify("selected-theme");
+            }
+        }));
+
+        self.theme_provider.connect_notify_local(
+            Some("dark"),
+            clone!(@weak self as this => move |_, _| {
+                if this.theme_provider.property::<bool>("dark") {
+                 this.dark_theme_toggle.set_active(true);
+              }
+              else {
+                this.light_theme_toggle.set_active(true);
+              }
+            }),
+        );
+
+        self.filter_themes_check_button.connect_active_notify(clone!(@weak self as this => move|_| {
+            this.set_themes_filter_func();
+        }));
+
+        self.set_themes_filter_func();
     }
 
     #[template_callback]
     fn on_font_row_activated(&self, _row: &adw::ActionRow) {
-        let chooser = gtk::FontChooserDialog::builder()
-            .title(gettext("Terminal Font"))
-            .transient_for(&self.obj().clone())
-            .level(gtk::FontChooserLevel::FAMILY | gtk::FontChooserLevel::SIZE | gtk::FontChooserLevel::STYLE)
-            .font(self.settings.font())
+        let dialog = gtk::FontDialog::builder().title(gettext("Terminal Font")).build();
+
+        let filter = gtk::BoolFilter::builder()
+            .expression(gtk::ClosureExpression::new::<bool>(
+                &[] as &[gtk::Expression],
+                glib::closure!(|arg: Option<glib::Object>| {
+                    arg.and_then(|a| {
+                        a.downcast_ref::<pango::FontFace>()
+                            .map(|face| face.family())
+                            .or(a.downcast_ref::<pango::FontFamily>().cloned())
+                            .map(|f| f.is_monospace())
+                    })
+                    .unwrap_or(false)
+                }),
+            ))
             .build();
-        chooser.set_filter_func(|family, _| family.is_monospace());
+        dialog.set_filter(Some(&filter));
 
-        chooser.connect_response(clone!(@weak self as this => move |chooser, response: gtk::ResponseType| {
-            if response == gtk::ResponseType::Ok && chooser.font().is_some() {
-                this.settings.set_font(&chooser.font().unwrap())
-            }
-            chooser.destroy();
-        }));
-
-        chooser.show();
+        let font = pango::FontDescription::from_string(&self.settings.font());
+        // TODO: for some reason, initial font doesn't do anything
+        dialog.choose_font(
+            Some(&self.obj().clone()),
+            Some(&font),
+            None::<&gio::Cancellable>,
+            clone!(@weak self as this => move |result| {
+                match result {
+                    Ok(font) => {
+                        this.settings.set_font(&font.to_str());
+                    },
+                    _ => ()
+                }
+            }),
+        );
     }
 
     fn set_themes_filter_func(&self) {
-        // if !self.filter_themes_check_button.is_active() {
-        //     self.preview_flow_box.set_filter_func(None);
-        // } else {
-        //     if (self.light_theme_toggle.is_active()) {
-        //         self.preview_flow_box.set_filter_func(light_themes_filter_func);
-        //     } else {
-        //         self.preview_flow_box.set_filter_func(dark_themes_filter_func);
-        //     }
-        // }
+        self.preview_flow_box.set_filter_func(if !self.filter_themes_check_button.is_active() {
+            |_: &gtk::FlowBoxChild| true
+        } else if self.light_theme_toggle.is_active() {
+            |child: &gtk::FlowBoxChild| {
+                child
+                    .downcast_ref::<ThemeThumbnail>()
+                    .and_then(|thumb| thumb.theme())
+                    .map_or(false, |theme| !theme.is_dark())
+            }
+        } else {
+            |child: &gtk::FlowBoxChild| {
+                child
+                    .downcast_ref::<ThemeThumbnail>()
+                    .and_then(|thumb| thumb.theme())
+                    .map_or(false, |theme| theme.is_dark())
+            }
+        });
+    }
+
+    #[template_callback]
+    fn on_open_themes_folder(&self) {
+        glib::spawn_future_local(
+            gtk::FileLauncher::new(ThemeProvider::user_themes_dir().as_ref().map(gio::File::for_path).as_ref()).launch_future(Some(&self.obj().clone())),
+        );
+    }
+
+    #[template_callback]
+    fn on_get_more_themes_online(&self) {
+        glib::spawn_future_local(gtk::UriLauncher::new("https://github.com/storm119/Tilix-Themes").launch_future(Some(&self.obj().clone())));
     }
 }

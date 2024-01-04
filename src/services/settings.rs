@@ -15,18 +15,22 @@ impl Default for Settings {
 
 impl Settings {}
 
-// #[gen_settings(
-//     file = "data/io.github.vhdirk.Terms.gschema.xml.in",
+impl Into<adw::ColorScheme> for StylePreference {
+    fn into(self) -> adw::ColorScheme {
+        match self {
+            StylePreference::System => adw::ColorScheme::Default,
+            StylePreference::Light => adw::ColorScheme::ForceLight,
+            StylePreference::Dark => adw::ColorScheme::ForceDark,
+        }
+    }
+}
 
-// )]
-// pub struct SearchSettings;
-
-// impl Default for SearchSettings {
-//     fn default() -> Self {
-//         Self::new(concat!(APP_ID, ".search"));
-//     }
-// }
-
-// impl SearchSettings {
-
-// }
+impl From<adw::ColorScheme> for StylePreference {
+    fn from(value: adw::ColorScheme) -> Self {
+        match value {
+            adw::ColorScheme::ForceLight | adw::ColorScheme::PreferLight => StylePreference::Light,
+            adw::ColorScheme::ForceDark | adw::ColorScheme::PreferDark => StylePreference::Dark,
+            _ => StylePreference::System,
+        }
+    }
+}

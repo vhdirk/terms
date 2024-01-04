@@ -209,7 +209,7 @@
                 </child>
               </object>
             </child>
-            <!-- <child>
+            <child>
               <object class="AdwActionRow" id="easy_copy_paste_action_row">
                 <property name="activatable-widget">easy_copy_paste_switch</property>
                 <property name="title" translatable="yes">Easy Copy &amp;amp; Paste</property>
@@ -220,7 +220,7 @@
                   </object>
                 </child>
               </object>
-            </child> -->
+            </child>
           </object>
         </child>
         <child>
@@ -506,11 +506,11 @@
             </child>
             <child>
               <object class="AdwActionRow">
-                <property name="activatable-widget">pretty_switch</property>
+                <property name="activatable-widget">theme_integration_switch</property>
                 <property name="title" translatable="yes">Theme Integration</property>
                 <property name="subtitle" translatable="yes">Paint the whole app with colors from your colorscheme.</property>
                 <child>
-                  <object class="GtkSwitch" id="pretty_switch">
+                  <object class="GtkSwitch" id="theme_integration_switch">
                     <property name="valign">center</property>
                   </object>
                 </child>
@@ -536,7 +536,7 @@
                   <object class="GtkButton">
                     <property name="icon-name">folder-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Open themes folder</property>
-                    <!-- <signal name="clicked" handler="on_open_themes_folder" swapped="no" /> -->
+                    <signal name="clicked" handler="on_open_themes_folder" swapped="true" />
                     <style />
                   </object>
                 </child>
@@ -544,7 +544,7 @@
                   <object class="GtkButton">
                     <property name="icon-name">web-browser-symbolic</property>
                     <property name="tooltip-text" translatable="yes">Get more themes online</property>
-                    <!-- <signal name="clicked" handler="on_get_more_themes_online" swapped="no" /> -->
+                    <signal name="clicked" handler="on_get_more_themes_online" swapped="true" />
                     <style />
                   </object>
                 </child>
@@ -588,8 +588,8 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">To ensure readability, "Theme Integration" will be disabled if you select a light color scheme while using the dark app style or a dark color scheme while using the light app style.</property>
                     <property name="wrap">True</property>
-                    <!-- <property name="visible" bind-source="filter_themes_check_button"
-                      bind-property="active" bind-flags="sync-create|invert-boolean" /> -->
+                    <property name="visible" bind-source="filter_themes_check_button"
+                      bind-property="active" bind-flags="sync-create|invert-boolean" />
                     <style>
                       <class name="warning" />
                     </style>

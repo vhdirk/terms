@@ -14,16 +14,6 @@ use super::*;
 // var builder = new Gtk.Builder.from_resource ("/com/raggesilver/BlackBox/gtk/tab-menu.ui");
 // this.tab_view.menu_model = builder.get_object ("tab-menu") as GLib.Menu;
 
-// this.layout_box.append (this.header_bar_revealer);
-// this.layout_box.append (this.tab_view);
-
-// this.overlay = new Gtk.Overlay ();
-// this.overlay.child = this.layout_box;
-
-// this.content = this.overlay;
-
-// this.set_name ("blackbox-main-window");
-
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/window.ui")]
 pub struct Window {
@@ -116,7 +106,6 @@ impl Window {
     fn setup_gactions(&self) {
         let preferences_action = gio::ActionEntry::builder("edit-preferences")
             .activate(clone!(@weak self as this => move |_win: &super::Window, _, _| {
-                println!("open preferences");
                 this.open_preferences();
             }))
             .build();
@@ -126,8 +115,7 @@ impl Window {
 
     pub fn open_preferences(&self) {
         let prefs_window = PreferencesWindow::new(Some(self.obj().as_ref()));
-
-        prefs_window.show();
+        prefs_window.set_visible(true);
     }
 
     pub fn set_init_args(&self, init_args: TerminalInitArgs) {

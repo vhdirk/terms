@@ -11,6 +11,7 @@ use gtk::CompositeTemplate;
 use tracing::*;
 use vte::CursorBlinkMode;
 use vte::CursorShape;
+use vte::EventControllerExt;
 use vte::StyleContextExt;
 
 use std::{cell::RefCell, collections::HashMap, env};
@@ -107,7 +108,7 @@ impl ObjectImpl for Terminal {
         PROPERTIES.as_ref()
     }
 
-    fn set_property(&self, id: usize, value: &Value, pspec: &glib::ParamSpec) {
+    fn set_property(&self, _id: usize, value: &Value, pspec: &glib::ParamSpec) {
         match pspec.name() {
             "user-scrollback-lines" => {
                 if let Ok(lines) = value.get::<i64>() {
@@ -187,7 +188,7 @@ impl Terminal {
         drop_target.set_types(&[gio::File::static_type(), String::static_type(), gdk::FileList::static_type()]);
 
         let drop_handler_id = drop_target.connect_drop(clone!(@weak self as this => @default-return true, move |_, value, _, _| {
-                                this.on_drop(value)
+            this.on_drop(value).into()
         }));
 
         self.ctx.borrow_mut().drop_handler_id = Some(drop_handler_id);
@@ -227,12 +228,70 @@ impl Terminal {
         }));
         self.ctx.borrow_mut().exit_handler = Some(handler);
 
-        let click = gtk::GestureClick::builder().button(gdk::BUTTON_SECONDARY).build();
-        click.connect_pressed(clone!(@weak self as this => move |_: &gtk::GestureClick, _: i32, x: f64, y: f64| {
+        let secondary_click = gtk::GestureClick::builder().button(gdk::BUTTON_SECONDARY).build();
+        secondary_click.connect_pressed(clone!(@weak self as this => move |_: &gtk::GestureClick, _: i32, x: f64, y: f64| {
                                 this.show_menu(x, y);
         }));
 
-        self.term.add_controller(click);
+        self.term.add_controller(secondary_click);
+
+        let keypress_controller = gtk::EventControllerKey::builder().build();
+        keypress_controller.connect_key_pressed(
+            clone!(@weak self as this =>  @default-return glib::Propagation::Stop, move |_, key, keycode, modifier| {
+                this.on_key_pressed(key, keycode, modifier)
+            }),
+        );
+
+        self.term.add_controller(keypress_controller);
+
+        let primary_click = gtk::GestureClick::builder().button(gdk::BUTTON_PRIMARY).build();
+        primary_click.connect_pressed(clone!(@weak self as this => move |gesture: &gtk::GestureClick, _: i32, x: f64, y: f64| {
+            if let Some(event) = gesture.current_event() {
+                if let (Some(match_str), tag) = this.term.check_match_at(x, y) {
+                    if event.modifier_state().contains(gdk::ModifierType::CONTROL_MASK) {
+
+                        glib::spawn_future_local(gtk::UriLauncher::new(&match_str).launch_future(None::<&gtk::Window>));
+
+                                //   new Gtk.UriLauncher (pattern).launch.begin (this.window, null);
+
+                    }
+                }
+            }
+
+
+        }));
+
+        self.term.add_controller(primary_click);
+
+        // var left_click_controller = new Gtk.GestureClick () {
+        //   button = Gdk.BUTTON_PRIMARY,
+        // };
+        // left_click_controller.pressed.connect ((gesture, n_clicked, x, y) => {
+        //   var event = gesture.get_current_event ();
+        //   var pattern = this.check_match_at (x, y, null);
+
+        //   if (
+        //     (event.get_modifier_state () & Gdk.ModifierType.CONTROL_MASK) == 0 ||
+        //     pattern == null
+        //   ) {
+        //     return;
+        //   }
+
+        //   new Gtk.UriLauncher (pattern).launch.begin (this.window, null);
+        // });
+        // this.add_controller (left_click_controller);
+
+        //     self.settings.
+
+        // this.settings.notify ["scrollback-lines"]
+        //   .connect (() => {
+        //     this.notify_property ("user-scrollback-lines");
+        //   });
+
+        // this.settings.notify ["scrollback-mode"]
+        //   .connect (() => {
+        //     this.notify_property ("user-scrollback-lines");
+        //   });
     }
 
     fn setup_regexes(&self) {
@@ -281,29 +340,58 @@ impl Terminal {
             .build();
     }
 
-    fn on_drop(&self, value: &Value) -> bool {
+    fn on_drop(&self, value: &Value) -> glib::Propagation {
         dbg!("Dropped value {:?}", value);
 
         if let Ok(file_list) = value.get::<gdk::FileList>() {
             for file in file_list.files() {
                 self.feed_child_file(&file);
             }
-            return true;
+            return glib::Propagation::Proceed;
         }
 
         if let Ok(file) = value.get::<gio::File>() {
             self.feed_child_file(&file);
-            return true;
+            return glib::Propagation::Proceed;
         }
 
         if let Ok(text) = value.get::<String>() {
             self.term.feed_child(&Sh::quote(&text));
             self.term.feed_child(" ".as_bytes());
-            return true;
+            return glib::Propagation::Proceed;
         }
 
         warn!("You dropped something Terms can't handle yet :(");
-        false
+        glib::Propagation::Stop
+    }
+
+    fn on_key_pressed(&self, key: gdk::Key, _keycode: u32, modifier: gdk::ModifierType) -> glib::Propagation {
+        if !modifier.contains(gdk::ModifierType::CONTROL_MASK) {
+            return glib::Propagation::Proceed;
+        }
+
+        // TODO: get shortcuts from system settings?
+        match key.name().as_ref().map(glib::GString::as_str) {
+            Some("c") => {
+                if self.term.has_selection() && self.settings.easy_copy_paste() {
+                    // TODO: allow html?
+                    self.term.copy_clipboard_format(vte::Format::Text);
+                    self.term.unselect_all();
+                    glib::Propagation::Stop
+                } else {
+                    glib::Propagation::Proceed
+                }
+            },
+            Some("v") => {
+                if self.settings.easy_copy_paste() {
+                    self.term.paste_clipboard();
+                    glib::Propagation::Stop
+                } else {
+                    glib::Propagation::Proceed
+                }
+            },
+            _ => glib::Propagation::Proceed,
+        }
     }
 
     fn on_font_changed(&self) {
@@ -350,6 +438,7 @@ impl Terminal {
                     self.term.set_color_foreground(color)
                 }
             }
+            self.term.activate();
         } else {
             warn!("No theme set")
         }

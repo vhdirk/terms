@@ -47,7 +47,7 @@
       <default>'Monospace 12'</default>
       <summary>Font family and size</summary>
     </key>
-    <key name="pretty" type="b">
+    <key name="theme-integration" type="b">
       <default>true</default>
       <summary>Whether the window should inherit terminal theme's colors</summary>
     </key>
@@ -89,7 +89,18 @@
       <default>1000</default>
       <summary>Number of lines stored in scrollback</summary>
     </key>
-
+    <key name="floating-controls" type="b">
+      <default>false</default>
+      <summary>If enabled, floating controls will be shown in headerless mode</summary>
+    </key>
+    <key name="floating-controls-hover-area" type="u">
+      <default>10</default>
+      <summary>Hoverable area (in pixels) at the top of the window to trigger floating controls</summary>
+    </key>
+    <key name="delay-before-showing-floating-controls" type="u">
+      <default>400</default>
+      <summary>Delay time before showing floating controls</summary>
+    </key>
     <key name="theme-light" type="s">
       <default>'Adwaita'</default>
       <summary>The light color scheme for the terminal</summary>
@@ -138,7 +149,10 @@
       <default>0</default>
       <summary>Whether or not the cursor should blink</summary>
     </key>
-
+    <key name="easy-copy-paste" type="b">
+      <default>false</default>
+      <summary>If enabled, ctrl+c and ctrl+v will work for copy/paste</summary>
+    </key>
     <key name="command-as-login-shell" type="b">
       <default>true</default>
       <summary>Whether to spawn shell in login mode</summary>
@@ -154,6 +168,11 @@
       <summary>Custom command to use instead of the user's shell</summary>
     </key>
 
+    <key name="notify-process-completion" type="b">
+      <default>true</default>
+      <summary>Send a desktop notification when a process is completed on an unfocussed tab</summary>
+    </key>
+
     <key name="working-directory-mode" enum="@app-id@.WorkingDirectoryMode">
       <default>'previous-terminal'</default>
       <summary>Working directory mode</summary>
@@ -163,13 +182,24 @@
       <default>b"~"</default>
       <summary>Custom working directory for new terminals</summary>
     </key>
-
-
-
-
   </schema>
 
   <!-- <schema id="@app-id@.search" path="/io/github/vhdirk/Terms/search" >
-
+    <key name="wrap-around" type="b">
+      <default>true</default>
+      <summary>Whether clicking next on the last search result should return to the first</summary>
+    </key>
+    <key name="match-case-sensitive" type="b">
+      <default>false</default>
+      <summary>Whether search should be case sensitive</summary>
+    </key>
+    <key name="match-whole-words" type="b">
+      <default>false</default>
+      <summary>Whether search should only match entire words</summary>
+    </key>
+    <key name="match-regex" type="b">
+      <default>false</default>
+      <summary>Whether search should be performed using regular expressions</summary>
+    </key>
   </schema> -->
 </schemalist>

@@ -89,7 +89,6 @@ impl ThemeThumbnailProvider {
     }
 
     pub fn apply_theme(&self, theme: &Theme) -> Option<String> {
-        println!("apply_theme {:?}", theme.name);
         if self.element.is_none() {
             return None;
         }
@@ -148,8 +147,6 @@ mod imp {
 
     impl ThemePreviewPaintable {
         pub fn set_theme(&self, theme: &Theme) {
-            println!("ThemePreviewPaintable::set_theme {:?}", theme.name);
-
             if let Some(themed) = ThemeThumbnailProvider::default().apply_theme(theme) {
                 let stream = gio::MemoryInputStream::from_bytes(&glib::Bytes::from_owned(themed));
                 match rsvg::Loader::new().read_stream(&stream, None::<&gio::File>, None::<&gio::Cancellable>) {
