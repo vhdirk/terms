@@ -20,8 +20,8 @@ Terms is an experiment. I like [Tilix][Tilix] and I like [BlackBox]. Why can't I
 - [ ] Tabs
 - [ ] Tiling
 - [ ] Flatpak support
-- [ ] Settings
-- [ ] Theming (should be compatible with Black Box)
+- [x] Settings
+- [x] Theming (should be compatible with Black Box)
 - [ ] Store and load sessions like Tilix does
 - [ ] iTerm2-like support for tmux
 

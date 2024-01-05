@@ -7,6 +7,7 @@ use glib::translate::FromGlib;
 use glib::translate::IntoGlib;
 use glib::ObjectExt;
 use gtk::glib;
+use gtk::graphene;
 use gtk::CompositeTemplate;
 use tracing::*;
 use vte::CursorBlinkMode;
@@ -133,9 +134,10 @@ impl ObjectImpl for Terminal {
             }
         }
 
-        if let Some(drop_handler_id) = self.ctx.borrow_mut().drop_handler_id.take() {
-            // if drop_handler_id.
-        }
+        // if let Some(drop_handler_id) = self.ctx.borrow_mut().drop_handler_id.take() {
+        //     drop_handler_id.
+        //     // if drop_handler_id.
+        // }
     }
 }
 
@@ -400,6 +402,7 @@ impl Terminal {
     }
 
     fn on_padding_changed(&self) {
+        // TODO: move to themeprovider
         if let Some(padding_provider) = self.ctx.borrow_mut().padding_provider.take() {
             self.term.style_context().remove_provider(&padding_provider);
         }
@@ -450,14 +453,14 @@ impl Terminal {
         // TODO: customize menu based on match_str
         dbg!("match {:?}, {:?}", match_str, tag);
 
-        let coords = self.term.translate_coordinates(self.obj().as_ref(), x, y).unwrap();
+        if let Some(point) = self.term.compute_point(self.obj().as_ref(), &graphene::Point::new(x as f32, y as f32)) {
+            let r = gdk::Rectangle::new(point.x() as i32, point.y() as i32, 0, 0);
 
-        let r = gdk::Rectangle::new(coords.0 as i32, coords.1 as i32, 0, 0);
-
-        self.popover_menu.set_has_arrow(true);
-        self.popover_menu.set_halign(gtk::Align::Center);
-        self.popover_menu.set_pointing_to(Some(&r));
-        self.popover_menu.show();
+            self.popover_menu.set_has_arrow(true);
+            self.popover_menu.set_halign(gtk::Align::Center);
+            self.popover_menu.set_pointing_to(Some(&r));
+            self.popover_menu.set_visible(true);
+        }
     }
 
     fn feed_child_file(&self, file: &gio::File) {
