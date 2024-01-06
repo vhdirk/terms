@@ -1,6 +1,5 @@
-use config::{APP_ID, GETTEXT_PACKAGE, LOCALEDIR, PKGDATADIR};
+use config::{APP_ID, GETTEXT_PACKAGE, LOCALEDIR};
 use gettextrs::{gettext, LocaleCategory};
-use serde::{Deserialize, Serialize};
 
 mod application;
 mod components;
@@ -9,6 +8,7 @@ mod services;
 mod utils;
 
 use application::Application;
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 // #[doc(hidden)]
 // pub fn resources_register_include_impl(bytes: &'static [u8]) -> Result<(), glib::Error> {
@@ -36,19 +36,6 @@ use application::Application;
 //     };
 // }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub enum ColorScheme {
-    Dark,
-    Light,
-    Default,
-}
-
-impl Default for ColorScheme {
-    fn default() -> Self {
-        Self::Default
-    }
-}
-
 fn init_gettext() {
     gettextrs::setlocale(LocaleCategory::LcAll, "");
     gettextrs::bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR).expect("Unable to bind the text domain");
@@ -56,34 +43,28 @@ fn init_gettext() {
     gettextrs::textdomain(GETTEXT_PACKAGE).expect("Unable to switch to the text domain");
 }
 
-fn init_resource() -> Result<(), glib::Error> {
-    glib::set_application_name(&gettext("Terms"));
-    gio::resources_register_include!("resources.gresource")?;
-    let provider = gtk::CssProvider::new();
-    provider.load_from_resource("/io/github/vhdirk/Terms/gtk/style.css");
-    if let Some(display) = gdk::Display::default() {
-        gtk::style_context_add_provider_for_display(&display, &provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
-    }
+fn init_resource() {
     gtk::Window::set_default_icon_name(APP_ID);
-    Ok(())
+    glib::set_application_name(&gettext("Terms"));
+    gio::resources_register_include!("resources.gresource").expect("Could not initialize resources");
 }
 
-pub fn init() -> Result<(), glib::Error> {
+pub fn init() {
+    tracing_subscriber::registry()
+        .with(fmt::layer().with_filter(EnvFilter::from_default_env()))
+        .init();
+
     gtk::init().expect("Could not initialize gtk");
-    adw::init().expect("Could not initialize libadwaita");
-    panel::init();
+    // adw::init().expect("Could not initialize libadwaita");
+    // panel::init();
 
     init_gettext();
-    tracing_subscriber::fmt()
-        .with_span_events(tracing_subscriber::fmt::format::FmtSpan::FULL)
-        .with_max_level(tracing::Level::INFO)
-        .init();
-    init_resource()?;
-    Ok(())
+    init_resource();
 }
 
 fn main() -> glib::ExitCode {
-    init().expect("Could not initialize");
+    init();
+
     // Create a new application
     let app = Application::new();
 

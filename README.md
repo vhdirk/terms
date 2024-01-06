@@ -1,5 +1,7 @@
 # Terms
 
+![Matrix](https://img.shields.io/matrix/terms)
+
 A tiling terminal emulator for GNOME on Linux using GTK4, written in Rust.
 
 <!-- <div align="center">

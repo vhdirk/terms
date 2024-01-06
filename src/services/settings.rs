@@ -1,4 +1,5 @@
 use crate::config::APP_ID;
+use glib::value::FromValue;
 use gsettings_macro::gen_settings;
 use std::path::{Path, PathBuf};
 
@@ -30,6 +31,16 @@ impl From<adw::ColorScheme> for StylePreference {
         match value {
             adw::ColorScheme::ForceLight | adw::ColorScheme::PreferLight => StylePreference::Light,
             adw::ColorScheme::ForceDark | adw::ColorScheme::PreferDark => StylePreference::Dark,
+            _ => StylePreference::System,
+        }
+    }
+}
+
+impl From<u32> for StylePreference {
+    fn from(value: u32) -> Self {
+        match value {
+            1 => StylePreference::Light,
+            2 => StylePreference::Dark,
             _ => StylePreference::System,
         }
     }

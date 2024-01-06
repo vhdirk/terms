@@ -80,7 +80,6 @@ impl ObjectImpl for ThemeThumbnail {
             if !this.ctx.borrow().selected {
                 this.set_selected(true);
                 this.obj().notify("selected");
-                this.activate();
             }
         }));
 

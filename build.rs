@@ -5,7 +5,6 @@ fn render_schema(gschema: &str, out_dir: &Path) {
     let app_id = env::var("APP_ID").unwrap();
 
     let contents = fs::read_to_string(gschema).unwrap();
-    eprintln!("{:?}", contents);
     let new = contents.replace("@gettext-package@", &gettext_package).replace("@app-id@", &app_id);
 
     let filename = Path::new(gschema).file_name().unwrap();

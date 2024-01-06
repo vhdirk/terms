@@ -18,11 +18,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-use std::cell::Cell;
-
-use glib::{clone, Properties};
+use glib::clone;
 use gtk::subclass::prelude::*;
 use gtk::{prelude::*, CompositeTemplate};
+use tracing::*;
 
 use crate::services::settings::{Settings, StylePreference};
 
@@ -105,6 +104,7 @@ impl StyleSwitcher {
 
     fn change_style_preference(&self, style_pref: StylePreference) {
         if self.settings.style_preference() != style_pref {
+            info!("Setting style preference {:?}", style_pref);
             self.settings.set_style_preference(style_pref);
         }
     }

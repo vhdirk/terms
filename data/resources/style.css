@@ -25,7 +25,7 @@ window:not(.about) headerbar,
   background-color: @ssh_context_color;
 }
 
-.custom-headerbar windowhandle>box {
+/* .custom-headerbar windowhandle>box {
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -40,7 +40,7 @@ window:not(.about) headerbar,
 
 .custom-headerbar windowcontrols:not(.empty).end {
   margin-left: 6px;
-}
+} */
 
 /**
  * Add space on the left when "Drag Area" is enabled.

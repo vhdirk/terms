@@ -73,7 +73,6 @@ pub struct Terminal {
     popover_menu: TemplateChild<gtk::PopoverMenu>,
 
     pub settings: Settings,
-    theme_provider: ThemeProvider,
 }
 
 #[glib::object_subclass]
@@ -154,7 +153,7 @@ impl Terminal {
     fn setup_widgets(&self) {
         self.ctx.borrow_mut().original_scrollback_lines = Some(self.term.scrollback_lines());
 
-        self.theme_provider.connect_notify_local(
+        ThemeProvider::default().connect_notify_local(
             Some("current-theme"),
             clone!(@weak self as this => move |_, _| {
                this.on_theme_changed();
@@ -177,7 +176,7 @@ impl Terminal {
         self.setup_regexes();
         self.connect_signals();
         self.bind_data();
-        self.on_theme_changed();
+        // self.on_theme_changed();
         self.on_font_changed();
         self.on_padding_changed();
 
@@ -217,7 +216,7 @@ impl Terminal {
 
                                 match spawn_result {
                                         Ok(pid) => this.ctx.borrow_mut().pid = Some(pid),
-                                        Err(err) => eprintln!("Could now spawn vte subprocess {:?}", err)
+                                        Err(err) => error!("Could now spawn vte subprocess {:?}", err)
                                 };
         }));
 
@@ -424,7 +423,7 @@ impl Terminal {
     }
 
     fn on_theme_changed(&self) {
-        if let Some(theme) = self.theme_provider.current_theme() {
+        if let Some(theme) = ThemeProvider::default().current_theme() {
             let bg = self.background_color(&theme);
 
             if let Some(palette) = theme.palette {
@@ -475,7 +474,7 @@ impl Terminal {
         self.ctx.borrow_mut().pid = None;
         let handler = self.ctx.borrow_mut().exit_handler.take();
         match handler {
-            None => eprintln!("missing exit signal handler"),
+            None => error!("missing exit signal handler"),
             Some(handler) => self.term.disconnect(handler),
         };
 
@@ -493,7 +492,7 @@ impl Terminal {
         //         TerminalExitBehavior::ExitTerminal => {
         //             let handler = cxb.exit_handler.take();
         //             match handler {
-        //                 None => eprintln!("missing exit signal handler"),
+        //                 None => error!("missing exit signal handler"),
         //                 Some(handler) => vte.disconnect(handler),
         //             };
         //             remove_page_by_hbox(&cxb.ctx, &cxb.hbox);

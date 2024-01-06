@@ -3,9 +3,10 @@ use gettextrs::gettext;
 use glib::{self, clone};
 use gtk::prelude::*;
 use once_cell::sync::Lazy;
+use tracing::*;
 
 use crate::components::ThemeThumbnail;
-use crate::services::settings::Settings;
+use crate::services::settings::{Settings, StylePreference};
 use crate::services::theme_provider::ThemeProvider;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
@@ -94,6 +95,8 @@ impl ObjectImpl for PreferencesWindow {
         match pspec.name() {
             "selected-theme" => {
                 if let Ok(theme) = value.get::<String>() {
+                    info!("Setting theme (light: {:?}): {:?}", self.light_theme_toggle.is_active(), theme);
+
                     if self.light_theme_toggle.is_active() {
                         self.settings.set_theme_light(&theme);
                     } else {
@@ -152,32 +155,24 @@ impl PreferencesWindow {
 
     fn bind_data(&self) {
         // Behavior
-        self.settings
-            .bind_remember_window_size(&self.remember_window_size_switch.clone(), "active")
-            .build();
+        self.settings.bind_remember_window_size(&*self.remember_window_size_switch, "active").build();
 
         // Terminal - Text
-        self.settings.bind_font(&self.font_label.clone(), "label").build();
+        self.settings.bind_font(&*self.font_label, "label").build();
 
-        self.settings
-            .bind_terminal_cell_width(&self.cell_width_spacing_adjustment.clone(), "value")
-            .build();
-        self.settings
-            .bind_terminal_cell_height(&self.cell_height_spacing_adjustment.clone(), "value")
-            .build();
-        self.settings.bind_theme_bold_is_bright(&self.bold_is_bright_switch.clone(), "active").build();
-        self.settings.bind_easy_copy_paste(&self.easy_copy_paste_switch.clone(), "active").build();
+        self.settings.bind_terminal_cell_width(&*self.cell_width_spacing_adjustment, "value").build();
+        self.settings.bind_terminal_cell_height(&*self.cell_height_spacing_adjustment, "value").build();
+        self.settings.bind_theme_bold_is_bright(&*self.bold_is_bright_switch, "active").build();
+        self.settings.bind_easy_copy_paste(&*self.easy_copy_paste_switch, "active").build();
 
         // Terminal - Terminal
-        self.settings.bind_terminal_bell(&self.terminal_bell_switch.clone(), "active").build();
-        self.settings.bind_cursor_shape(&self.cursor_shape_combo_row.clone(), "selected").build();
-        self.settings
-            .bind_cursor_blink_mode(&self.cursor_blink_mode_combo_row.clone(), "selected")
-            .build();
+        self.settings.bind_terminal_bell(&*self.terminal_bell_switch, "active").build();
+        self.settings.bind_cursor_shape(&*self.cursor_shape_combo_row, "selected").build();
+        self.settings.bind_cursor_blink_mode(&*self.cursor_blink_mode_combo_row, "selected").build();
 
         // TODO: why store each side when we don't have the ability to adjust them individually
         self.settings
-            .bind_terminal_padding(&self.padding_spin_button_adjustment.clone(), "value")
+            .bind_terminal_padding(&*self.padding_spin_button_adjustment, "value")
             .mapping(|variant, _ty| {
                 variant
                     .get::<(u32, u32, u32, u32)>()
@@ -192,7 +187,7 @@ impl PreferencesWindow {
             .build();
 
         self.settings
-            .bind_opacity(&self.opacity_spin_button_adjustment.clone(), "value")
+            .bind_opacity(&*self.opacity_spin_button_adjustment, "value")
             .mapping(|variant, _ty| variant.get::<u32>().map(|value| (value as f64).to_value()))
             .set_mapping(|value, _ty| value.get::<f64>().ok().map(|value| (value as u32).to_variant()))
             .build();
@@ -208,7 +203,13 @@ impl PreferencesWindow {
         // settings.notify_property ("custom-working-directory");
 
         // Terminal - Appearance
-        self.settings.bind_theme_integration(&self.theme_integration_switch.clone(), "active").build();
+        self.settings
+            .bind_style_preference(&*self.style_preference_combo_row, "selected")
+            .mapping(|variant, _ty| variant.get::<StylePreference>().map(|pref| (pref as u32).to_value()))
+            .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| Into::<StylePreference>::into(v).into()))
+            .build();
+
+        self.settings.bind_theme_integration(&*self.theme_integration_switch, "active").build();
 
         self.light_theme_toggle.connect_active_notify(clone!(@weak self as this => move|_| {
             this.obj().notify("selected-theme");
@@ -285,8 +286,10 @@ impl PreferencesWindow {
 
     fn set_themes_filter_func(&self) {
         self.preview_flow_box.set_filter_func(if !self.filter_themes_check_button.is_active() {
+            info!("Showing all themes");
             |_: &gtk::FlowBoxChild| true
         } else if self.light_theme_toggle.is_active() {
+            info!("Showing only light themes");
             |child: &gtk::FlowBoxChild| {
                 child
                     .downcast_ref::<ThemeThumbnail>()
@@ -294,6 +297,7 @@ impl PreferencesWindow {
                     .map_or(false, |theme| !theme.is_dark())
             }
         } else {
+            info!("Showing only dark themes");
             |child: &gtk::FlowBoxChild| {
                 child
                     .downcast_ref::<ThemeThumbnail>()

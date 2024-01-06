@@ -8,7 +8,7 @@ use glib::ExitCode;
 use gtk::{gio, glib, glib::clone, prelude::*, subclass::prelude::*};
 use serde::{Deserialize, Serialize};
 use std::{cell::RefCell, path::PathBuf};
-use tracing::{debug, info};
+use tracing::*;
 
 // use crate::{config, session_list::SessionList, spawn, system_settings::SystemSettings, Window};
 
@@ -51,11 +51,12 @@ mod imp {
     use std::env;
 
     use adw::subclass::prelude::AdwApplicationImpl;
-    use panel::{prelude::WorkbenchExt, subclass::prelude::PanelApplicationImpl};
+    // use panel::{prelude::WorkbenchExt, subclass::prelude::PanelApplicationImpl};
 
     use crate::{
-        components::{TerminalInitArgs, Window, Workspace},
+        components::{TerminalInitArgs, Window},
         config::APP_ID,
+        services::theme_provider::ThemeProvider,
     };
 
     use super::*;
@@ -86,7 +87,7 @@ mod imp {
     impl ObjectSubclass for Application {
         const NAME: &'static str = "TermsApplication";
         type Type = super::Application;
-        type ParentType = panel::Application;
+        type ParentType = adw::Application;
     }
 
     impl ObjectImpl for Application {
@@ -111,9 +112,12 @@ mod imp {
             // Get the current window or create one if necessary
 
             // TODO: keep track of windows
-            let window = Window::new(&*app, self.init_args.borrow().clone());
+
+            let window = Window::new(app.as_ref(), self.init_args.borrow().clone());
 
             // Ask the window manager/compositor to present the window
+            info!("Add window");
+            app.add_window(&window);
             window.present();
 
             // let workbench = panel::Workbench::new();
@@ -123,9 +127,17 @@ mod imp {
 
         fn startup(&self) {
             self.parent_startup();
+            info!("Initing libadwaita");
+            adw::init().expect("Could not init libadwaita");
+        }
+
+        fn command_line(&self, command_line: &gio::ApplicationCommandLine) -> ExitCode {
+            self.parent_command_line(command_line)
         }
 
         fn handle_local_options(&self, options: &glib::VariantDict) -> ExitCode {
+            info!("command options: ");
+
             if options.contains("version") {
                 // Nothing to do here; Version is always printed
                 return ExitCode::SUCCESS;
@@ -144,9 +156,13 @@ mod imp {
         }
     }
 
-    impl GtkApplicationImpl for Application {}
+    impl GtkApplicationImpl for Application {
+        fn window_removed(&self, window: &gtk::Window) {
+            self.parent_window_removed(window);
+        }
+    }
     impl AdwApplicationImpl for Application {}
-    impl PanelApplicationImpl for Application {}
+    // impl PanelApplicationImpl for Application {}
 
     impl Application {
         fn setup_command_line(&self) {
@@ -185,23 +201,25 @@ mod imp {
 
 glib::wrapper! {
         pub struct Application(ObjectSubclass<imp::Application>)
-                @extends gio::Application, gtk::Application, adw::Application, panel::Application,
-                @implements gio::ActionMap, gio::ActionGroup;
+        @extends gio::Application, gtk::Application, adw::Application,
+        @implements gio::ActionMap, gio::ActionGroup;
 }
 
 impl Default for Application {
     fn default() -> Self {
-        gio::Application::default().and_downcast::<Application>().unwrap()
+        adw::Application::default().downcast().unwrap()
     }
 }
 
 impl Application {
     pub fn new() -> Self {
-        glib::Object::builder()
+        let app: Self = glib::Object::builder()
             .property("application-id", Some(config::APP_ID))
-            .property("flags", ApplicationFlags::default())
-            .property("resource-base-path", Some("/io/github/vhdirk/Terms/"))
-            .build()
+            .property("flags", ApplicationFlags::SEND_ENVIRONMENT)
+            .property("resource-base-path", Some("/io/github/vhdirk/Terms"))
+            .build();
+        app.set_default();
+        app
     }
 
     pub fn run(&self) -> ExitCode {
@@ -223,22 +241,21 @@ impl Application {
         let window = self.active_window().unwrap();
         let dialog = adw::AboutWindow::builder()
             .transient_for(&window)
+            .version(VERSION)
             .icon_name(APP_ID)
             .application_icon(APP_ID)
             .application_name(APP_NAME)
-            .developer_name("Dirk Van Haerenborgh")
-            .website("Website")
-            .copyright("© 2022 Dirk Van Haerenborgh")
             .license_type(gtk::License::Gpl30)
+            .developer_name("Dirk Van Haerenborgh")
+            .copyright("© 2022 Dirk Van Haerenborgh")
             .website("https://github.com/vhdirk/terms/")
             .issue_url("https://github.com/vhdirk/terms/issues")
-            .version(VERSION)
-            .translator_credits(gettext("translator-credits").replace("\\n", "\n"))
-            .modal(true)
+            // .translator_credits(gettext("translator-credits").replace("\\n", "\n"))
             .developers(vec!["Dirk Van Haerenborgh <vhdirk@gmail.com>"])
             .artists(vec!["Dirk Van Haerenborgh <vhdirk@gmail.com>"])
             .documenters(vec!["Dirk Van Haerenborgh <vhdirk@gmail.com>"])
-            .comments("A terminal where conditions apply.")
+            .comments(gettext("A terminal where conditions apply."))
+            .modal(true)
             .build();
         dialog.present();
     }

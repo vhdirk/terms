@@ -3,11 +3,12 @@ use gio::SimpleAction;
 use glib::{clone, closure_local, RustClosure};
 use gtk::prelude::*;
 use gtk::{gio, glib};
-use panel::subclass::prelude::*;
+// use panel::subclass::prelude::*;
 use std::cell::RefCell;
 
 use crate::components::PreferencesWindow;
 use crate::services::settings::Settings;
+use crate::services::theme_provider::ThemeProvider;
 
 use super::*;
 

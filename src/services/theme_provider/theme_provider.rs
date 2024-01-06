@@ -1,3 +1,4 @@
+use adw::prelude::AdwApplicationExt;
 use glib::{clone, subclass::prelude::*, ObjectExt, ParamSpecBuilderExt, ToValue};
 use std::{
     cell::RefCell,
@@ -5,6 +6,7 @@ use std::{
     fs,
     path::{Path, PathBuf},
 };
+use tracing::*;
 
 use crate::{
     config::PKGDATADIR,
@@ -16,6 +18,7 @@ use super::theme::Theme;
 
 #[derive(Debug)]
 #[repr(u8)]
+#[allow(unused)]
 pub enum ThemePaletteColorIndex {
     Background = 0,
     Red = 1,
@@ -91,13 +94,12 @@ impl ObjectImpl for ThemeProvider {
                 glib::ParamSpecBoolean::builder("theme-integration").readwrite().build(),
             ]
         });
-
         PROPERTIES.as_ref()
     }
 
     fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
         match pspec.name() {
-            "dark" => self.style_manager.is_dark().into(),
+            "dark" => self.is_dark().into(),
             "current-theme" => self.current_theme().into(),
             "theme-integration" => self.ctx.borrow().theme_integration.into(),
             _ => unimplemented!(),
@@ -111,7 +113,7 @@ impl ObjectImpl for ThemeProvider {
                     self.ctx.borrow_mut().theme_integration = val;
                     self.apply_theming();
                 },
-                Err(err) => eprintln!("Could not set property {}: {}", pspec.name(), err),
+                Err(err) => error!("Could not set property {}: {}", pspec.name(), err),
             },
             _ => unimplemented!(),
         }
@@ -129,7 +131,7 @@ impl ThemeProvider {
     fn ensure_user_themes_dir_exists() {
         if let Some(themes_dir) = Self::user_themes_dir() {
             if let Err(err) = fs::create_dir_all(&themes_dir) {
-                eprintln!("Error creating directory: {}", err);
+                error!("Error creating directory: {}", err);
             }
         }
     }
@@ -138,7 +140,7 @@ impl ThemeProvider {
         let content = match fs::read_to_string(file_path) {
             Ok(content) => content,
             Err(err) => {
-                eprintln!("Error while reading color theme file {}: {}", file_path.to_string_lossy(), err);
+                error!("Error while reading color theme file {}: {}", file_path.to_string_lossy(), err);
                 return None;
             },
         };
@@ -146,7 +148,7 @@ impl ThemeProvider {
         match serde_json::from_str(&content) {
             Ok(value) => Some(value),
             Err(err) => {
-                eprintln!("Error while reading color theme file {}: {}", file_path.to_string_lossy(), err);
+                error!("Error while reading color theme file {}: {}", file_path.to_string_lossy(), err);
                 return None;
             },
         }
@@ -166,7 +168,7 @@ impl ThemeProvider {
         }) {
             Ok(themes) => themes,
             Err(err) => {
-                eprintln!("Error reading directory: {}", err);
+                error!("Error reading directory: {}", err);
                 vec![]
             },
         }
@@ -205,13 +207,21 @@ impl ThemeProvider {
         // React to style-preference changes
         self.settings
             .bind_style_preference(&self.style_manager, "color-scheme")
-            .mapping(|variant, _ty| variant.get::<StylePreference>().map(|pref| Into::<adw::ColorScheme>::into(pref).to_value()))
-            .set_mapping(|value, _ty| {
-                value.get::<adw::ColorScheme>().ok().map(|scheme| {
-                    println!("style scheme {:?}", scheme);
-                    Into::<StylePreference>::into(scheme).into()
+            .mapping(|variant, _ty| {
+                variant.get::<StylePreference>().map(|pref| {
+                    let scheme = Into::<adw::ColorScheme>::into(pref);
+                    info!("set adw color scheme from preference {:?} -> {:?}", pref, scheme);
+                    scheme.to_value()
                 })
             })
+            .get_only()
+            // .set_mapping(|value, _ty| {
+            //     value.get::<adw::ColorScheme>().ok().map(|scheme| {
+            //         let pref = Into::<StylePreference>::into(scheme);
+            //         info!("set style preference from adw color scheme {:?} -> {:?}", scheme, pref);
+            //         pref.into()
+            //     })
+            // })
             .build();
 
         self.style_manager.connect_dark_notify(clone!(@weak self as this  => move |_sm| {
@@ -223,7 +233,7 @@ impl ThemeProvider {
     }
 
     pub fn current_theme(&self) -> String {
-        if self.style_manager.is_dark() {
+        if self.is_dark() {
             self.settings.theme_dark()
         } else {
             self.settings.theme_light()
@@ -234,19 +244,25 @@ impl ThemeProvider {
     // and icons will be illegible. Same goes for light style with dark theme
     // selected. In those cases, we need to disable theme integration.
     fn is_safe_to_enable_theme_integration(&self, theme: &Theme) -> bool {
-        self.style_manager.is_dark() == theme.is_dark()
+        self.is_dark() == theme.is_dark()
+    }
+
+    fn is_dark(&self) -> bool {
+        self.style_manager.is_dark()
     }
 
     fn apply_theming(&self) {
         let themes = self.ctx.borrow().themes.clone();
         let theme = themes.get(&self.current_theme());
+        info!("Request to apply theme: {:?}", theme);
 
         if theme.is_none() || !self.settings.theme_integration() || !self.is_safe_to_enable_theme_integration(theme.unwrap()) {
             return;
         }
+        info!("Applying theme: {:?}", theme);
 
         let provider = gtk::CssProvider::new();
-        provider.load_from_data(&self.generate_gtk_theme(theme.unwrap()));
+        provider.load_from_bytes(&self.generate_gtk_theme(theme.unwrap()).as_bytes().into());
         self.ctx.borrow_mut().css_provider = provider;
 
         if let Some(display) = gdk::Display::default() {
@@ -254,6 +270,7 @@ impl ThemeProvider {
             gtk::style_context_add_provider_for_display(&display, &self.ctx.borrow().css_provider, gtk::STYLE_PROVIDER_PRIORITY_USER + 200);
         }
 
+        let _guard = self.style_manager.freeze_notify();
         self.style_manager.set_color_scheme(self.settings.style_preference().into());
     }
 

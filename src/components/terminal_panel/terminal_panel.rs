@@ -3,6 +3,7 @@ use adw::subclass::prelude::*;
 use glib::ObjectExt;
 use gtk::glib;
 use gtk::CompositeTemplate;
+use tracing::*;
 
 use std::cell::RefCell;
 
@@ -66,10 +67,9 @@ impl TerminalPanel {
     }
 
     fn connect_signals(&self) {
-        dbg!("Connect exit closure");
         self.terminal
             .connect_exit(clone!(@weak self as this => move |_terminal: &Terminal , status: i32| {
-                                    println!("Terminal exited with {}", status);
+                                    info!("Terminal exited with {}", status);
                                     this.obj().emit_by_name::<()>("exit", &[]);
             }));
     }

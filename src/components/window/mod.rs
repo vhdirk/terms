@@ -7,7 +7,7 @@ use super::{HeaderBar, Session, TerminalInitArgs};
 glib::wrapper! {
         pub struct Window(ObjectSubclass<imp::Window>)
                 @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::Window, adw::ApplicationWindow, //, panel::Workspace,
-                @implements gtk::Accessible, gio::ActionGroup, gio::ActionMap; // gtk::Buildable, gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
+                @implements gtk::Accessible, gio::ActionGroup, gio::ActionMap, gtk::Buildable, gtk::ConstraintTarget, gtk::Native, gtk::Root, gtk::ShortcutManager;
 }
 
 impl Window {

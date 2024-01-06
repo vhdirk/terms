@@ -7,7 +7,7 @@ mod terminal;
 mod terminal_panel;
 mod theme_thumbnail;
 mod window;
-mod workspace;
+// mod workspace;
 
 pub use header_bar::*;
 pub use preferences_window::*;
@@ -18,4 +18,4 @@ pub use terminal::*;
 pub use terminal_panel::*;
 pub use theme_thumbnail::*;
 pub use window::*;
-pub use workspace::*;
+// pub use workspace::*;

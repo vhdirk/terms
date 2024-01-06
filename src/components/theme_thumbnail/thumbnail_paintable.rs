@@ -20,9 +20,10 @@ use elementtree::Element;
 use glib::subclass::prelude::*;
 use glib::{Cast, IsA};
 use gtk::graphene;
+use once_cell::sync::Lazy;
 use rand::Rng;
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
-use tracing::warn;
+use tracing::*;
 use vte::{FileExt, SnapshotExt};
 
 use std::cell::{Cell, RefCell};
@@ -35,7 +36,7 @@ use gtk::subclass::prelude::*;
 use crate::services::theme_provider::{Theme, ThemeProvider};
 
 ref_thread_local! {
-    static managed INSTANCE: ThemeThumbnailProvider = ThemeThumbnailProvider::new();
+    static managed INSTANCE: Lazy<ThemeThumbnailProvider> = Lazy::new(|| ThemeThumbnailProvider::new());
 }
 
 impl Default for ThemeThumbnailProvider {

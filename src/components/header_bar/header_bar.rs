@@ -1,18 +1,12 @@
-use crate::application::AppProfile;
 use crate::components::StyleSwitcher;
-use crate::config::PROFILE;
 use adw::subclass::prelude::*;
 use gtk::glib;
-use gtk::prelude::*;
-
-use super::*;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/header_bar.ui")]
 pub struct HeaderBar {
-    #[template_child]
-    pub revealer: TemplateChild<gtk::Revealer>,
-
+    // #[template_child]
+    // pub revealer: TemplateChild<gtk::Revealer>,
     #[template_child]
     pub title_widget: TemplateChild<adw::WindowTitle>,
 
@@ -28,6 +22,7 @@ impl ObjectSubclass for HeaderBar {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.set_css_name("headerbar");
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
