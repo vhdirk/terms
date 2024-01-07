@@ -4,11 +4,11 @@ on:
   pull_request:
     branches: [main, next]
 
-name: CI
+name: ci
 
 jobs:
   rustfmt:
-    name: Rustfmt
+    name: rustfmt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +43,7 @@ jobs:
             gtk4-devel \
             libadwaita-devel \
             libpanel-devel \
-            vte-2.91-gtk4-devel
+            vte291-gtk4-devel
 
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
@@ -61,7 +61,7 @@ jobs:
         run: cargo test
 
   flatpak:
-    name: Flatpak
+    name: flatpak
     runs-on: ubuntu-latest
     container:
       image: bilelmoussaoui/flatpak-github-actions:gnome-45
@@ -73,7 +73,7 @@ jobs:
             gtk4-devel \
             libadwaita-devel \
             libpanel-devel \
-            vte-2.91-gtk4-devel
+            vte291-gtk4-devel
       - uses: actions/checkout@v4
       - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
         with:

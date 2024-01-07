@@ -101,7 +101,7 @@ impl ObjectImpl for ThemeProvider {
         }
     }
 
-    fn set_property(&self, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
+    fn set_property(&self, _id: usize, _value: &glib::Value, pspec: &glib::ParamSpec) {
         match pspec.name() {
             _ => unimplemented!(),
         }

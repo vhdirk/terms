@@ -48,7 +48,7 @@ impl fmt::Display for AppProfile {
 
 mod imp {
 
-    use std::env;
+    use std::{collections::HashMap, env};
 
     use adw::subclass::prelude::AdwApplicationImpl;
     // use panel::{prelude::WorkbenchExt, subclass::prelude::PanelApplicationImpl};
@@ -109,6 +109,8 @@ mod imp {
         // tries to launch a "second instance" of the application. When they try
         // to do that, we'll just present any existing window.
         fn activate(&self) {
+            // init the theme provider
+            ThemeProvider::default();
             let app = self.obj();
             // Get the current window or create one if necessary
 
@@ -128,11 +130,16 @@ mod imp {
 
         fn startup(&self) {
             self.parent_startup();
-            info!("Initing libadwaita");
-            adw::init().expect("Could not init libadwaita");
         }
 
         fn command_line(&self, command_line: &gio::ApplicationCommandLine) -> ExitCode {
+            let env = command_line.environ();
+            info!("running with env {:?}", env);
+
+            if !self.obj().is_remote() {
+                self.activate();
+            }
+
             self.parent_command_line(command_line)
         }
 
@@ -151,7 +158,11 @@ mod imp {
 
             let command = options.lookup_value("command", None).and_then(|w| w.get::<String>());
 
-            self.set_init_args(TerminalInitArgs { working_dir, command });
+            self.set_init_args(TerminalInitArgs {
+                working_dir,
+                command,
+                env: HashMap::new(),
+            });
 
             self.parent_handle_local_options(options)
         }
@@ -216,7 +227,7 @@ impl Application {
     pub fn new() -> Self {
         let app: Self = glib::Object::builder()
             .property("application-id", Some(config::APP_ID))
-            .property("flags", ApplicationFlags::SEND_ENVIRONMENT)
+            .property("flags", ApplicationFlags::SEND_ENVIRONMENT | ApplicationFlags::HANDLES_COMMAND_LINE)
             .property("resource-base-path", Some("/io/github/vhdirk/Terms"))
             .build();
         app.set_default();

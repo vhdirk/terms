@@ -1,6 +1,7 @@
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, ops::Deref, path::PathBuf};
 
 use glib::{subclass::types::ObjectSubclassIsExt, ObjectExt};
+use once_cell::sync::Lazy;
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
 use tracing::*;
 
@@ -11,12 +12,12 @@ mod theme_provider;
 use theme_provider as imp;
 
 ref_thread_local! {
-    static managed INSTANCE: ThemeProvider = ThemeProvider::new();
+    static managed INSTANCE: Lazy<ThemeProvider> = Lazy::new(ThemeProvider::new);
 }
 
 impl Default for ThemeProvider {
     fn default() -> Self {
-        INSTANCE.borrow().clone()
+        Lazy::force(&INSTANCE.borrow()).clone()
     }
 }
 

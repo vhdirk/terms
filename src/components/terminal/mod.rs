@@ -1,7 +1,7 @@
 mod constants;
 mod terminal;
 // mod flatpak_spawn;
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 use glib::{closure_local, subclass::prelude::*, ObjectExt};
 use terminal as imp;
@@ -10,6 +10,7 @@ use terminal as imp;
 pub struct TerminalInitArgs {
     pub working_dir: Option<PathBuf>,
     pub command: Option<String>,
+    pub env: HashMap<String, String>,
 }
 
 glib::wrapper! {

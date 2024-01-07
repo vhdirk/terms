@@ -62,7 +62,7 @@ impl ObjectImpl for StyleSwitcher {
         self.settings
             .connect_style_preference_changed(clone!(@weak self as this => move |_| this.on_style_changed()));
 
-        self.on_style_changed();
+        // self.on_style_changed();
     }
 }
 
@@ -71,7 +71,11 @@ impl WidgetImpl for StyleSwitcher {}
 #[gtk::template_callbacks]
 impl StyleSwitcher {
     fn on_style_changed(&self) {
-        let _guard = self.obj().freeze_notify();
+        info!("on style changed");
+        let _system_guard = self.system_selector.freeze_notify();
+        let _light_guard = self.light_selector.freeze_notify();
+        let _dark_guard = self.dark_selector.freeze_notify();
+
         match self.settings.style_preference() {
             StylePreference::System => {
                 self.system_selector.set_active(true);
@@ -93,6 +97,8 @@ impl StyleSwitcher {
 
     #[template_callback]
     fn theme_check_active_changed(&self) {
+        info!("theme_check_active_changed");
+
         if self.system_selector.is_active() {
             self.change_style_preference(StylePreference::System);
         } else if self.light_selector.is_active() {
