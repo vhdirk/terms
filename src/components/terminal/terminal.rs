@@ -176,7 +176,7 @@ impl Terminal {
         self.setup_regexes();
         self.connect_signals();
         self.bind_data();
-        // self.on_theme_changed();
+        self.on_theme_changed();
         self.on_font_changed();
         self.on_padding_changed();
 
@@ -229,20 +229,12 @@ impl Terminal {
         }));
         self.ctx.borrow_mut().exit_handler = Some(handler);
 
-        let secondary_click = gtk::GestureClick::builder().button(gdk::BUTTON_SECONDARY).build();
-        secondary_click.connect_pressed(clone!(@weak self as this => move |_: &gtk::GestureClick, _: i32, x: f64, y: f64| {
-                                this.show_menu(x, y);
-        }));
-
-        self.term.add_controller(secondary_click);
-
         let keypress_controller = gtk::EventControllerKey::builder().build();
         keypress_controller.connect_key_pressed(
             clone!(@weak self as this =>  @default-return glib::Propagation::Stop, move |_, key, keycode, modifier| {
                 this.on_key_pressed(key, keycode, modifier)
             }),
         );
-
         self.term.add_controller(keypress_controller);
 
         let primary_click = gtk::GestureClick::builder().button(gdk::BUTTON_PRIMARY).build();
@@ -251,36 +243,21 @@ impl Terminal {
                 if let (Some(match_str), tag) = this.term.check_match_at(x, y) {
                     if event.modifier_state().contains(gdk::ModifierType::CONTROL_MASK) {
 
+                        // TODO: get active window
                         glib::spawn_future_local(gtk::UriLauncher::new(&match_str).launch_future(None::<&gtk::Window>));
-
-                                //   new Gtk.UriLauncher (pattern).launch.begin (this.window, null);
-
                     }
                 }
             }
-
-
         }));
 
         self.term.add_controller(primary_click);
 
-        // var left_click_controller = new Gtk.GestureClick () {
-        //   button = Gdk.BUTTON_PRIMARY,
-        // };
-        // left_click_controller.pressed.connect ((gesture, n_clicked, x, y) => {
-        //   var event = gesture.get_current_event ();
-        //   var pattern = this.check_match_at (x, y, null);
+        let secondary_click = gtk::GestureClick::builder().button(gdk::BUTTON_SECONDARY).build();
+        secondary_click.connect_pressed(clone!(@weak self as this => move |_: &gtk::GestureClick, _: i32, x: f64, y: f64| {
+                                this.show_menu(x, y);
+        }));
 
-        //   if (
-        //     (event.get_modifier_state () & Gdk.ModifierType.CONTROL_MASK) == 0 ||
-        //     pattern == null
-        //   ) {
-        //     return;
-        //   }
-
-        //   new Gtk.UriLauncher (pattern).launch.begin (this.window, null);
-        // });
-        // this.add_controller (left_click_controller);
+        self.term.add_controller(secondary_click);
 
         //     self.settings.
 
@@ -440,7 +417,6 @@ impl Terminal {
                     self.term.set_color_foreground(color)
                 }
             }
-            self.term.activate();
         } else {
             warn!("No theme set")
         }

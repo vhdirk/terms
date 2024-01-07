@@ -13,7 +13,6 @@ use crate::services::theme_provider::ThemeProvider;
 #[template(resource = "/io/github/vhdirk/Terms/gtk/preferences_window.ui")]
 pub struct PreferencesWindow {
     pub settings: Settings,
-    pub theme_provider: ThemeProvider,
 
     // Behaviour
     #[template_child]
@@ -131,7 +130,7 @@ impl PreferencesWindow {
     fn setup_widgets(&self) {
         self.connect_signals();
 
-        for (name, theme) in self.theme_provider.themes().iter() {
+        for (name, theme) in ThemeProvider::default().themes().iter() {
             let thumb = ThemeThumbnail::new(theme);
 
             let theme_name_to = name.clone();
@@ -228,10 +227,10 @@ impl PreferencesWindow {
             }
         }));
 
-        self.theme_provider.connect_notify_local(
+        ThemeProvider::default().connect_notify_local(
             Some("dark"),
             clone!(@weak self as this => move |_, _| {
-                if this.theme_provider.property::<bool>("dark") {
+            if ThemeProvider::default().property::<bool>("dark") {
                  this.dark_theme_toggle.set_active(true);
               }
               else {
@@ -239,6 +238,7 @@ impl PreferencesWindow {
               }
             }),
         );
+        ThemeProvider::default().notify("dark");
 
         self.filter_themes_check_button.connect_active_notify(clone!(@weak self as this => move|_| {
             this.set_themes_filter_func();

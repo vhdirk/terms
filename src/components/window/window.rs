@@ -8,7 +8,6 @@ use std::cell::RefCell;
 
 use crate::components::PreferencesWindow;
 use crate::services::settings::Settings;
-use crate::services::theme_provider::ThemeProvider;
 
 use super::*;
 

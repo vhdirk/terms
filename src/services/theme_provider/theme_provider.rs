@@ -1,4 +1,3 @@
-use adw::prelude::AdwApplicationExt;
 use glib::{clone, subclass::prelude::*, ObjectExt, ParamSpecBuilderExt, ToValue};
 use std::{
     cell::RefCell,
@@ -40,9 +39,8 @@ pub enum ThemePaletteColorIndex {
 
 #[derive(Debug)]
 pub struct ThemeProviderContext {
-    css_provider: gtk::CssProvider,
+    css_provider: Option<gtk::CssProvider>,
     themes: HashMap<String, Theme>,
-    theme_integration: bool,
 }
 
 impl Default for ThemeProviderContext {
@@ -50,7 +48,6 @@ impl Default for ThemeProviderContext {
         Self {
             css_provider: Default::default(),
             themes: Default::default(),
-            theme_integration: Default::default(),
         }
     }
 }
@@ -91,7 +88,6 @@ impl ObjectImpl for ThemeProvider {
             vec![
                 glib::ParamSpecBoolean::builder("dark").read_only().build(),
                 glib::ParamSpecString::builder("current-theme").read_only().build(),
-                glib::ParamSpecBoolean::builder("theme-integration").readwrite().build(),
             ]
         });
         PROPERTIES.as_ref()
@@ -101,20 +97,12 @@ impl ObjectImpl for ThemeProvider {
         match pspec.name() {
             "dark" => self.is_dark().into(),
             "current-theme" => self.current_theme().into(),
-            "theme-integration" => self.ctx.borrow().theme_integration.into(),
             _ => unimplemented!(),
         }
     }
 
     fn set_property(&self, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
         match pspec.name() {
-            "theme-integration" => match value.get::<bool>() {
-                Ok(val) => {
-                    self.ctx.borrow_mut().theme_integration = val;
-                    self.apply_theming();
-                },
-                Err(err) => error!("Could not set property {}: {}", pspec.name(), err),
-            },
             _ => unimplemented!(),
         }
     }
@@ -192,37 +180,29 @@ impl ThemeProvider {
         Self::ensure_user_themes_dir_exists();
         self.ctx.borrow_mut().themes = Self::load_all_color_themes();
 
+        self.settings.connect_theme_integration_changed(clone!(@weak self as this => move |_| {
+            this.apply_theming();
+        }));
+
         self.settings.connect_theme_light_changed(clone!(@weak self as this => move |_| {
+            this.apply_theming();
             if !this.style_manager.is_dark() {
                 this.obj().notify("current-theme");
             }
         }));
 
         self.settings.connect_theme_dark_changed(clone!(@weak self as this => move |_| {
+            this.apply_theming();
             if this.style_manager.is_dark() {
                 this.obj().notify("current-theme");
             }
         }));
 
         // React to style-preference changes
-        self.settings
-            .bind_style_preference(&self.style_manager, "color-scheme")
-            .mapping(|variant, _ty| {
-                variant.get::<StylePreference>().map(|pref| {
-                    let scheme = Into::<adw::ColorScheme>::into(pref);
-                    info!("set adw color scheme from preference {:?} -> {:?}", pref, scheme);
-                    scheme.to_value()
-                })
-            })
-            .get_only()
-            // .set_mapping(|value, _ty| {
-            //     value.get::<adw::ColorScheme>().ok().map(|scheme| {
-            //         let pref = Into::<StylePreference>::into(scheme);
-            //         info!("set style preference from adw color scheme {:?} -> {:?}", scheme, pref);
-            //         pref.into()
-            //     })
-            // })
-            .build();
+        self.settings.connect_style_preference_changed(clone!(@weak self as this => move |_| {
+            this.style_manager.set_color_scheme(this.settings.style_preference().into());
+            this.apply_theming();
+        }));
 
         self.style_manager.connect_dark_notify(clone!(@weak self as this  => move |_sm| {
             this.obj().notify("dark");
@@ -256,18 +236,32 @@ impl ThemeProvider {
         let theme = themes.get(&self.current_theme());
         info!("Request to apply theme: {:?}", theme);
 
-        if theme.is_none() || !self.settings.theme_integration() || !self.is_safe_to_enable_theme_integration(theme.unwrap()) {
+        if theme.is_none() {
             return;
         }
-        info!("Applying theme: {:?}", theme);
 
-        let provider = gtk::CssProvider::new();
-        provider.load_from_bytes(&self.generate_gtk_theme(theme.unwrap()).as_bytes().into());
-        self.ctx.borrow_mut().css_provider = provider;
+        let provider = if self.settings.theme_integration() && !self.is_safe_to_enable_theme_integration(theme.unwrap()) {
+            info!("It is not safe to enable theme integration for this color scheme");
+            None
+        } else if self.settings.theme_integration() {
+            info!("Applying theme: {:?}", theme);
+            let provider = gtk::CssProvider::new();
+            provider.load_from_bytes(&self.generate_gtk_theme(theme.unwrap()).as_bytes().into());
+            Some(provider)
+        } else {
+            None
+        };
 
         if let Some(display) = gdk::Display::default() {
-            // higher priority
-            gtk::style_context_add_provider_for_display(&display, &self.ctx.borrow().css_provider, gtk::STYLE_PROVIDER_PRIORITY_USER + 200);
+            if let Some(old_provider) = &self.ctx.borrow_mut().css_provider.take() {
+                gtk::style_context_remove_provider_for_display(&display, old_provider)
+            }
+
+            if let Some(provider) = provider.as_ref() {
+                // higher priority
+                gtk::style_context_add_provider_for_display(&display, provider, gtk::STYLE_PROVIDER_PRIORITY_USER + 200);
+            }
+            self.ctx.borrow_mut().css_provider = provider;
         }
 
         let _guard = self.style_manager.freeze_notify();

@@ -65,6 +65,7 @@ mod imp {
     pub struct Application {
         /// The application settings.
         pub settings: Settings,
+        // pub theme_provider: ThemeProvider,
         // /// The system settings.
         // pub system_settings: SystemSettings,
         // /// The list of logged-in sessions.
