@@ -42,7 +42,8 @@ jobs:
           dnf install -y \
             gtk4-devel \
             libadwaita-devel \
-            libpanel-devel
+            libpanel-devel \
+            vte-2.91-gtk4-devel
 
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
@@ -66,10 +67,17 @@ jobs:
       image: bilelmoussaoui/flatpak-github-actions:gnome-45
       options: --privileged
     steps:
-    - uses: actions/checkout@v4
-    - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
-      with:
-        bundle: terms.flatpak
-        manifest-path: build-aux/io.github.vhdirk.Terms.Devel.json
-        run-tests: true
-        cache-key: flatpak-builder-${{ github.sha }}
+      - name: Install dependencies
+        run: |
+          dnf install -y \
+            gtk4-devel \
+            libadwaita-devel \
+            libpanel-devel \
+            vte-2.91-gtk4-devel
+      - uses: actions/checkout@v4
+      - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: terms.flatpak
+          manifest-path: build-aux/io.github.vhdirk.Terms.Devel.json
+          run-tests: true
+          cache-key: flatpak-builder-${{ github.sha }}
