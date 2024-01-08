@@ -1,5 +1,4 @@
 use crate::config::APP_ID;
-use glib::value::FromValue;
 use gsettings_macro::gen_settings;
 use std::path::{Path, PathBuf};
 

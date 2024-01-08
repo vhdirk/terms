@@ -10,6 +10,7 @@ use gtk::glib;
 use gtk::graphene;
 use gtk::CompositeTemplate;
 use tracing::*;
+use vte::BoxExt;
 use vte::CursorBlinkMode;
 use vte::CursorShape;
 use vte::EventControllerExt;
@@ -61,6 +62,7 @@ struct TerminalContext {
 pub struct Terminal {
     pub init_args: RefCell<TerminalInitArgs>,
 
+    pub settings: Settings,
     ctx: RefCell<TerminalContext>,
 
     #[template_child]
@@ -72,7 +74,8 @@ pub struct Terminal {
     #[template_child]
     popover_menu: TemplateChild<gtk::PopoverMenu>,
 
-    pub settings: Settings,
+    #[template_child]
+    scrolled: TemplateChild<gtk::ScrolledWindow>,
 }
 
 #[glib::object_subclass]
@@ -170,6 +173,11 @@ impl Terminal {
 
         self.settings.connect_opacity_changed(clone!(@weak self as this => move |_| {
             this.on_theme_changed();
+        }));
+
+        self.settings.bind_use_overlay_scrolling(&*self.scrolled, "overlay-scrolling").build();
+        self.settings.connect_show_scrollbars_changed(clone!(@weak self as this => move |_| {
+            this.on_show_scrollbars_changed();
         }));
 
         self.setup_drag_drop();
@@ -390,6 +398,31 @@ impl Terminal {
 
         self.term.style_context().add_provider(&provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
         self.ctx.borrow_mut().padding_provider = Some(provider);
+    }
+
+    fn on_show_scrollbars_changed(&self) {
+        let show_scrollbars = self.settings.show_scrollbars();
+        let is_scrollbar_being_used = self.term.parent().map(|term_parent| term_parent.is::<gtk::ScrolledWindow>()).unwrap_or(false);
+        let parent_is_this = self.term.parent().map(|term_parent| term_parent.is::<super::Terminal>()).unwrap_or(false);
+
+        if show_scrollbars != is_scrollbar_being_used {
+            if parent_is_this {
+                self.obj().remove(&*self.term);
+            } else if is_scrollbar_being_used {
+                self.scrolled.set_child(None::<&gtk::Widget>);
+            }
+        }
+
+        // TODO: if overlay scrolling is _not_ used, the scrolledwindow being fully transparent makes it look horrible
+        if show_scrollbars != is_scrollbar_being_used || self.term.parent().is_none() {
+            if show_scrollbars {
+                self.scrolled.set_visible(true);
+                self.scrolled.set_child(Some(&*self.term));
+            } else {
+                self.obj().insert_child_after(&*self.term, None::<&gtk::Widget>);
+                self.scrolled.set_visible(false);
+            }
+        }
     }
 
     fn background_color(&self, theme: &Theme) -> Option<gdk::RGBA> {

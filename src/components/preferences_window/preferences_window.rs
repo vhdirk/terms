@@ -42,21 +42,31 @@ pub struct PreferencesWindow {
     #[template_child]
     pub opacity_spin_button_adjustment: TemplateChild<gtk::Adjustment>,
 
+    // Terminal - Scrolling
+    #[template_child]
+    pub scrollback_mode_combo_row: TemplateChild<adw::ComboRow>,
+    #[template_child]
+    pub custom_scrollback_adjustment: TemplateChild<gtk::Adjustment>,
+    #[template_child]
+    pub custom_scrollback_spin_button: TemplateChild<gtk::SpinButton>,
+    #[template_child]
+    pub show_scrollbars_switch: TemplateChild<gtk::Switch>,
+    #[template_child]
+    pub use_overlay_scrolling_switch: TemplateChild<gtk::Switch>,
+
     // Terminal - Appearance
     #[template_child]
     pub style_preference_combo_row: TemplateChild<adw::ComboRow>,
     #[template_child]
     pub theme_integration_switch: TemplateChild<gtk::Switch>,
 
-    // Terminal - Appearance
+    // Terminal - Theme
     #[template_child]
     pub filter_themes_check_button: TemplateChild<gtk::CheckButton>,
-
     #[template_child]
     pub dark_theme_toggle: TemplateChild<gtk::ToggleButton>,
     #[template_child]
     pub light_theme_toggle: TemplateChild<gtk::ToggleButton>,
-
     #[template_child]
     pub preview_flow_box: TemplateChild<gtk::FlowBox>,
 }
@@ -191,6 +201,42 @@ impl PreferencesWindow {
             .set_mapping(|value, _ty| value.get::<f64>().ok().map(|value| (value as u32).to_variant()))
             .build();
 
+        // Terminal - Scrolling
+        self.settings.bind_show_scrollbars(&*self.show_scrollbars_switch, "active").build();
+        self.settings.bind_use_overlay_scrolling(&*self.use_overlay_scrolling_switch, "active").build();
+        self.settings
+            .bind_scrollback_lines(&*self.custom_scrollback_spin_button, "value")
+            .mapping(|variant, _ty| variant.get::<u32>().map(|value| (value as f64).to_value()))
+            .set_mapping(|value, _ty| value.get::<f64>().ok().map(|value| (value as u32).to_variant()))
+            .build();
+
+        // self.settings
+        //     .bind_style_preference(&*self.style_preference_combo_row, "selected")
+        //     .mapping(|variant, _ty| variant.get::<StylePreference>().map(|pref| (pref as u32).to_value()))
+        //     .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| StylePreference::from(v).into()))
+        //     .build();
+
+        // settings.bind_property (
+        //   "scrollback-mode",
+        //   this,
+        //   "show-custom-scrollback-row",
+        //   BindingFlags.SYNC_CREATE,
+        //   // scrollback-mode -> show-custom-scrollback-row
+        //   (_, from_value, ref to_value) => {
+        //     to_value = from_value.get_uint () == 0;
+        //     return true;
+        //   },
+        //   null
+        // );
+
+        // // 0 = Fixed, 1 = Unlimited, 2 = Disabled
+        // settings.schema.bind(
+        //   "scrollback-mode",
+        //   this.scrollback_mode_combo_row,
+        //   "selected",
+        //   SettingsBindFlags.DEFAULT
+        // );
+
         // settings.notify ["custom-working-directory"].connect (() => {
         //   if (this.is_custom_working_directory_valid ()) {
         //     this.custom_working_directory_entry_row.remove_css_class ("error");
@@ -205,11 +251,12 @@ impl PreferencesWindow {
         self.settings
             .bind_style_preference(&*self.style_preference_combo_row, "selected")
             .mapping(|variant, _ty| variant.get::<StylePreference>().map(|pref| (pref as u32).to_value()))
-            .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| Into::<StylePreference>::into(v).into()))
+            .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| StylePreference::from(v).into()))
             .build();
 
         self.settings.bind_theme_integration(&*self.theme_integration_switch, "active").build();
 
+        // Terminal - Theme
         self.light_theme_toggle.connect_active_notify(clone!(@weak self as this => move|_| {
             this.obj().notify("selected-theme");
             this.set_themes_filter_func();
@@ -227,6 +274,7 @@ impl PreferencesWindow {
             }
         }));
 
+        // need to use themeprovider here to listen to both settings and adw stylemanager
         ThemeProvider::default().connect_notify_local(
             Some("dark"),
             clone!(@weak self as this => move |_, _| {
@@ -238,6 +286,8 @@ impl PreferencesWindow {
               }
             }),
         );
+
+        // set the toggle buttons in the correct state
         ThemeProvider::default().notify("dark");
 
         self.filter_themes_check_button.connect_active_notify(clone!(@weak self as this => move|_| {

@@ -61,8 +61,7 @@ impl ObjectImpl for StyleSwitcher {
 
         self.settings
             .connect_style_preference_changed(clone!(@weak self as this => move |_| this.on_style_changed()));
-
-        // self.on_style_changed();
+        self.on_style_changed();
     }
 }
 
@@ -103,7 +102,7 @@ impl StyleSwitcher {
             self.change_style_preference(StylePreference::System);
         } else if self.light_selector.is_active() {
             self.change_style_preference(StylePreference::Light);
-        } else {
+        } else if self.dark_selector.is_active() {
             self.change_style_preference(StylePreference::Dark);
         }
     }
@@ -115,45 +114,3 @@ impl StyleSwitcher {
         }
     }
 }
-
-//   public uint style { get; set; }
-//   public bool show_system { get; set; default = true; }
-
-//   static construct {
-//     set_layout_manager_type (typeof (Gtk.BinLayout));
-//     set_css_name ("themeswitcher");
-//   }
-
-//   construct {
-//     this.notify ["style"].connect (this.on_style_changed);
-
-//     var s = Settings.get_default ();
-//     s.bind_property ("style-preference",
-//                      this,
-//                      "style",
-//                      GLib.BindingFlags.SYNC_CREATE | GLib.BindingFlags.BIDIRECTIONAL,
-//                      null,
-//                      null);
-//   }
-
-//   private void on_style_changed () {
-//     this.freeze_notify ();
-//     if (this.style == ApplicationStyle.SYSTEM) {
-//       this.system_selector.active = true;
-//       this.light_selector.active = false;
-//       this.dark_selector.active = false;
-//     }
-//     else if (this.style == ApplicationStyle.LIGHT) {
-//       this.system_selector.active = false;
-//       this.light_selector.active = true;
-//       this.dark_selector.active = false;
-//     }
-//     else {
-//       this.system_selector.active = false;
-//       this.light_selector.active = false;
-//       this.dark_selector.active = true;
-//     }
-//     this.thaw_notify ();
-//   }
-
-// }

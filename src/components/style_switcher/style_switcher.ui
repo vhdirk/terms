@@ -11,6 +11,7 @@
         <property name="spacing">18</property>
         <child>
           <object class="GtkOverlay">
+
             <property name="visible">true</property>
             <property name="halign">center</property>
             <child>
@@ -25,8 +26,7 @@
             </child>
             <child type="overlay">
               <object class="GtkImage">
-                <property name="visible" bind-source="system_selector" bind-property="active"
-                  bind-flags="sync-create" />
+                <property name="visible" bind-source="system_selector" bind-property="active" bind-flags="sync-create" />
                 <property name="icon-name">checkmark-small-symbolic</property>
                 <property name="pixel-size">13</property>
                 <property name="halign">end</property>

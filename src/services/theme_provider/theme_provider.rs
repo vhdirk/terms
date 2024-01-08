@@ -200,7 +200,6 @@ impl ThemeProvider {
 
         // React to style-preference changes
         self.settings.connect_style_preference_changed(clone!(@weak self as this => move |_| {
-            this.style_manager.set_color_scheme(this.settings.style_preference().into());
             this.apply_theming();
         }));
 
@@ -232,6 +231,10 @@ impl ThemeProvider {
     }
 
     fn apply_theming(&self) {
+        let _guard = self.style_manager.freeze_notify();
+        println!("style pref {:?}", self.settings.style_preference());
+        self.style_manager.set_color_scheme(self.settings.style_preference().into());
+
         let themes = self.ctx.borrow().themes.clone();
         let theme = themes.get(&self.current_theme());
         info!("Request to apply theme: {:?}", theme);
@@ -263,9 +266,6 @@ impl ThemeProvider {
             }
             self.ctx.borrow_mut().css_provider = provider;
         }
-
-        let _guard = self.style_manager.freeze_notify();
-        self.style_manager.set_color_scheme(self.settings.style_preference().into());
     }
 
     pub fn themes(&self) -> HashMap<String, Theme> {
