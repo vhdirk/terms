@@ -24,6 +24,7 @@ use shell_quote::Sh;
 use vte::{PopoverExt, PtyFlags, TerminalExt, TerminalExtManual, WidgetExt};
 
 use crate::components::search_toolbar::SearchToolbar;
+use crate::services::settings::ScrollbackMode;
 use crate::services::settings::Settings;
 use crate::services::theme_provider::Theme;
 use crate::services::theme_provider::ThemeProvider;
@@ -106,25 +107,19 @@ impl ObjectImpl for Terminal {
     }
 
     fn properties() -> &'static [glib::ParamSpec] {
-        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| vec![glib::ParamSpecInt64::builder("user-scrollback-lines").readwrite().build()]);
+        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| vec![]);
 
         PROPERTIES.as_ref()
     }
 
     fn set_property(&self, _id: usize, value: &Value, pspec: &glib::ParamSpec) {
         match pspec.name() {
-            "user-scrollback-lines" => {
-                if let Ok(lines) = value.get::<i64>() {
-                    self.term.set_scrollback_lines(lines)
-                }
-            },
             _ => unimplemented!(),
         }
     }
 
     fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
         match pspec.name() {
-            "user-scrollback-lines" => self.term.scrollback_lines().to_value(),
             _ => unimplemented!(),
         }
     }
@@ -155,6 +150,7 @@ impl Terminal {
 
     fn setup_widgets(&self) {
         self.ctx.borrow_mut().original_scrollback_lines = Some(self.term.scrollback_lines());
+        // self.scrolled.set_property("hscroll-policy", gtk::PolicyType::Never);
 
         ThemeProvider::default().connect_notify_local(
             Some("current-theme"),
@@ -175,10 +171,9 @@ impl Terminal {
             this.on_theme_changed();
         }));
 
-        self.settings.bind_use_overlay_scrolling(&*self.scrolled, "overlay-scrolling").build();
-        self.settings.connect_show_scrollbars_changed(clone!(@weak self as this => move |_| {
-            this.on_show_scrollbars_changed();
-        }));
+        // self.settings.connect_show_scrollbars_changed(clone!(@weak self as this => move |_| {
+        //     this.on_show_scrollbars_changed();
+        // }));
 
         self.setup_drag_drop();
         self.setup_regexes();
@@ -248,7 +243,7 @@ impl Terminal {
         let primary_click = gtk::GestureClick::builder().button(gdk::BUTTON_PRIMARY).build();
         primary_click.connect_pressed(clone!(@weak self as this => move |gesture: &gtk::GestureClick, _: i32, x: f64, y: f64| {
             if let Some(event) = gesture.current_event() {
-                if let (Some(match_str), tag) = this.term.check_match_at(x, y) {
+                if let (Some(match_str), _tag) = this.term.check_match_at(x, y) {
                     if event.modifier_state().contains(gdk::ModifierType::CONTROL_MASK) {
 
                         // TODO: get active window
@@ -266,18 +261,6 @@ impl Terminal {
         }));
 
         self.term.add_controller(secondary_click);
-
-        //     self.settings.
-
-        // this.settings.notify ["scrollback-lines"]
-        //   .connect (() => {
-        //     this.notify_property ("user-scrollback-lines");
-        //   });
-
-        // this.settings.notify ["scrollback-mode"]
-        //   .connect (() => {
-        //     this.notify_property ("user-scrollback-lines");
-        //   });
     }
 
     fn setup_regexes(&self) {
@@ -307,23 +290,32 @@ impl Terminal {
             .set_mapping(|value, _ty| value.get::<CursorBlinkMode>().ok().map(|mode| mode.into_glib().into()))
             .build();
 
-        self.obj()
-            .bind_property("user-scrollback-lines", &self.term.clone(), "scrollback-lines")
-            .sync_create()
+        self.settings.bind_use_overlay_scrolling(&*self.scrolled, "overlay-scrolling").build();
+        // self.obj()
+        //     .bind_property("user-scrollback-lines", &self.term.clone(), "scrollback-lines")
+        //     .sync_create()
+        //     .build();
+
+        self.settings
+            .bind_show_scrollbars(&*self.scrolled, "vscrollbar-policy")
+            .get_only()
+            .mapping(|variant, _ty| {
+                variant
+                    .get::<bool>()
+                    .map(|show| if show { gtk::PolicyType::Automatic } else { gtk::PolicyType::Never }.to_value())
+            })
             .build();
 
-        // Fallback scrolling makes it so that VTE handles scrolling on its own. We
-        // want VTE to let GtkScrolledWindow take care of scrolling if the user
-        // enabled "show scrollbars". Thus we set
-        // `enable-fallback-scrolling = !show-scrollbars`
-        //
-        // See:
-        // - https://gitlab.gnome.org/raggesilver/blackbox/-/issues/179
-        // - https://gitlab.gnome.org/GNOME/vte/-/issues/336
-        self.settings
-            .bind_show_scrollbars(&self.term.clone(), "enable-fallback-scrolling")
-            .flags(SettingsBindFlags::INVERT_BOOLEAN)
-            .build();
+        self.settings.bind_scroll_on_keystroke(&*self.term, "scroll-on-keystroke").build();
+        self.settings.bind_scroll_on_output(&*self.term, "scroll-on-output").build();
+
+        self.settings.connect_scrollback_mode_changed(clone!(@weak self as this => move |_| {
+            this.on_scrollback_changed();
+        }));
+        self.settings.connect_scrollback_lines_changed(clone!(@weak self as this => move |_| {
+            this.on_scrollback_changed();
+        }));
+        self.on_scrollback_changed();
     }
 
     fn on_drop(&self, value: &Value) -> glib::Propagation {
@@ -400,36 +392,23 @@ impl Terminal {
         self.ctx.borrow_mut().padding_provider = Some(provider);
     }
 
-    fn on_show_scrollbars_changed(&self) {
-        let show_scrollbars = self.settings.show_scrollbars();
-        let is_scrollbar_being_used = self.term.parent().map(|term_parent| term_parent.is::<gtk::ScrolledWindow>()).unwrap_or(false);
-        let parent_is_this = self.term.parent().map(|term_parent| term_parent.is::<super::Terminal>()).unwrap_or(false);
-
-        if show_scrollbars != is_scrollbar_being_used {
-            if parent_is_this {
-                self.obj().remove(&*self.term);
-            } else if is_scrollbar_being_used {
-                self.scrolled.set_child(None::<&gtk::Widget>);
-            }
-        }
-
-        // TODO: if overlay scrolling is _not_ used, the scrolledwindow being fully transparent makes it look horrible
-        if show_scrollbars != is_scrollbar_being_used || self.term.parent().is_none() {
-            if show_scrollbars {
-                self.scrolled.set_visible(true);
-                self.scrolled.set_child(Some(&*self.term));
-            } else {
-                self.obj().insert_child_after(&*self.term, None::<&gtk::Widget>);
-                self.scrolled.set_visible(false);
-            }
-        }
-    }
-
     fn background_color(&self, theme: &Theme) -> Option<gdk::RGBA> {
         theme.background_color.as_ref().cloned().map(|mut color| {
             color.set_alpha(self.settings.opacity() as f32 * 0.01);
             color
         })
+    }
+
+    fn scrollback_lines(&self) -> i64 {
+        match self.settings.scrollback_mode() {
+            ScrollbackMode::FixedSize => self.settings.scrollback_lines() as i64,
+            ScrollbackMode::Unlimited => -1i64,
+            ScrollbackMode::Disabled => 0i64,
+        }
+    }
+
+    fn on_scrollback_changed(&self) {
+        self.term.set_scrollback_lines(self.scrollback_lines());
     }
 
     fn on_theme_changed(&self) {
@@ -487,6 +466,7 @@ impl Terminal {
             Some(handler) => self.term.disconnect(handler),
         };
 
+        // TODO: terminal exit behaviour
         // let handler: SignalHandlerId = self.term.connect_child_exited(move |vte, _| {
         //     let mut cxb = ctx.borrow_mut();
         //     let behavior: TerminalExitBehavior =

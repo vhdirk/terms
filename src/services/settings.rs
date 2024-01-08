@@ -44,3 +44,13 @@ impl From<u32> for StylePreference {
         }
     }
 }
+
+impl From<u32> for ScrollbackMode {
+    fn from(value: u32) -> Self {
+        match value {
+            1 => ScrollbackMode::Unlimited,
+            2 => ScrollbackMode::Disabled,
+            _ => ScrollbackMode::FixedSize,
+        }
+    }
+}

@@ -6,7 +6,7 @@ use once_cell::sync::Lazy;
 use tracing::*;
 
 use crate::components::ThemeThumbnail;
-use crate::services::settings::{Settings, StylePreference};
+use crate::services::settings::{ScrollbackMode, Settings, StylePreference};
 use crate::services::theme_provider::ThemeProvider;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
@@ -53,6 +53,10 @@ pub struct PreferencesWindow {
     pub show_scrollbars_switch: TemplateChild<gtk::Switch>,
     #[template_child]
     pub use_overlay_scrolling_switch: TemplateChild<gtk::Switch>,
+    #[template_child]
+    pub scroll_on_keystroke_switch: TemplateChild<gtk::Switch>,
+    #[template_child]
+    pub scroll_on_output_switch: TemplateChild<gtk::Switch>,
 
     // Terminal - Appearance
     #[template_child]
@@ -205,37 +209,22 @@ impl PreferencesWindow {
         self.settings.bind_show_scrollbars(&*self.show_scrollbars_switch, "active").build();
         self.settings.bind_use_overlay_scrolling(&*self.use_overlay_scrolling_switch, "active").build();
         self.settings
-            .bind_scrollback_lines(&*self.custom_scrollback_spin_button, "value")
+            .bind_scrollback_lines(&*self.custom_scrollback_adjustment, "value")
             .mapping(|variant, _ty| variant.get::<u32>().map(|value| (value as f64).to_value()))
             .set_mapping(|value, _ty| value.get::<f64>().ok().map(|value| (value as u32).to_variant()))
             .build();
 
-        // self.settings
-        //     .bind_style_preference(&*self.style_preference_combo_row, "selected")
-        //     .mapping(|variant, _ty| variant.get::<StylePreference>().map(|pref| (pref as u32).to_value()))
-        //     .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| StylePreference::from(v).into()))
-        //     .build();
+        self.settings
+            .bind_scrollback_mode(&*self.scrollback_mode_combo_row, "selected")
+            .mapping(|variant, _ty| variant.get::<ScrollbackMode>().map(|mode| (mode as u32).to_value()))
+            .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| ScrollbackMode::from(v).into()))
+            .build();
 
-        // settings.bind_property (
-        //   "scrollback-mode",
-        //   this,
-        //   "show-custom-scrollback-row",
-        //   BindingFlags.SYNC_CREATE,
-        //   // scrollback-mode -> show-custom-scrollback-row
-        //   (_, from_value, ref to_value) => {
-        //     to_value = from_value.get_uint () == 0;
-        //     return true;
-        //   },
-        //   null
-        // );
-
-        // // 0 = Fixed, 1 = Unlimited, 2 = Disabled
-        // settings.schema.bind(
-        //   "scrollback-mode",
-        //   this.scrollback_mode_combo_row,
-        //   "selected",
-        //   SettingsBindFlags.DEFAULT
-        // );
+        self.settings.connect_scrollback_mode_changed(clone!(@weak self as this => move|s| {
+            this.custom_scrollback_spin_button.set_sensitive(s.scrollback_mode() == ScrollbackMode::FixedSize);
+        }));
+        self.settings.bind_scroll_on_keystroke(&*self.scroll_on_keystroke_switch, "active").build();
+        self.settings.bind_scroll_on_output(&*self.scroll_on_output_switch, "active").build();
 
         // settings.notify ["custom-working-directory"].connect (() => {
         //   if (this.is_custom_working_directory_valid ()) {
@@ -275,20 +264,15 @@ impl PreferencesWindow {
         }));
 
         // need to use themeprovider here to listen to both settings and adw stylemanager
-        ThemeProvider::default().connect_notify_local(
-            Some("dark"),
-            clone!(@weak self as this => move |_, _| {
-            if ThemeProvider::default().property::<bool>("dark") {
-                 this.dark_theme_toggle.set_active(true);
-              }
-              else {
-                this.light_theme_toggle.set_active(true);
-              }
-            }),
-        );
-
-        // set the toggle buttons in the correct state
-        ThemeProvider::default().notify("dark");
+        ThemeProvider::default()
+            .bind_property("dark", &*self.dark_theme_toggle, "active")
+            .sync_create()
+            .build();
+        ThemeProvider::default()
+            .bind_property("dark", &*self.light_theme_toggle, "active")
+            .invert_boolean()
+            .sync_create()
+            .build();
 
         self.filter_themes_check_button.connect_active_notify(clone!(@weak self as this => move|_| {
             this.set_themes_filter_func();

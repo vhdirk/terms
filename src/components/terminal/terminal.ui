@@ -108,6 +108,8 @@
         <property name="hexpand">true</property>
         <property name="halign">fill</property>
         <property name="valign">fill</property>
+        <property name="hscrollbar-policy">never</property>
+
         <child>
           <object class="VteTerminal" id="term">
             <property name="hexpand">true</property>
@@ -117,6 +119,7 @@
             <property name="allow-hyperlink">true</property>
             <property name="receives-default">true</property>
             <property name="scroll-unit-is-pixels">true</property>
+
           </object>
         </child>
       </object>

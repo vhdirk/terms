@@ -43,19 +43,6 @@
       <default>false</default>
     </key>
 
-    <key name="font" type="s">
-      <default>'Monospace 12'</default>
-      <summary>Font family and size</summary>
-    </key>
-    <key name="theme-integration" type="b">
-      <default>true</default>
-      <summary>Whether the window should inherit terminal theme's colors</summary>
-    </key>
-    <key name="opacity" type="u">
-      <default>100</default>
-      <summary>Terminal window background opacity</summary>
-    </key>
-
     <key name="show-menu-button" type="b">
       <default>true</default>
       <summary>Whether or not to display a menu button in the headerbar</summary>
@@ -75,20 +62,32 @@
       <summary>If enabled, terminals will scroll by pixels instead of rows</summary>
     </key>
 
+    <key name="scrollback-mode" enum="@app-id@.ScrollbackMode">
+      <default>'fixed-size'</default>
+      <summary>Scrollback mode</summary>
+    </key>
+    <key name="scrollback-lines" type="u">
+      <default>1000</default>
+      <summary>Number of lines stored in scrollback</summary>
+    </key>
+    <key name="scroll-on-keystroke" type="b">
+      <default>true</default>
+      <summary>Whether to scroll to the bottom when a key is pressed</summary>
+      <description>If true, pressing a key jumps the scrollbar to the bottom.</description>
+    </key>
+    <key name="scroll-on-output" type="b">
+      <default>false</default>
+      <summary>Whether to scroll to the bottom when there's new output</summary>
+      <description>If true, whenever there's new output the terminal will scroll to the bottom.</description>
+    </key>
+
+
+
     <key name="use-sixel" type="b">
       <default>false</default>
       <summary>If enabled, terminals will render sixel escape sequences</summary>
     </key>
 
-    <key name="scrollback-mode" enum="@app-id@.ScrollbackMode">
-      <default>'fixed-size'</default>
-      <summary>Scrollback mode</summary>
-    </key>
-
-    <key name="scrollback-lines" type="u">
-      <default>1000</default>
-      <summary>Number of lines stored in scrollback</summary>
-    </key>
     <key name="floating-controls" type="b">
       <default>false</default>
       <summary>If enabled, floating controls will be shown in headerless mode</summary>
@@ -101,6 +100,21 @@
       <default>400</default>
       <summary>Delay time before showing floating controls</summary>
     </key>
+
+
+    <key name="font" type="s">
+      <default>'Monospace 12'</default>
+      <summary>Font family and size</summary>
+    </key>
+    <key name="theme-integration" type="b">
+      <default>true</default>
+      <summary>Whether the window should inherit terminal theme's colors</summary>
+    </key>
+    <key name="opacity" type="u">
+      <default>100</default>
+      <summary>Terminal window background opacity</summary>
+    </key>
+
     <key name="theme-light" type="s">
       <default>'Adwaita'</default>
       <summary>The light color scheme for the terminal</summary>
