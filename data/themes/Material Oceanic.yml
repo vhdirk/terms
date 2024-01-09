@@ -1,0 +1,25 @@
+---
+name: "Material Oceanic"
+comment: "Material Oceanic Scheme"
+
+color_01: '#252525'    # Black (Host)
+color_02: '#FF5252'    # Red (Syntax string)
+color_03: '#C3D82C'    # Green (Command)
+color_04: '#FFC135'    # Yellow (Command second)
+color_05: '#42A5F5'    # Blue (Path)
+color_06: '#D81B60'    # Magenta (Syntax var)
+color_07: '#00ACC1'    # Cyan (Prompt)
+color_08: '#F5F5F5'    # White
+color_09: '#708284'    # Bright Black
+color_10: '#FF5252'    # Bright Red (Command error)
+color_11: '#C3D82C'    # Bright Green (Exec)
+color_12: '#FFC135'    # Bright Yellow
+color_13: '#42A5F5'    # Bright Blue (Folder)
+color_14: '#D81B60'    # Bright Magenta
+color_15: '#00ACC1'    # Bright Cyan
+color_16: '#F5F5F5'    # Bright White
+
+background: '#263238'  # Background
+foreground: '#A1B0B8'  # Foreground (Text)
+
+cursor: '#A1B0B8'      # Cursor

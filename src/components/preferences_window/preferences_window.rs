@@ -5,10 +5,12 @@ use adw::subclass::prelude::*;
 use gettextrs::gettext;
 use glib::{self, clone};
 use gtk::prelude::*;
+use itertools::Itertools;
 use once_cell::sync::Lazy;
 use tracing::*;
 
 use crate::components::ThemeThumbnail;
+use crate::config::THEMES_URL;
 use crate::services::settings::{ScrollbackMode, Settings, StylePreference, WorkingDirectoryMode};
 use crate::services::theme_provider::ThemeProvider;
 
@@ -170,7 +172,8 @@ impl PreferencesWindow {
     fn setup_widgets(&self) {
         self.connect_signals();
 
-        for (name, theme) in ThemeProvider::default().themes().iter() {
+        // TODO: this is very slow when dealing with lots of themes
+        for (name, theme) in ThemeProvider::default().themes().iter().sorted_by_key(|x| x.0) {
             let thumb = ThemeThumbnail::new(theme);
 
             let theme_name_to = name.clone();
@@ -419,6 +422,6 @@ impl PreferencesWindow {
 
     #[template_callback]
     fn on_get_more_themes_online(&self) {
-        glib::spawn_future_local(gtk::UriLauncher::new("https://github.com/storm119/Tilix-Themes").launch_future(Some(&self.obj().clone())));
+        glib::spawn_future_local(gtk::UriLauncher::new(THEMES_URL).launch_future(Some(&self.obj().clone())));
     }
 }

@@ -11,9 +11,30 @@
         <attribute name="custom">style-switcher</attribute>
       </item>
     </section>
+    <!-- <section>
+      <item>
+        <attribute name="custom">zoom</attribute>
+      </item>
+    </section> -->
     <section>
       <item>
-        <attribute name="label" translatable="yes">Preferences</attribute>
+        <attribute name="id">new-session</attribute>
+        <attribute name="label" translatable="yes">New _Session</attribute>
+        <attribute name="action">win.new-session</attribute>
+        <attribute name="target" type="(ss)">('default','')</attribute>
+        <!-- <attribute name="hidden-when">action-disabled</attribute> -->
+      </item>
+      <item>
+        <attribute name="id">new-window</attribute>
+        <attribute name="label" translatable="yes">New _Window</attribute>
+        <attribute name="action">app.new-window</attribute>
+        <attribute name="target" type="(ss)">('default','')</attribute>
+        <!-- <attribute name="hidden-when">action-disabled</attribute> -->
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
         <attribute name="action">win.edit-preferences</attribute>
       </item>
     </section>
@@ -87,8 +108,7 @@
                                   <object class="GtkPopoverMenu">
                                     <property name="menu-model">main-menu</property>
                                     <child type="style-switcher">
-                                      <object class="PanelThemeSelector" id="theme_selector">
-                                        <property name="action-name">win.theme</property>
+                                      <object class="TermsStyleSwitcher" id="style_switcher">
                                       </object>
                                     </child>
                                   </object>

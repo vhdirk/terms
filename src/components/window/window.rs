@@ -7,7 +7,8 @@ use gtk::{gio, glib};
 use std::cell::RefCell;
 
 use crate::components::PreferencesWindow;
-use crate::services::settings::Settings;
+use crate::config::PROFILE;
+use crate::services::settings::{Settings, StylePreference};
 
 use super::*;
 
@@ -45,6 +46,11 @@ impl ObjectSubclass for Window {
 impl ObjectImpl for Window {
     fn constructed(&self) {
         self.parent_constructed();
+
+        if PROFILE.should_use_devel_class() {
+            let obj = self.obj();
+            obj.add_css_class("devel");
+        }
 
         self.setup_gactions();
         self.setup_widgets();

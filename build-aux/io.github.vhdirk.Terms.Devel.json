@@ -38,17 +38,70 @@
     },
     "modules" : [
         {
-            "name" : "terms",
-            "buildsystem" : "meson",
-            "run-tests" : true,
-            "config-opts" : [
-                "-Dprofile=development"
+            "name": "vte",
+            "buildsystem": "meson",
+            "config-opts": [
+                "--buildtype=release",
+                "-Dgtk3=false",
+                "-Dgtk4=true",
+                "-Dglade=false",
+                "-Dgir=false",
+                "-Dvapi=false"
             ],
-            "builddir" : true,
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "dir",
-                    "path" : "../"
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/GNOME/vte.git",
+                    "branch": "master"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0001-Add-sequences-and-signals-for-desktop-notification.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0002-vte.sh-Emit-OSC-777-from-PROMPT_COMMAND.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0003-Test-the-notification-received-signal.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0004-Support-preexec-notifications-from-an-interactive-sh.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0005-Test-the-shell-preexec-signal.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0006-Support-precmd-notifications-from-an-interactive-she.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0007-Test-the-shell-precmd-signal.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0008-Support-tracking-the-active-container-inside-the-ter.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/0009-expose-notification-shellcmd-containers-to-GTK-4.patch"
+                }
+            ]
+        },
+        {
+            "name": "terms",
+            "buildsystem": "meson",
+            "run-tests": true,
+            "config-opts": ["-Dprofile=development"],
+            "builddir": true,
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "../"
                 }
             ]
         }

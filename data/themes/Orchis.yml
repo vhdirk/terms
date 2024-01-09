@@ -1,0 +1,25 @@
+---
+name: "Orchis"
+comment: "Tango but using Orchis foreground/background colors"
+
+color_01: '#000000'    # Black (Host)
+color_02: '#CC0000'    # Red (Syntax string)
+color_03: '#4D9A05'    # Green (Command)
+color_04: '#C3A000'    # Yellow (Command second)
+color_05: '#3464A3'    # Blue (Path)
+color_06: '#754F7B'    # Magenta (Syntax var)
+color_07: '#05979A'    # Cyan (Prompt)
+color_08: '#D3D6CF'    # White
+color_09: '#545652'    # Bright Black
+color_10: '#EF2828'    # Bright Red (Command error)
+color_11: '#89E234'    # Bright Green (Exec)
+color_12: '#FBE84F'    # Bright Yellow
+color_13: '#729ECF'    # Bright Blue (Folder)
+color_14: '#AC7EA8'    # Bright Magenta
+color_15: '#34E2E2'    # Bright Cyan
+color_16: '#EDEDEB'    # Bright White
+
+background: '#F8F8F8'  # Background
+foreground: '#303030'  # Foreground (Text)
+
+cursor: '#ffffff'      # Cursor

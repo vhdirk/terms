@@ -68,7 +68,7 @@ impl ThemeThumbnailProvider {
     fn process_node(elem: &mut Element, theme: &Theme) {
         let mut color = None;
         if elem.get_attr("label") == Some("palette") {
-            if let Some(palette) = theme.palette {
+            if let Some(palette) = &theme.palette {
                 let mut rng = rand::thread_rng();
                 let random_number = rng.gen_range(7..palette.len());
                 color = palette.get(random_number).cloned();
@@ -76,7 +76,7 @@ impl ThemeThumbnailProvider {
         }
 
         if elem.get_attr("label") == Some("fg") {
-            color = theme.foreground_color;
+            color = theme.foreground;
         }
 
         if let Some(color) = color {

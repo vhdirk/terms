@@ -13,6 +13,8 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal_frame.ui">../../src/components/terminal_frame/terminal_frame.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="search_toolbar.ui">../../src/components/search_toolbar/search_toolbar.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="session.ui">../../src/components/session/session.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="style_switcher.ui">../../src/components/style_switcher/style_switcher.ui</file>
+
     <file compressed="true">style.css</file>
     <file compressed="true">style-dark.css</file>
   </gresource>
@@ -20,6 +22,7 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="theme-thumbnail.svg">svg/theme-thumbnail.svg</file>
   </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/actions">
+    <file preprocess="xml-stripblanks" alias="checkmark-small-symbolic.svg">../icons/actions/checkmark-small-symbolic.svg</file>
   </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/apps">
     <file alias="app-icon.svg" preprocess="xml-stripblanks">../icons/io.github.vhdirk.Terms.svg</file>

@@ -1,6 +1,9 @@
 use std::{borrow::Cow, fmt, rc::Rc};
 
-use crate::config::{self, APP_ID, APP_NAME, VERSION};
+use crate::{
+    components::{TerminalInitArgs, Window},
+    config::{self, APP_ID, APP_NAME, VERSION},
+};
 use adw;
 use gettextrs::gettext;
 use gio::{ApplicationFlags, Settings};
@@ -25,24 +28,26 @@ pub enum AppProfile {
 }
 
 impl AppProfile {
-    /// The string representation of this `AppProfile`.
-    pub fn as_str(&self) -> &str {
-        match self {
-            Self::Stable => "stable",
-            Self::Beta => "beta",
-            Self::Devel => "devel",
-        }
-    }
-
     /// Whether this `AppProfile` should use the `.devel` CSS class on windows.
     pub fn should_use_devel_class(&self) -> bool {
         matches!(self, Self::Devel)
     }
 }
 
+impl Into<&str> for &AppProfile {
+    /// The string representation of this `AppProfile`.
+    fn into(self) -> &'static str {
+        match *self {
+            AppProfile::Stable => "stable",
+            AppProfile::Beta => "beta",
+            AppProfile::Devel => "devel",
+        }
+    }
+}
+
 impl fmt::Display for AppProfile {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(self.as_str())
+        f.write_str(self.into())
     }
 }
 
@@ -94,10 +99,10 @@ mod imp {
     impl ObjectImpl for Application {
         fn constructed(&self) {
             self.parent_constructed();
-            let app = self.obj();
-            app.setup_gactions();
-            app.set_accels_for_action("win.show-help-overlay", &["<Control>question"]);
-            app.set_accels_for_action("win.edit-preferences", &["<Control>comma"]);
+            let obj = self.obj();
+            obj.setup_gactions();
+            obj.set_accels_for_action("win.show-help-overlay", &["<Control>question"]);
+            obj.set_accels_for_action("win.edit-preferences", &["<Control>comma"]);
 
             self.setup_command_line();
         }
@@ -111,21 +116,8 @@ mod imp {
         fn activate(&self) {
             // init the theme provider
             ThemeProvider::default();
-            let app = self.obj();
-            // Get the current window or create one if necessary
 
-            // TODO: keep track of windows
-
-            let window = Window::new(app.as_ref(), self.init_args.borrow().clone());
-
-            // Ask the window manager/compositor to present the window
-            info!("Add window");
-            app.add_window(&window);
-            window.present();
-
-            // let workbench = panel::Workbench::new();
-            // let workspace = Workspace::new(&*app, self.init_args.borrow().clone());
-            // workbench.add_workspace(&workspace);
+            self.new_window(Some(self.init_args.borrow().clone()));
         }
 
         fn startup(&self) {
@@ -211,6 +203,20 @@ mod imp {
             let mut args = self.init_args.borrow_mut();
             *args = init_args;
         }
+
+        pub fn new_window(&self, init_args: Option<TerminalInitArgs>) {
+            // Get the current window or create one if necessary
+            let app = self.obj();
+
+            // TODO: if init_args is none, we have to get them from the last terminal?
+
+            let window = Window::new(&*app, init_args.unwrap());
+
+            // Ask the window manager/compositor to present the window
+            info!("Add window");
+            app.add_window(&window);
+            window.present();
+        }
     }
 }
 
@@ -249,8 +255,15 @@ impl Application {
     fn setup_gactions(&self) {
         let quit_action = gio::ActionEntry::builder("quit").activate(move |app: &Self, _, _| app.quit()).build();
         let about_action = gio::ActionEntry::builder("about").activate(move |app: &Self, _, _| app.show_about()).build();
+        let new_window = gio::ActionEntry::builder("new-window")
+            .activate(move |app: &Self, _, _| app.new_window())
+            .build();
 
-        self.add_action_entries([quit_action, about_action]);
+        self.add_action_entries([quit_action, about_action, new_window]);
+    }
+
+    fn new_window(&self) {
+        self.imp().new_window(None);
     }
 
     fn show_about(&self) {

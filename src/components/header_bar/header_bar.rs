@@ -1,6 +1,8 @@
 use adw::subclass::prelude::*;
 use gtk::glib;
 
+use crate::components::StyleSwitcher;
+
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/header_bar.ui")]
 pub struct HeaderBar {
@@ -8,9 +10,8 @@ pub struct HeaderBar {
     // pub revealer: TemplateChild<gtk::Revealer>,
     #[template_child]
     pub title_widget: TemplateChild<adw::WindowTitle>,
-    // #[template_child]
-    // pub style_switcher: TemplateChild<StyleSwitcher>,
-
+    #[template_child]
+    pub style_switcher: TemplateChild<StyleSwitcher>,
     // #[template_child]
     // pub theme_selector: TemplateChild<panel::ThemeSelector>,
 }

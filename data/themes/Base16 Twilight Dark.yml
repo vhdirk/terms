@@ -1,0 +1,25 @@
+---
+name: 'base16: Twilight (dark)'
+comment: "@chriskempson's base16 Twilight (dark variant)"
+
+color_01: '#1e1e1e'    # Black (Host)
+color_02: '#cf6a4c'    # Red (Syntax string)
+color_03: '#8f9d6a'    # Green (Command)
+color_04: '#f9ee98'    # Yellow (Command second)
+color_05: '#7587a6'    # Blue (Path)
+color_06: '#9b859d'    # Magenta (Syntax var)
+color_07: '#afc4db'    # Cyan (Prompt)
+color_08: '#a7a7a7'    # White
+color_09: '#5f5a60'    # Bright Black
+color_10: '#cf6a4c'    # Bright Red (Command error)
+color_11: '#8f9d6a'    # Bright Green (Exec)
+color_12: '#f9ee98'    # Bright Yellow
+color_13: '#7587a6'    # Bright Blue (Folder)
+color_14: '#9b859d'    # Bright Magenta
+color_15: '#afc4db'    # Bright Cyan
+color_16: '#ffffff'    # Bright White
+
+background: '#1e1e1e'  # Background
+foreground: '#a7a7a7'  # Foreground (Text)
+
+cursor: '#a7a7a7'      # Cursor

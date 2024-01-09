@@ -1,0 +1,25 @@
+---
+name: 'Tango Dark'
+comment: "@vhdirk's preferred dark color scheme"
+
+color_01: '#2e3436'    # Black (Host)
+color_02: '#cc0000'    # Red (Syntax string)
+color_03: '#4e9a06'    # Green (Command)
+color_04: '#c4a000'    # Yellow (Command second)
+color_05: '#3465a4'    # Blue (Path)
+color_06: '#75507b'    # Magenta (Syntax var)
+color_07: '#06989a'    # Cyan (Prompt)
+color_08: '#d3d7cf'    # White
+color_09: '#555753'    # Bright Black
+color_10: '#ef2929'    # Bright Red (Command error)
+color_11: '#8ae234'    # Bright Green (Exec)
+color_12: '#fce94f'    # Bright Yellow
+color_13: '#729fcf'    # Bright Blue (Folder)
+color_14: '#ad7fa8'    # Bright Magenta
+color_15: '#34e2e2'    # Bright Cyan
+color_16: '#eeeeec'    # Bright White
+
+background: '#000000'  # Background
+foreground: '#bbbbbb'  # Foreground (Text)
+
+cursor: '#bbbbbb'      # Cursor

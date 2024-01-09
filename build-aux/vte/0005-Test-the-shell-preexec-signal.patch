@@ -1,0 +1,39 @@
+From 0c067096b83f8d8d4b0615fdd11b4a065ba792e6 Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@gnome.org>
+Date: Fri, 20 Apr 2018 18:21:53 +0200
+Subject: [PATCH 5/9] Test the shell-preexec signal
+
+https://bugzilla.gnome.org/show_bug.cgi?id=711059
+https://bugzilla.gnome.org/show_bug.cgi?id=711060
+---
+ src/app/app.cc | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/app/app.cc b/src/app/app.cc
+index e8a51192..bce12c72 100644
+--- a/src/app/app.cc
++++ b/src/app/app.cc
+@@ -2324,6 +2324,12 @@ notification_received_cb(VteTerminal *terminal,
+         g_print("[%s]: %s\n", summary, body);
+ }
+ 
++static void
++shell_preexec_cb(VteTerminal *terminal)
++{
++        g_print("[shell] executing command\n");
++}
++
+ static void
+ window_lower_window_cb(VteTerminal* terminal,
+                        VteappWindow* window)
+@@ -2617,6 +2623,7 @@ vteapp_window_constructed(GObject *object)
+ 
+ #if VTE_GTK == 3
+         g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
++        g_signal_connect(window->terminal, "shell-preexec", G_CALLBACK(shell_preexec_cb), NULL);
+ 
+         /* Settings */
+         if (options.no_double_buffer) {
+-- 
+2.43.0
+

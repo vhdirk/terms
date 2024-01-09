@@ -389,7 +389,7 @@ impl Terminal {
     }
 
     fn background_color(&self, theme: &Theme) -> Option<gdk::RGBA> {
-        theme.background_color.as_ref().cloned().map(|mut color| {
+        theme.background.as_ref().cloned().map(|mut color| {
             color.set_alpha(self.settings.opacity() as f32 * 0.01);
             color
         })
@@ -409,19 +409,18 @@ impl Terminal {
 
     fn on_theme_changed(&self) {
         if let Some(theme) = ThemeProvider::default().current_theme() {
+            self.term.set_color_cursor_foreground(theme.cursor.as_ref());
+
             let bg = self.background_color(&theme);
 
             if let Some(palette) = theme.palette {
-                self.term.set_colors(
-                    theme.foreground_color.as_ref(),
-                    bg.as_ref(),
-                    palette.iter().collect::<Vec<&gdk::RGBA>>().as_slice(),
-                );
+                self.term
+                    .set_colors(theme.foreground.as_ref(), bg.as_ref(), palette.iter().collect::<Vec<&gdk::RGBA>>().as_slice());
             } else {
                 if let Some(color) = bg.as_ref() {
                     self.term.set_color_background(color)
                 }
-                if let Some(color) = theme.foreground_color.as_ref() {
+                if let Some(color) = theme.foreground.as_ref() {
                     self.term.set_color_foreground(color)
                 }
             }

@@ -13,13 +13,6 @@ glib::wrapper! {
 impl HeaderBar {
     pub fn new() -> Self {
         let obj: Self = glib::Object::builder().build();
-
-        match PROFILE {
-            AppProfile::Devel => {
-                obj.set_css_classes(&["devel"]);
-            },
-            _ => (),
-        }
         obj
     }
 }

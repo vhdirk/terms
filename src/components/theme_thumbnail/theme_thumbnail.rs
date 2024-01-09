@@ -135,7 +135,7 @@ impl ThemeThumbnail {
         if let Some(img) = self.ctx.borrow().picture.as_ref() {
             img.set_paintable(Some(&paintable));
 
-            if let Some(bg_color) = theme.background_color {
+            if let Some(bg_color) = theme.background {
                 let css_provider = gtk::CssProvider::new();
                 css_provider.load_from_data(&format!("picture {{ background-color: {}; }}", bg_color));
                 img.style_context().add_provider(&css_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);

@@ -2,7 +2,7 @@ use glib::{clone, subclass::prelude::*, ObjectExt, ParamSpecBuilderExt, ToValue}
 use std::{
     cell::RefCell,
     collections::HashMap,
-    fs,
+    fs::{self, DirEntry},
     path::{Path, PathBuf},
 };
 use tracing::*;
@@ -110,10 +110,10 @@ impl ObjectImpl for ThemeProvider {
 
 impl ThemeProvider {
     pub fn user_themes_dir() -> Option<PathBuf> {
-        dirs::data_local_dir().map(|d| d.join("terms").join("schemes"))
+        dirs::data_local_dir().map(|d| d.join("terms").join("themes"))
     }
     pub fn app_themes_dir() -> PathBuf {
-        PathBuf::from(PKGDATADIR).join("schemes")
+        PathBuf::from(PKGDATADIR).join("themes")
     }
 
     fn ensure_user_themes_dir_exists() {
@@ -124,22 +124,13 @@ impl ThemeProvider {
         }
     }
 
-    fn read_color_theme(file_path: &Path) -> Option<Theme> {
-        let content = match fs::read_to_string(file_path) {
-            Ok(content) => content,
-            Err(err) => {
-                error!("Error while reading color theme file {}: {}", file_path.to_string_lossy(), err);
-                return None;
-            },
-        };
-
-        match serde_json::from_str(&content) {
-            Ok(value) => Some(value),
-            Err(err) => {
-                error!("Error while reading color theme file {}: {}", file_path.to_string_lossy(), err);
-                return None;
-            },
+    fn is_valid_theme_file(entry: &DirEntry) -> bool {
+        if !entry.path().is_file() {
+            return false;
         }
+
+        entry.path().extension() == Some("yml".as_ref()) || entry.path().extension() == Some("yaml".as_ref())
+        // || entry.path().extension() == Some("json".as_ref())
     }
 
     fn load_color_themes(themes_dir: &Path) -> Vec<Theme> {
@@ -150,8 +141,8 @@ impl ThemeProvider {
         match fs::read_dir(themes_dir).map(|entries| {
             entries
                 .filter_map(Result::ok)
-                .filter(|entry| entry.path().is_file() && entry.path().extension() == Some("json".as_ref()))
-                .filter_map(|entry| Self::read_color_theme(&entry.path()))
+                .filter(Self::is_valid_theme_file)
+                .filter_map(|entry| Theme::from_file(&entry.path()))
                 .collect()
         }) {
             Ok(themes) => themes,
@@ -301,15 +292,15 @@ impl ThemeProvider {
 
                 /* @define-color borders                 mix(@window_fg_color, @window_bg_color, 0.8); */
             "#,
-            background_color = theme.background_color.unwrap_or(gdk::RGBA::new(0.0, 0.0, 0.0, 255.0)),
-            foreground_color = theme.foreground_color.unwrap_or(gdk::RGBA::new(255.0, 255.0, 255.0, 255.0)),
+            background_color = theme.background.unwrap_or(gdk::RGBA::new(0.0, 0.0, 0.0, 255.0)),
+            foreground_color = theme.foreground.unwrap_or(gdk::RGBA::new(255.0, 255.0, 255.0, 255.0)),
         );
 
         // Libadwaita sets border colors to foreground color at 15% opacity. This
         // works beautifuly for all background colors, but it breaks the borders we
         // draw
 
-        if let Some(palette) = theme.palette {
+        if let Some(palette) = &theme.palette {
             if self.style_manager.is_dark() {
                 gtk_theme.push_str(&format!(
                     r#"
@@ -329,11 +320,11 @@ impl ThemeProvider {
                         @define-color root_context_color    mix(@window_bg_color, {destructive_color}, 0.4);
                         @define-color ssh_context_color     mix(@window_bg_color, {ssh_context_color}, 0.6);
                     "#,
-                    destructive_color = palette.get(ThemePaletteColorIndex::LightRed as usize).unwrap().to_string(),
-                    success_color = palette.get(ThemePaletteColorIndex::LightGreen as usize).unwrap().to_string(),
-                    accent_color = palette.get(ThemePaletteColorIndex::LightBlue as usize).unwrap().to_string(),
-                    warning_color = palette.get(ThemePaletteColorIndex::LightYellow as usize).unwrap().to_string(),
-                    ssh_context_color = palette.get(ThemePaletteColorIndex::LightPurple as usize).unwrap().to_string()
+                    destructive_color = palette[ThemePaletteColorIndex::LightRed as usize].to_string(),
+                    success_color = palette[ThemePaletteColorIndex::LightGreen as usize].to_string(),
+                    accent_color = palette[ThemePaletteColorIndex::LightBlue as usize].to_string(),
+                    warning_color = palette[ThemePaletteColorIndex::LightYellow as usize].to_string(),
+                    ssh_context_color = palette[ThemePaletteColorIndex::LightPurple as usize].to_string()
                 ));
             } else {
                 gtk_theme.push_str(&format!(
@@ -353,11 +344,11 @@ impl ThemeProvider {
                         @define-color root_context_color    mix(@window_bg_color, {destructive_color}, 0.4);
                         @define-color ssh_context_color     mix(@window_bg_color, {ssh_context_color}, 0.6);
                     "#,
-                    destructive_color = palette.get(ThemePaletteColorIndex::Red as usize).unwrap().to_string(),
-                    success_color = palette.get(ThemePaletteColorIndex::Green as usize).unwrap().to_string(),
-                    accent_color = palette.get(ThemePaletteColorIndex::Blue as usize).unwrap().to_string(),
-                    warning_color = palette.get(ThemePaletteColorIndex::Yellow as usize).unwrap().to_string(),
-                    ssh_context_color = palette.get(ThemePaletteColorIndex::Purple as usize).unwrap().to_string()
+                    destructive_color = palette[ThemePaletteColorIndex::Red as usize].to_string(),
+                    success_color = palette[ThemePaletteColorIndex::Green as usize].to_string(),
+                    accent_color = palette[ThemePaletteColorIndex::Blue as usize].to_string(),
+                    warning_color = palette[ThemePaletteColorIndex::Yellow as usize].to_string(),
+                    ssh_context_color = palette[ThemePaletteColorIndex::Purple as usize].to_string()
                 ));
             }
         }
