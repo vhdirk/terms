@@ -9,6 +9,7 @@ use glib::ObjectExt;
 use gtk::glib;
 use gtk::graphene;
 use gtk::CompositeTemplate;
+use gtk::SystemSetting;
 use tracing::*;
 use vte::BoxExt;
 use vte::CursorBlinkMode;
@@ -52,8 +53,6 @@ struct TerminalContext {
     pub spawn_handle: Option<JoinHandle<()>>,
     pub spawn_ctx: Option<SpawnCtx>,
     pub drop_handler_id: Option<SignalHandlerId>,
-
-    pub original_scrollback_lines: Option<i64>,
 
     pub padding_provider: Option<gtk::CssProvider>,
 }
@@ -112,7 +111,7 @@ impl ObjectImpl for Terminal {
         PROPERTIES.as_ref()
     }
 
-    fn set_property(&self, _id: usize, value: &Value, pspec: &glib::ParamSpec) {
+    fn set_property(&self, _id: usize, _value: &Value, pspec: &glib::ParamSpec) {
         match pspec.name() {
             _ => unimplemented!(),
         }
@@ -149,9 +148,6 @@ impl Terminal {
     }
 
     fn setup_widgets(&self) {
-        self.ctx.borrow_mut().original_scrollback_lines = Some(self.term.scrollback_lines());
-        // self.scrolled.set_property("hscroll-policy", gtk::PolicyType::Never);
-
         ThemeProvider::default().connect_notify_local(
             Some("current-theme"),
             clone!(@weak self as this => move |_, _| {
@@ -159,7 +155,10 @@ impl Terminal {
             }),
         );
 
-        self.settings.connect_font_changed(clone!(@weak self as this => move |_| {
+        self.settings.connect_system_font_changed(clone!(@weak self as this => move |_| {
+            this.on_font_changed();
+        }));
+        self.settings.connect_custom_font_changed(clone!(@weak self as this => move |_| {
             this.on_font_changed();
         }));
 
@@ -170,10 +169,6 @@ impl Terminal {
         self.settings.connect_opacity_changed(clone!(@weak self as this => move |_| {
             this.on_theme_changed();
         }));
-
-        // self.settings.connect_show_scrollbars_changed(clone!(@weak self as this => move |_| {
-        //     this.on_show_scrollbars_changed();
-        // }));
 
         self.setup_drag_drop();
         self.setup_regexes();
@@ -373,7 +368,8 @@ impl Terminal {
     }
 
     fn on_font_changed(&self) {
-        let font = self.settings.font();
+        // TODO: system font
+        let font = self.settings.custom_font();
         self.term.set_font_desc(Some(&pango::FontDescription::from_string(&font)))
     }
 

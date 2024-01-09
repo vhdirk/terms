@@ -1,4 +1,3 @@
-use crate::components::StyleSwitcher;
 use adw::subclass::prelude::*;
 use gtk::glib;
 
@@ -9,9 +8,11 @@ pub struct HeaderBar {
     // pub revealer: TemplateChild<gtk::Revealer>,
     #[template_child]
     pub title_widget: TemplateChild<adw::WindowTitle>,
+    // #[template_child]
+    // pub style_switcher: TemplateChild<StyleSwitcher>,
 
-    #[template_child]
-    pub style_switcher: TemplateChild<StyleSwitcher>,
+    // #[template_child]
+    // pub theme_selector: TemplateChild<panel::ThemeSelector>,
 }
 
 #[glib::object_subclass]

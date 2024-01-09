@@ -19,11 +19,12 @@ Terms is an experiment. I like [Tilix][Tilix] and I like [BlackBox]. Why can't I
 - [x] Multiple windows
 - [x] Drag/drop support
 - [x] href/mailto regex matching
+- [x] Settings
+- [x] Theming (should be compatible with Black Box/Tilix)
 - [ ] Tabs
 - [ ] Tiling
+- [ ] Profiles
 - [ ] Flatpak support
-- [x] Settings
-- [x] Theming (should be compatible with Black Box)
 - [ ] Store and load sessions like Tilix does
 - [ ] iTerm2-like support for tmux
 
@@ -54,18 +55,16 @@ Join the GNOME and gtk-rs community!
 
 ## Credits
 
-Lots of ideas and code from these projects:
+Lots of ideas and code is ~stolen~ borrowed from these projects:
 
-- [Podcasts]
-- [Shortwave]
 - [BlackBox]
 - [Tilix]
 - [Fractal]
 - [Zoha]
+- [Prompt]
 
-[Podcasts]: https://gitlab.gnome.org/World/podcasts
-[Shortwave]: https://gitlab.gnome.org/World/Shortwave
 [BlackBox]: https://gitlab.gnome.org/raggesilver/blackbox
 [Tilix]: https://github.com/gnunn1/tilix
 [Fractal]: https://gitlab.gnome.org/World/fractal
 [Zoha]: https://github.com/hkoosha/zoha4
+[Prompt]: https://gitlab.gnome.org/chergert/prompt

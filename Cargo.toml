@@ -22,7 +22,7 @@ gdk = { package = "gdk4", version = "^0.7", features = ["v4_12"] }
 gtk = { package = "gtk4", version = "^0.7", features = ["v4_12"] }
 
 adw = { package = "libadwaita", version = "0.5", features = ["v1_4"] }
-# panel = { package = "libpanel", version = "0.3" }
+panel = { package = "libpanel", version = "0.3" }
 vte = { git = "https://gitlab.gnome.org/vhdirk/vte4-rs", package = "vte4", branch = "0.7", version = "0.7", features = [
     "v0_72",
 ] }

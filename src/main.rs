@@ -43,23 +43,13 @@ fn init_gettext() {
     gettextrs::textdomain(GETTEXT_PACKAGE).expect("Unable to switch to the text domain");
 }
 
-fn init_resource() {
-    gtk::Window::set_default_icon_name(APP_ID);
-    glib::set_application_name(&gettext("Terms"));
-    gio::resources_register_include!("resources.gresource").expect("Could not initialize resources");
-}
-
 pub fn init() {
     tracing_subscriber::registry()
         .with(fmt::layer().with_filter(EnvFilter::from_default_env()))
         .init();
 
-    gtk::init().expect("Could not initialize gtk");
-    // adw::init().expect("Could not initialize libadwaita");
-    // panel::init();
-
     init_gettext();
-    init_resource();
+    gio::resources_register_include!("resources.gresource").expect("Could not initialize resources");
 }
 
 fn main() -> glib::ExitCode {

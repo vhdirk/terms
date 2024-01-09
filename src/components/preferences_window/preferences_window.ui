@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-<requires lib="gtk" version="4.10" />
-<requires lib="libadwaita" version="1.4" />
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
   <template class="TermsPreferencesWindow" parent="AdwPreferencesWindow">
     <property name="default-width">640</property>
     <property name="default-height">800</property>
@@ -15,14 +15,8 @@
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Behavior</property>
             <child>
-              <object class="AdwActionRow" id="remember_window_size_row">
-                <property name="activatable-widget">remember_window_size_switch</property>
+              <object class="AdwSwitchRow" id="remember_window_size_switch">
                 <property name="title" translatable="yes">Remember Window Size</property>
-                <child>
-                  <object class="GtkSwitch" id="remember_window_size_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
@@ -148,20 +142,27 @@
     </child>
     <child>
       <object class="AdwPreferencesPage">
-        <property name="name">terminal</property>
-        <property name="title" translatable="yes">Terminal</property>
+        <property name="name">appearance</property>
+        <property name="title" translatable="yes">Appearance</property>
         <property name="icon-name">utilities-terminal-symbolic</property>
+
         <!--- Text section -->
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Text</property>
+
             <child>
-              <object class="AdwActionRow">
+              <object class="AdwSwitchRow" id="system_font_switch">
+                <property name="title" translatable="yes">Use system font</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow" id="custom_font_row">
                 <property name="activatable">True</property>
                 <property name="title" translatable="yes">Font</property>
-        <signal name="activated" handler="on_font_row_activated" swapped="true" />
+                <signal name="activated" handler="on_custom_font_row_activated" swapped="true" />
                 <child>
-                  <object class="GtkLabel" id="font_label">
+                  <object class="GtkLabel" id="custom_font_label">
                     <property name="valign">center</property>
                     <property name="label" translatable="no">Monospace 10</property>
                   </object>
@@ -172,53 +173,33 @@
               <object class="AdwExpanderRow" id="cell_spacing_expander_row">
                 <property name="title" translatable="yes">Cell Spacing</property>
                 <child>
-                  <object class="AdwActionRow">
+                  <object class="AdwSpinRow">
                     <property name="title" translatable="yes">Width</property>
-                    <child>
-                      <object class="GtkSpinButton">
-                        <property name="valign">center</property>
-                        <property name="digits">2</property>
-                        <property name="adjustment">cell_width_spacing_adjustment</property>
-                      </object>
-                    </child>
+                    <property name="valign">center</property>
+                    <property name="digits">2</property>
+                    <property name="adjustment">cell_width_spacing_adjustment</property>
                   </object>
                 </child>
                 <child>
-                  <object class="AdwActionRow">
+                  <object class="AdwSpinRow">
                     <property name="title" translatable="yes">Height</property>
-                    <child>
-                      <object class="GtkSpinButton">
-                        <property name="valign">center</property>
-                        <property name="digits">2</property>
-                        <property name="adjustment">cell_height_spacing_adjustment</property>
-                      </object>
-                    </child>
+                    <property name="valign">center</property>
+                    <property name="digits">2</property>
+                    <property name="adjustment">cell_height_spacing_adjustment</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="AdwActionRow">
-                <property name="activatable-widget">bold_is_bright_switch</property>
+              <object class="AdwSwitchRow" id="bold_is_bright_switch">
                 <property name="title" translatable="yes">Bright Bold Text</property>
                 <property name="subtitle" translatable="yes">Use bright colors for bold text.</property>
-                <child>
-                  <object class="GtkSwitch" id="bold_is_bright_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>
-              <object class="AdwActionRow" id="easy_copy_paste_action_row">
-                <property name="activatable-widget">easy_copy_paste_switch</property>
+              <object class="AdwSwitchRow" id="easy_copy_paste_switch">
                 <property name="title" translatable="yes">Easy Copy &amp;amp; Paste</property>
                 <property name="subtitle" translatable="yes">Use ctrl+c/ctrl+v for copy/paste.</property>
-                <child>
-                  <object class="GtkSwitch" id="easy_copy_paste_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
@@ -228,18 +209,11 @@
             <property name="title" translatable="yes">Terminal</property>
 
             <child>
-              <object class="AdwActionRow">
+              <object class="AdwSwitchRow" id="terminal_bell_switch">
                 <property name="title" translatable="yes">Audible Bell</property>
                 <property name="subtitle" translatable="yes">If enabled, terminals might use an audible bell to indicate events.</property>
-                <property name="activatable-widget">terminal_bell_switch</property>
-                <child>
-                  <object class="GtkSwitch" id="terminal_bell_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
-
 
             <child>
               <object class="AdwExpanderRow">
@@ -262,7 +236,8 @@
                 <child>
                   <object class="AdwComboRow" id="cursor_blink_mode_combo_row">
                     <property name="title" translatable="yes">Cursor Blinking</property>
-                    <property name="subtitle" translatable="yes">Whether or not the cursor should blink.</property>
+                    <property name="subtitle" translatable="yes">Whether or not the cursor should
+                      blink.</property>
                     <property name="model">
                       <object class="GtkStringList">
                         <items>
@@ -278,49 +253,43 @@
             </child>
 
             <child>
-              <object class="AdwActionRow">
+              <object class="AdwSpinRow" id="padding_spin_button">
                 <property name="title" translatable="yes">Padding</property>
-                <child>
-                  <object class="GtkSpinButton" id="padding_spin_button">
-                    <property name="adjustment">padding_spin_button_adjustment</property>
-                    <property name="climb-rate">1</property>
-                    <property name="numeric">1</property>
-                    <property name="snap-to-ticks">True</property>
-                    <property name="valign">center</property>
-                  </object>
-                </child>
+                <property name="adjustment">padding_spin_button_adjustment</property>
+                <property name="climb-rate">1</property>
+                <property name="numeric">1</property>
+                <property name="snap-to-ticks">True</property>
               </object>
             </child>
             <child>
-              <object class="AdwActionRow">
+              <object class="AdwSpinRow" id="opacity_spin_button">
                 <property name="title" translatable="yes">Opacity</property>
                 <property name="subtitle" translatable="yes">Terminal background opacity.</property>
-                <child>
-                  <object class="GtkSpinButton" id="opacity_spin_button">
-                    <property name="adjustment">opacity_spin_button_adjustment</property>
-                    <property name="climb-rate">1</property>
-                    <property name="numeric">1</property>
-                    <property name="snap-to-ticks">False</property>
-                    <property name="valign">center</property>
-                  </object>
-                </child>
+                <property name="adjustment">opacity_spin_button_adjustment</property>
+                <property name="climb-rate">1</property>
+                <property name="numeric">1</property>
+                <property name="snap-to-ticks">False</property>
               </object>
             </child>
           </object>
         </child>
 
-        <!-- <child>
+        <child>
           <object class="AdwPreferencesGroup">
-            <!- <property name="title" translatable="yes">Working Directory</property>
-            <property name="description" translatable="yes">Set a directory to be used for new tabs and windows.</property> ->
+            <!-- <property name="title" translatable="yes">Working Directory</property> -->
+            <!-- <property name="description" translatable="yes">Set a directory to be used for new
+            tabs
+        and windows.</property> -->
             <child>
               <object class="AdwComboRow" id="working_directory_mode_combo_row">
                 <property name="title" translatable="yes">Working Directory</property>
-                <!- <binding name="subtitle">
+
+                <!--<binding
+            name="subtitle">
                   <closure type="gchararray" function="explain_working_directory_mode">
                     <lookup name="selected">working_directory_mode_combo_row</lookup>
                   </closure>
-                </binding> ->
+                </binding> -->
                 <property name="model">
                   <object class="GtkStringList">
                     <items>
@@ -336,16 +305,10 @@
             <child>
               <object class="AdwEntryRow" id="custom_working_directory_entry_row">
                 <property name="title" translatable="yes">Custom Working Directory</property>
-                <!- <binding name="visible">
-                  <closure type="gboolean" function="show_custom_working_directory_entry_row">
-                    <lookup name="selected">working_directory_mode_combo_row</lookup>
-                  </closure>
-                </binding> ->
-
                 <child>
                   <object class="GtkButton">
                     <property name="valign">center</property>
-                    <!- <signal name="clicked" handler="set_custom_working_dir_to_home" swapped="no" /> ->
+                    <signal name="clicked" handler="set_custom_working_dir_to_home" swapped="true" />
                     <style>
                       <class name="flat" />
                     </style>
@@ -360,7 +323,7 @@
               </object>
             </child>
           </object>
-        </child> -->
+        </child>
 
         <child>
           <object class="AdwPreferencesGroup">
@@ -369,27 +332,14 @@
               <object class="AdwExpanderRow" id="scrollbars_expander_row">
                 <property name="title" translatable="yes">Scrollbars</property>
                 <child>
-                  <object class="AdwActionRow">
+                  <object class="AdwSwitchRow" id="show_scrollbars_switch">
                     <property name="title" translatable="yes">Show Scrollbars</property>
-                    <property name="activatable-widget">show_scrollbars_switch</property>
-                    <child>
-                      <object class="GtkSwitch" id="show_scrollbars_switch">
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="AdwActionRow" id="use_overlay_scrolling_action_row">
+                  <object class="AdwSwitchRow" id="use_overlay_scrolling_switch">
                     <property name="title" translatable="yes">Use Overlay Scrolling</property>
-                    <property name="activatable-widget">use_overlay_scrolling_switch</property>
-        <property name="sensitive" bind-source="show_scrollbars_switch"
-          bind-property="active" bind-flags="sync-create" />
-                    <child>
-                      <object class="GtkSwitch" id="use_overlay_scrolling_switch">
-                        <property name="valign">center</property>
-                      </object>
-                    </child>
+                    <property name="sensitive" bind-source="show_scrollbars_switch" bind-property="active" bind-flags="sync-create" />
                   </object>
                 </child>
               </object>
@@ -411,103 +361,63 @@
             </child>
 
             <child>
-              <object class="AdwActionRow">
+              <object class="AdwSpinRow" id="custom_scrollback_spin_button">
                 <property name="title" translatable="yes">Scrollback Lines</property>
-                <property name="activatable-widget">custom_scrollback_spin_button</property>
-                <child>
-                  <object class="GtkSpinButton" id="custom_scrollback_spin_button">
-                    <property name="valign">center</property>
-                    <property name="width-chars">6</property>
-                    <property name="adjustment">custom_scrollback_adjustment</property>
-                  </object>
-                </child>
+                <property name="valign">center</property>
+                <property name="width-chars">6</property>
+                <property name="adjustment">custom_scrollback_adjustment</property>
               </object>
             </child>
 
             <child>
-              <object class="AdwActionRow" id="scroll_on_keystroke_row">
-                <property name="activatable-widget">scroll_on_keystroke_switch</property>
+              <object class="AdwSwitchRow" id="scroll_on_keystroke_switch">
                 <property name="title" translatable="yes">Scroll on keystroke</property>
                 <property name="subtitle" translatable="yes">Whether to scroll to the bottom when a key is pressed.</property>
-                <child>
-                  <object class="GtkSwitch" id="scroll_on_keystroke_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
 
             <child>
-              <object class="AdwActionRow" id="scroll_on_output_row">
-                <property name="activatable-widget">scroll_on_output_switch</property>
+              <object class="AdwSwitchRow" id="scroll_on_output_switch">
                 <property name="title" translatable="yes">Scroll on output</property>
                 <property name="subtitle" translatable="yes">Whether to scroll to the bottom when there's new output.</property>
-                <child>
-                  <object class="GtkSwitch" id="scroll_on_output_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
-
           </object>
         </child>
 
-        <!-- <child>
+        <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Command</property>
             <child>
-              <object class="AdwActionRow">
-                <property name="activatable-widget">run_command_as_login_switch</property>
+              <object class="AdwSwitchRow" id="run_command_as_login_switch">
                 <property name="title" translatable="yes">Run Command as Login Shell</property>
-                <child>
-                  <object class="GtkSwitch" id="run_command_as_login_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>
-              <object class="AdwActionRow">
-                <property name="activatable-widget">use_custom_shell_command_switch</property>
+              <object class="AdwSwitchRow" id="use_custom_shell_command_switch">
                 <property name="title" translatable="yes">Use Custom Command</property>
-                <child>
-                  <object class="GtkSwitch" id="use_custom_shell_command_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>
               <object class="AdwEntryRow" id="custom_command_entry_row">
                 <property name="title" translatable="yes">Custom Command</property>
-              </object>
-            </child>
-          </object>
-        </child> -->
-
-        <!--<child>
-          <object class="AdwPreferencesGroup">
-            <!- This is too repetitive. Keep commented for now. ->
-            <!- <property name="title" translatable="yes">Desktop Integration</property> ->
-            <!- <property name="description" translatable="yes">Integrate Black Box with your
-            desktop environment.</property> ->
-            <child>
-              <object class="AdwActionRow">
-                <property name="activatable-widget">notify_process_completion_switch</property>
-                <property name="title" translatable="yes">Notification on Completed Task</property>
-                <property name="subtitle" translatable="yes">Send a desktop notification when a
-                  command is completed on an unfocussed tab.</property>
-                <child>
-                  <object class="GtkSwitch" id="notify_process_completion_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
+                <property name="sensitive" bind-source="use_custom_shell_command_switch" bind-property="active" bind-flags="sync-create" />
               </object>
             </child>
           </object>
         </child>
-      -->
+
+        <child>
+          <object class="AdwPreferencesGroup">
+            <child>
+              <object class="AdwSwitchRow" id="notify_process_completion_switch">
+                <property name="title" translatable="yes">Notification on Completed Task</property>
+                <property name="subtitle" translatable="yes">Send a desktop notification when a command is completed on an unfocussed tab.</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Appearance</property>
@@ -526,15 +436,9 @@
               </object>
             </child>
             <child>
-              <object class="AdwActionRow">
-                <property name="activatable-widget">theme_integration_switch</property>
+              <object class="AdwSwitchRow" id="theme_integration_switch">
                 <property name="title" translatable="yes">Theme Integration</property>
                 <property name="subtitle" translatable="yes">Paint the whole app with colors from your colorscheme.</property>
-                <child>
-                  <object class="GtkSwitch" id="theme_integration_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>

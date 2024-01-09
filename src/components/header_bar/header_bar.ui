@@ -87,7 +87,9 @@
                                   <object class="GtkPopoverMenu">
                                     <property name="menu-model">main-menu</property>
                                     <child type="style-switcher">
-                                      <object class="TermsStyleSwitcher" id="style_switcher"></object>
+                                      <object class="PanelThemeSelector" id="theme_selector">
+                                        <property name="action-name">win.theme</property>
+                                      </object>
                                     </child>
                                   </object>
                                 </property>

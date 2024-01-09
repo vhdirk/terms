@@ -7,7 +7,7 @@ use once_cell::sync::Lazy;
 use std::cell::RefCell;
 
 use super::TerminalInitArgs;
-use crate::components::terminal_panel::TerminalPanel;
+use crate::components::terminal_frame::TerminalFrame;
 
 #[derive(Debug, Default, CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/session.ui")]
@@ -56,7 +56,7 @@ impl Session {
     }
 
     fn setup_widgets(&self) {
-        let panel = TerminalPanel::new(self.init_args.borrow().clone());
+        let panel = TerminalFrame::new(self.init_args.borrow().clone());
         self.obj().set_property("child", &panel);
 
         panel.connect_exit(clone!(@weak self as this => move |panel| {

@@ -54,3 +54,13 @@ impl From<u32> for ScrollbackMode {
         }
     }
 }
+
+impl From<u32> for WorkingDirectoryMode {
+    fn from(value: u32) -> Self {
+        match value {
+            1 => WorkingDirectoryMode::Home,
+            2 => WorkingDirectoryMode::Custom,
+            _ => WorkingDirectoryMode::PreviousTerminal,
+        }
+    }
+}

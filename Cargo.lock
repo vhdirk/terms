@@ -1522,6 +1522,38 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "302d7ab3130588088d277783b1e2d2e10c9e9e4a16dd9050e6ec93fb3e7048f4"
 
 [[package]]
+name = "libpanel"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f90c367dcd0b5972ff50fed72deb4ec22946cb0346e9be5bd357afe8d097f392"
+dependencies = [
+ "futures-core",
+ "gdk4",
+ "gio",
+ "glib",
+ "gtk4",
+ "libadwaita",
+ "libc",
+ "libpanel-sys",
+]
+
+[[package]]
+name = "libpanel-sys"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "daf15707b11148fe5f084c7ee2dcd109accd24866357c0bf563d11d4f4b28246"
+dependencies = [
+ "gdk4-sys",
+ "gio-sys",
+ "glib-sys",
+ "gobject-sys",
+ "gtk4-sys",
+ "libadwaita-sys",
+ "libc",
+ "system-deps",
+]
+
+[[package]]
 name = "libredox"
 version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2684,6 +2716,7 @@ dependencies = [
  "gsettings-macro",
  "gtk4",
  "libadwaita",
+ "libpanel",
  "librsvg",
  "once_cell",
  "pango",

@@ -25,13 +25,13 @@ glib_req = '>= @0@'.format(glib_req_version)
 gtk_req = '>= @0@'.format(gtk_req_version)
 gir_req = '>= @0@'.format(gir_req_version)
 libadwaita_req = '>= @0@'.format(libadwaita_req_version)
-# libpanel_req = '>= @0@'.format(libpanel_req_version)
+libpanel_req = '>= @0@'.format(libpanel_req_version)
 
 dependency('glib-2.0', version: glib_req)
 dependency('gio-2.0', version: glib_req) # always same version as glib
 dependency('gtk4', version: gtk_req)
 dependency('libadwaita-1', version: libadwaita_req)
-# dependency('libpanel-1', version: libpanel_req)
+dependency('libpanel-1', version: libpanel_req)
 
 glib_compile_resources = find_program('glib-compile-resources', required: true)
 glib_compile_schemas = find_program('glib-compile-schemas', required: true)

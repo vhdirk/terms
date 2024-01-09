@@ -102,7 +102,11 @@
     </key>
 
 
-    <key name="font" type="s">
+    <key name="system-font" type="b">
+      <default>true</default>
+      <summary>If enabled, uses the system font for terminal</summary>
+    </key>
+    <key name="custom-font" type="s">
       <default>'Monospace 12'</default>
       <summary>Font family and size</summary>
     </key>

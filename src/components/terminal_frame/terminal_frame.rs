@@ -11,22 +11,19 @@ use glib::{clone, subclass::Signal};
 use once_cell::sync::Lazy;
 
 #[derive(Debug, Default, CompositeTemplate)]
-#[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_panel.ui")]
-// #[properties(wrapper_type = super::TerminalPanel)]
-pub struct TerminalPanel {
+#[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_frame.ui")]
+// #[properties(wrapper_type = super::TerminalFrame)]
+pub struct TerminalFrame {
     pub init_args: RefCell<TerminalInitArgs>,
 
     #[template_child]
     terminal: TemplateChild<Terminal>,
-
-    #[template_child]
-    search_toolbar: TemplateChild<SearchToolbar>,
 }
 
 #[glib::object_subclass]
-impl ObjectSubclass for TerminalPanel {
-    const NAME: &'static str = "TermsTerminalPanel";
-    type Type = super::TerminalPanel;
+impl ObjectSubclass for TerminalFrame {
+    const NAME: &'static str = "TermsTerminalFrame";
+    type Type = super::TerminalFrame;
     type ParentType = gtk::Box;
 
     fn class_init(klass: &mut Self::Class) {
@@ -39,7 +36,7 @@ impl ObjectSubclass for TerminalPanel {
 }
 
 // #[glib::derived_properties]
-impl ObjectImpl for TerminalPanel {
+impl ObjectImpl for TerminalFrame {
     fn constructed(&self) {
         self.parent_constructed();
 
@@ -52,11 +49,11 @@ impl ObjectImpl for TerminalPanel {
     }
 }
 
-impl WidgetImpl for TerminalPanel {}
-impl BoxImpl for TerminalPanel {}
+impl WidgetImpl for TerminalFrame {}
+impl BoxImpl for TerminalFrame {}
 
 #[gtk::template_callbacks]
-impl TerminalPanel {
+impl TerminalFrame {
     pub fn set_init_args(&self, init_args: TerminalInitArgs) {
         let mut args = self.init_args.borrow_mut();
         *args = init_args;
@@ -78,18 +75,18 @@ impl TerminalPanel {
 // // //     <child>
 // // //       <object class="GtkScrolledWindow" id="scrolled">
 // // //         <!-- <property name="child">
-// // //           <lookup name="TerminalPanel">TerminalPanelSession</lookup>
+// // //           <lookup name="TerminalFrame">TerminalFrameSession</lookup>
 // // //         </property> -->
 // // //       </object>
 // // //     </child>
 
 // // //     <child>
-// // //       <object class="TerminalPanelSearchToolbar" id="search_toolbar">
-// // //         <!-- <binding name="TerminalPanel">
-// // //           <lookup name="TerminalPanel">TerminalPanelSession</lookup>
+// // //       <object class="TerminalFrameSearchToolbar" id="search_toolbar">
+// // //         <!-- <binding name="TerminalFrame">
+// // //           <lookup name="TerminalFrame">TerminalFrameSession</lookup>
 // // //         </binding> -->
 
-// // //         <property name="TerminalPanel" bind-source="TerminalPanelSession" bind-property="TerminalPanel" bind-flags="sync-create" />
+// // //         <property name="TerminalFrame" bind-source="TerminalFrameSession" bind-property="TerminalFrame" bind-flags="sync-create" />
 // // //       </object>
 // // //     </child>
 // // //   </template>

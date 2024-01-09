@@ -1,4 +1,4 @@
-use std::{borrow::Cow, fmt};
+use std::{borrow::Cow, fmt, rc::Rc};
 
 use crate::config::{self, APP_ID, APP_NAME, VERSION};
 use adw;
@@ -130,6 +130,9 @@ mod imp {
 
         fn startup(&self) {
             self.parent_startup();
+
+            gtk::Window::set_default_icon_name(APP_ID);
+            glib::set_application_name(&gettext("Terms"));
         }
 
         fn command_line(&self, command_line: &gio::ApplicationCommandLine) -> ExitCode {
@@ -231,6 +234,7 @@ impl Application {
             .property("resource-base-path", Some("/io/github/vhdirk/Terms"))
             .build();
         app.set_default();
+        Self::register_startup_hook(&app);
         app
     }
 
@@ -270,5 +274,20 @@ impl Application {
             .modal(true)
             .build();
         dialog.present();
+    }
+
+    pub(crate) fn register_startup_hook(app: &Self) {
+        let signalid: Rc<RefCell<Option<glib::SignalHandlerId>>> = Rc::new(RefCell::new(None));
+        {
+            let signalid_ = signalid.clone();
+
+            let id = app.connect_startup(move |app| {
+                app.disconnect(signalid_.borrow_mut().take().expect("Signal ID went missing"));
+                gtk::init().expect("Failed to initalize gtk4");
+                adw::init().expect("Failed to initialize adw");
+                panel::init();
+            });
+            *signalid.borrow_mut() = Some(id);
+        }
     }
 }

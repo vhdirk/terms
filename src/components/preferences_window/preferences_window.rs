@@ -1,3 +1,6 @@
+use std::path::PathBuf;
+
+use adw::prelude::{ComboRowExt, ExpanderRowExt};
 use adw::subclass::prelude::*;
 use gettextrs::gettext;
 use glib::{self, clone};
@@ -6,7 +9,7 @@ use once_cell::sync::Lazy;
 use tracing::*;
 
 use crate::components::ThemeThumbnail;
-use crate::services::settings::{ScrollbackMode, Settings, StylePreference};
+use crate::services::settings::{ScrollbackMode, Settings, StylePreference, WorkingDirectoryMode};
 use crate::services::theme_provider::ThemeProvider;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
@@ -16,23 +19,27 @@ pub struct PreferencesWindow {
 
     // Behaviour
     #[template_child]
-    pub remember_window_size_switch: TemplateChild<gtk::Switch>,
+    pub remember_window_size_switch: TemplateChild<adw::SwitchRow>,
 
     // Terminal - Text
     #[template_child]
-    pub font_label: TemplateChild<gtk::Label>,
+    pub system_font_switch: TemplateChild<adw::SwitchRow>,
+    #[template_child]
+    pub custom_font_label: TemplateChild<gtk::Label>,
+    #[template_child]
+    pub custom_font_row: TemplateChild<adw::ActionRow>,
     #[template_child]
     pub cell_width_spacing_adjustment: TemplateChild<gtk::Adjustment>,
     #[template_child]
     pub cell_height_spacing_adjustment: TemplateChild<gtk::Adjustment>,
     #[template_child]
-    pub bold_is_bright_switch: TemplateChild<gtk::Switch>,
+    pub bold_is_bright_switch: TemplateChild<adw::SwitchRow>,
     #[template_child]
-    pub easy_copy_paste_switch: TemplateChild<gtk::Switch>,
+    pub easy_copy_paste_switch: TemplateChild<adw::SwitchRow>,
 
     // Terminal - Terminal
     #[template_child]
-    pub terminal_bell_switch: TemplateChild<gtk::Switch>,
+    pub terminal_bell_switch: TemplateChild<adw::SwitchRow>,
     #[template_child]
     pub cursor_shape_combo_row: TemplateChild<adw::ComboRow>,
     #[template_child]
@@ -48,21 +55,37 @@ pub struct PreferencesWindow {
     #[template_child]
     pub custom_scrollback_adjustment: TemplateChild<gtk::Adjustment>,
     #[template_child]
-    pub custom_scrollback_spin_button: TemplateChild<gtk::SpinButton>,
+    pub custom_scrollback_spin_button: TemplateChild<adw::SpinRow>,
     #[template_child]
-    pub show_scrollbars_switch: TemplateChild<gtk::Switch>,
+    pub show_scrollbars_switch: TemplateChild<adw::SwitchRow>,
     #[template_child]
-    pub use_overlay_scrolling_switch: TemplateChild<gtk::Switch>,
+    pub use_overlay_scrolling_switch: TemplateChild<adw::SwitchRow>,
     #[template_child]
-    pub scroll_on_keystroke_switch: TemplateChild<gtk::Switch>,
+    pub scroll_on_keystroke_switch: TemplateChild<adw::SwitchRow>,
     #[template_child]
-    pub scroll_on_output_switch: TemplateChild<gtk::Switch>,
+    pub scroll_on_output_switch: TemplateChild<adw::SwitchRow>,
+
+    // Terminal - Working directory
+    #[template_child]
+    pub working_directory_mode_combo_row: TemplateChild<adw::ComboRow>,
+    #[template_child]
+    pub custom_working_directory_entry_row: TemplateChild<adw::EntryRow>,
+
+    // Terminal - Command
+    #[template_child]
+    pub run_command_as_login_switch: TemplateChild<adw::SwitchRow>,
+    #[template_child]
+    pub use_custom_shell_command_switch: TemplateChild<adw::SwitchRow>,
+    #[template_child]
+    pub custom_command_entry_row: TemplateChild<adw::EntryRow>,
+    #[template_child]
+    pub notify_process_completion_switch: TemplateChild<adw::SwitchRow>,
 
     // Terminal - Appearance
     #[template_child]
     pub style_preference_combo_row: TemplateChild<adw::ComboRow>,
     #[template_child]
-    pub theme_integration_switch: TemplateChild<gtk::Switch>,
+    pub theme_integration_switch: TemplateChild<adw::SwitchRow>,
 
     // Terminal - Theme
     #[template_child]
@@ -73,6 +96,9 @@ pub struct PreferencesWindow {
     pub light_theme_toggle: TemplateChild<gtk::ToggleButton>,
     #[template_child]
     pub preview_flow_box: TemplateChild<gtk::FlowBox>,
+
+    #[template_child]
+    pub scrollbars_expander_row: TemplateChild<adw::ExpanderRow>,
 }
 
 #[glib::object_subclass]
@@ -171,8 +197,9 @@ impl PreferencesWindow {
         self.settings.bind_remember_window_size(&*self.remember_window_size_switch, "active").build();
 
         // Terminal - Text
-        self.settings.bind_font(&*self.font_label, "label").build();
-
+        self.settings.bind_system_font(&*self.system_font_switch, "active").build();
+        self.settings.bind_custom_font(&*self.custom_font_label, "label").build();
+        self.settings.bind_system_font(&*self.custom_font_row, "visible").invert_boolean().build();
         self.settings.bind_terminal_cell_width(&*self.cell_width_spacing_adjustment, "value").build();
         self.settings.bind_terminal_cell_height(&*self.cell_height_spacing_adjustment, "value").build();
         self.settings.bind_theme_bold_is_bright(&*self.bold_is_bright_switch, "active").build();
@@ -223,18 +250,40 @@ impl PreferencesWindow {
         self.settings.connect_scrollback_mode_changed(clone!(@weak self as this => move|s| {
             this.custom_scrollback_spin_button.set_sensitive(s.scrollback_mode() == ScrollbackMode::FixedSize);
         }));
+        self.custom_scrollback_spin_button
+            .set_sensitive(self.settings.scrollback_mode() == ScrollbackMode::FixedSize);
+
         self.settings.bind_scroll_on_keystroke(&*self.scroll_on_keystroke_switch, "active").build();
         self.settings.bind_scroll_on_output(&*self.scroll_on_output_switch, "active").build();
 
-        // settings.notify ["custom-working-directory"].connect (() => {
-        //   if (this.is_custom_working_directory_valid ()) {
-        //     this.custom_working_directory_entry_row.remove_css_class ("error");
-        //   }
-        //   else {
-        //     this.custom_working_directory_entry_row.add_css_class ("error");
-        //   }
-        // });
-        // settings.notify_property ("custom-working-directory");
+        // Terminal - Working directory
+        self.settings
+            .bind_working_directory_mode(&*self.working_directory_mode_combo_row, "selected")
+            .mapping(|variant, _ty| variant.get::<WorkingDirectoryMode>().map(|mode| (mode as u32).to_value()))
+            .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| WorkingDirectoryMode::from(v).into()))
+            .build();
+
+        self.settings.connect_working_directory_mode_changed(clone!(@weak self as this => move|s| {
+            this.set_custom_working_dir_row_visible();
+        }));
+        self.set_custom_working_dir_row_visible();
+
+        self.settings
+            .bind_custom_working_directory(&*self.custom_working_directory_entry_row, "text")
+            .build();
+        self.settings.connect_custom_working_directory_changed(clone!(@weak self as this => move|_| {
+            this.validate_custom_working_directory();
+        }));
+        self.validate_custom_working_directory();
+
+        // Terminal - Command
+        self.settings.bind_command_as_login_shell(&*self.run_command_as_login_switch, "active").build();
+        self.settings.bind_custom_shell_command(&*self.custom_command_entry_row, "text").build();
+        self.settings.bind_use_custom_command(&*self.custom_command_entry_row, "sensitive").build();
+        self.settings.bind_use_custom_command(&*self.use_custom_shell_command_switch, "active").build();
+        self.settings
+            .bind_notify_process_completion(&*self.notify_process_completion_switch, "active")
+            .build();
 
         // Terminal - Appearance
         self.settings
@@ -282,7 +331,7 @@ impl PreferencesWindow {
     }
 
     #[template_callback]
-    fn on_font_row_activated(&self, _row: &adw::ActionRow) {
+    fn on_custom_font_row_activated(&self, _row: &adw::ActionRow) {
         let dialog = gtk::FontDialog::builder().title(gettext("Terminal Font")).build();
 
         let filter = gtk::BoolFilter::builder()
@@ -301,7 +350,7 @@ impl PreferencesWindow {
             .build();
         dialog.set_filter(Some(&filter));
 
-        let font = pango::FontDescription::from_string(&self.settings.font());
+        let font = pango::FontDescription::from_string(&self.settings.custom_font());
         // TODO: for some reason, initial font doesn't do anything
         dialog.choose_font(
             Some(&self.obj().clone()),
@@ -310,12 +359,32 @@ impl PreferencesWindow {
             clone!(@weak self as this => move |result| {
                 match result {
                     Ok(font) => {
-                        this.settings.set_font(&font.to_str());
+                        this.settings.set_custom_font(&font.to_str());
                     },
                     _ => ()
                 }
             }),
         );
+    }
+
+    #[template_callback]
+    fn set_custom_working_dir_to_home(&self, _btn: &gtk::Button) {
+        self.settings.set_custom_working_directory(&dirs::home_dir().unwrap_or(PathBuf::from("/")));
+    }
+
+    fn set_custom_working_dir_row_visible(&self) {
+        self.custom_working_directory_entry_row
+            .set_visible(self.settings.working_directory_mode() == WorkingDirectoryMode::Custom)
+    }
+
+    fn validate_custom_working_directory(&self) {
+        let path = self.settings.custom_working_directory();
+
+        if path.exists() && path.is_dir() {
+            self.custom_working_directory_entry_row.remove_css_class("error");
+        } else {
+            self.custom_working_directory_entry_row.add_css_class("error");
+        }
     }
 
     fn set_themes_filter_func(&self) {
