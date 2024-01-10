@@ -89,6 +89,18 @@
                 {
                     "type": "patch",
                     "path": "build-aux/0009-expose-notification-shellcmd-containers-to-GTK-4.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/vte/Allow-background-color-and-color-on-VteTerminal-widgets-t.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/vte/Sixel.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "build-aux/vte/widget-a11y-Add-missing-text-changes-on-scrolling-with-mo.patch"
                 }
             ]
         },

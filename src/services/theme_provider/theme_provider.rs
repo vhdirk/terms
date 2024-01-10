@@ -222,8 +222,8 @@ impl ThemeProvider {
     }
 
     fn apply_theming(&self) {
+        info!("Settings adw style preference: {:?}", self.settings.style_preference());
         let _guard = self.style_manager.freeze_notify();
-        println!("style pref {:?}", self.settings.style_preference());
         self.style_manager.set_color_scheme(self.settings.style_preference().into());
 
         let themes = self.ctx.borrow().themes.clone();

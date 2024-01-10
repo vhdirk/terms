@@ -65,22 +65,12 @@ impl AdwApplicationWindowImpl for Window {}
 
 impl Window {
     fn setup_widgets(&self) {
-        let session = Session::new(self.init_args.borrow().clone());
-        self.tab_view.append(&session);
-
-        session.connect_close(clone!(@weak self as this => move |session: &Session| {
-                                this.tab_view.close_page(&this.tab_view.page(session));
-
-                                if this.tab_view.n_pages() == 0 {
-                                        this.obj().close();
-                                }
-        }));
-
         if self.settings.remember_window_size() {
             self.load_window_size();
         }
 
         self.connect_signals();
+        self.new_session(Some(self.init_args.borrow().clone()));
     }
 
     fn load_window_size(&self) {
@@ -116,7 +106,13 @@ impl Window {
             }))
             .build();
 
-        self.obj().add_action_entries([preferences_action]);
+        let new_session_action = gio::ActionEntry::builder("new-session")
+            .activate(clone!(@weak self as this => move |_win: &super::Window, _, _| {
+                this.new_session(None);
+            }))
+            .build();
+
+        self.obj().add_action_entries([preferences_action, new_session_action]);
     }
 
     pub fn open_preferences(&self) {
@@ -127,5 +123,18 @@ impl Window {
     pub fn set_init_args(&self, init_args: TerminalInitArgs) {
         let mut args = self.init_args.borrow_mut();
         *args = init_args;
+    }
+
+    pub fn new_session(&self, init_args: Option<TerminalInitArgs>) {
+        let session = Session::new(init_args.unwrap());
+        self.tab_view.append(&session);
+
+        session.connect_close(clone!(@weak self as this => move |session: &Session| {
+                                this.tab_view.close_page(&this.tab_view.page(session));
+
+                                if this.tab_view.n_pages() == 0 {
+                                        this.obj().close();
+                                }
+        }));
     }
 }
