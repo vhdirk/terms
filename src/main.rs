@@ -1,4 +1,4 @@
-use config::{APP_ID, GETTEXT_PACKAGE, LOCALEDIR};
+use config::{APP_ID, GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
 use gettextrs::{gettext, LocaleCategory};
 
 mod application;
@@ -49,7 +49,8 @@ pub fn init() {
         .init();
 
     init_gettext();
-    gio::resources_register_include!("resources.gresource").expect("Could not initialize resources");
+    let res = gio::Resource::load(RESOURCES_FILE).expect("Could not load gresource file");
+    gio::resources_register(&res);
 }
 
 fn main() -> glib::ExitCode {
