@@ -2,7 +2,23 @@
 
 ![Matrix](https://img.shields.io/matrix/terms)
 
-A tiling terminal emulator for GNOME on Linux using GTK4, written in Rust.
+<div align="center">
+  <h1><img src="./data/icons/io.github.vhdirk.Terms.svg" height="64"/>Terms</h1>
+  <h4>A tiling terminal emulator for</h4>
+  <p>
+    <!-- <a href="#features">Features</a> •
+    <a href="#install">Install</a> •
+    <a href="#gallery">Gallery</a> •
+    <a href="./CHANGELOG.md">Changelog</a> -->
+    <br/>
+    <!-- <a href="https://gitlab.gnome.org/raggesilver/blackbox/-/wikis/home">Wiki</a> • -->
+    <a href="./LICENSE">License</a> •
+    <!-- <a href="./CONTRIBUTING.md">Contributing</a> -->
+  </p>
+  <p>
+  </p>
+</div>
+
 
 <!-- <div align="center">
 
@@ -12,6 +28,7 @@ A tiling terminal emulator for GNOME on Linux using GTK4, written in Rust.
 ## Goal
 
 Terms is an experiment. I like [Tilix][Tilix] and I like [BlackBox]. Why can't I have both?
+Terms uses GTK4 and is written in Rust. The latter has no added value aside from the fact that I like it.
 
 ## Status
 
@@ -55,13 +72,15 @@ Join the GNOME and gtk-rs community!
 
 ## Credits
 
-Lots of ideas and code is ~stolen~ borrowed from these projects:
+Lots of ideas and code is ~~stolen~~ borrowed from these projects:
 
 - [BlackBox]
 - [Tilix]
 - [Fractal]
 - [Zoha]
 - [Prompt]
+
+Attribution is added in code.
 
 [BlackBox]: https://gitlab.gnome.org/raggesilver/blackbox
 [Tilix]: https://github.com/gnunn1/tilix
