@@ -2,7 +2,7 @@
 
 <div align="center">
   <h1><img src="./data/icons/io.github.vhdirk.Terms.svg" height="64"/>Terms</h1>
-  <p>![Matrix](https://img.shields.io/matrix/terms)</p>
+  <img alt="Matrix" src="https://img.shields.io/matrix/terms">
   <h4>A tiling terminal emulator for</h4>
   <p>
     <!-- <a href="#features">Features</a> •
