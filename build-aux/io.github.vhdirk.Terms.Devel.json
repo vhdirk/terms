@@ -9,11 +9,15 @@
     ],
     "command" : "terms",
     "finish-args" : [
+        "--allow=devel",
+        "--filesystem=home",
+        "--filesystem=host",
         "--share=network",
         "--share=ipc",
         "--socket=fallback-x11",
         "--socket=wayland",
         "--device=dri",
+        "--talk-name=org.freedesktop.Flatpak",
         "--env=RUST_LOG=terms=debug",
         "--env=G_MESSAGES_DEBUG=none",
         "--env=RUST_BACKTRACE=1"
@@ -46,7 +50,8 @@
                 "-Dgtk4=true",
                 "-Dglade=false",
                 "-Dgir=false",
-                "-Dvapi=false"
+                "-Dvapi=false",
+                "-Dsixel=true"
             ],
             "sources": [
                 {
@@ -56,51 +61,47 @@
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0001-Add-sequences-and-signals-for-desktop-notification.patch"
+                    "path": "../build-aux/vte/0001-Add-sequences-and-signals-for-desktop-notification.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0002-vte.sh-Emit-OSC-777-from-PROMPT_COMMAND.patch"
+                    "path": "../build-aux/vte/0002-vte.sh-Emit-OSC-777-from-PROMPT_COMMAND.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0003-Test-the-notification-received-signal.patch"
+                    "path": "../build-aux/vte/0003-Test-the-notification-received-signal.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0004-Support-preexec-notifications-from-an-interactive-sh.patch"
+                    "path": "../build-aux/vte/0004-Support-preexec-notifications-from-an-interactive-sh.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0005-Test-the-shell-preexec-signal.patch"
+                    "path": "../build-aux/vte/0005-Test-the-shell-preexec-signal.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0006-Support-precmd-notifications-from-an-interactive-she.patch"
+                    "path": "../build-aux/vte/0006-Support-precmd-notifications-from-an-interactive-she.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0007-Test-the-shell-precmd-signal.patch"
+                    "path": "../build-aux/vte/0007-Test-the-shell-precmd-signal.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0008-Support-tracking-the-active-container-inside-the-ter.patch"
+                    "path": "../build-aux/vte/0008-Support-tracking-the-active-container-inside-the-ter.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/0009-expose-notification-shellcmd-containers-to-GTK-4.patch"
+                    "path": "../build-aux/vte/0009-expose-notification-shellcmd-containers-to-GTK-4.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/vte/Allow-background-color-and-color-on-VteTerminal-widgets-t.patch"
+                    "path": "../build-aux/vte/Allow-background-color-and-color-on-VteTerminal-widgets-t.patch"
                 },
                 {
                     "type": "patch",
-                    "path": "build-aux/vte/Sixel.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "build-aux/vte/widget-a11y-Add-missing-text-changes-on-scrolling-with-mo.patch"
+                    "path": "../build-aux/vte/widget-a11y-Add-missing-text-changes-on-scrolling-with-mo.patch"
                 }
             ]
         },
