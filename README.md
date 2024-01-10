@@ -1,9 +1,9 @@
-
+![Matrix](https://img.shields.io/matrix/terms%3Amatrix.org)
 
 <div align="center">
-  <h1><img src="./data/icons/io.github.vhdirk.Terms.svg" height="64"/>Terms</h1>
-  <img alt="Matrix" src="https://img.shields.io/matrix/terms">
-  <h4>A tiling terminal emulator for</h4>
+  <h1><img src="./data/icons/io.github.vhdirk.Terms.svg" height="64" style="vertical-align: middle" />Terms</h1>
+
+  <h4>A tiling terminal emulator for GNOME</h4>
   <p>
     <!-- <a href="#features">Features</a> •
     <a href="#install">Install</a> •
