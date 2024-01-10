@@ -49,6 +49,7 @@ fn compile_glib() {
 }
 
 fn main() {
-    // TODO: we probably only want to do this when not running under meson
-    compile_glib();
+    if !env::var("BUILD_IS_MESON").is_ok_and(|val| val == "true") {
+        compile_glib();
+    }
 }

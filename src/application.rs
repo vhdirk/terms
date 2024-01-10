@@ -298,7 +298,6 @@ impl Application {
                 app.disconnect(signalid_.borrow_mut().take().expect("Signal ID went missing"));
                 gtk::init().expect("Failed to initalize gtk4");
                 adw::init().expect("Failed to initialize adw");
-                panel::init();
             });
             *signalid.borrow_mut() = Some(id);
         }
