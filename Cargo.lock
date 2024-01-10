@@ -49,8 +49,9 @@ checksum = "96d30a06541fbafbc7f82ed10c06164cfbd2c401138f6addd8404629c4b16711"
 
 [[package]]
 name = "ashpd"
-version = "0.7.0"
-source = "git+https://github.com/bilelmoussaoui/ashpd.git#6576a332f3c93bd45148c4160db5a13a5bb15741"
+version = "0.6.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ac22eda5891cc086690cb6fa10121c0390de0e3b04eb269f2d766b00d3f2d81"
 dependencies = [
  "async-fs 2.1.0",
  "async-net",
@@ -1531,38 +1532,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "302d7ab3130588088d277783b1e2d2e10c9e9e4a16dd9050e6ec93fb3e7048f4"
 
 [[package]]
-name = "libpanel"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f90c367dcd0b5972ff50fed72deb4ec22946cb0346e9be5bd357afe8d097f392"
-dependencies = [
- "futures-core",
- "gdk4",
- "gio",
- "glib",
- "gtk4",
- "libadwaita",
- "libc",
- "libpanel-sys",
-]
-
-[[package]]
-name = "libpanel-sys"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "daf15707b11148fe5f084c7ee2dcd109accd24866357c0bf563d11d4f4b28246"
-dependencies = [
- "gdk4-sys",
- "gio-sys",
- "glib-sys",
- "gobject-sys",
- "gtk4-sys",
- "libadwaita-sys",
- "libc",
- "system-deps",
-]
-
-[[package]]
 name = "libredox"
 version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2739,7 +2708,6 @@ dependencies = [
  "gtk4",
  "itertools 0.12.0",
  "libadwaita",
- "libpanel",
  "librsvg",
  "once_cell",
  "pango",
