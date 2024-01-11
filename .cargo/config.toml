@@ -4,7 +4,7 @@ rustflags = ["--cfg", "ruma_identifiers_storage=\"Arc\""]
 [env]
 GSETTINGS_SCHEMA_DIR = { value = "target", relative = true }
 GETTEXT_PACKAGE = "terms"
-APP_ID = "io.github.vhdirk.Terms"
+APP_ID = "io.github.vhdirk.Terms.Devel"
 
 
 [doc.extern-map.registries]

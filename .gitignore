@@ -12,3 +12,5 @@ src/config.rs
 vendor
 .vscode
 .flatpak-builder/
+.fenv/
+flatpak_app/
