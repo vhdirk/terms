@@ -1,40 +1,15 @@
-use config::{APP_ID, GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
-use gettextrs::{gettext, LocaleCategory};
+use config::{GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
+use gettextrs::LocaleCategory;
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
+
+use application::Application;
 
 mod application;
 mod components;
 mod config;
+mod pcre2;
 mod services;
 mod utils;
-
-use application::Application;
-use tracing_subscriber::{fmt, prelude::*, EnvFilter};
-
-// #[doc(hidden)]
-// pub fn resources_register_include_impl(bytes: &'static [u8]) -> Result<(), glib::Error> {
-//     let bytes = glib::Bytes::from_static(bytes);
-//     let resource = Resource::from_data(&bytes)?;
-//     resources_register(&resource);
-//     Ok(())
-// }
-
-// // rustdoc-stripper-ignore-next
-// /// Include gresources generated with `glib_build_tools::compile_resources` and register with glib. `path` is
-// /// relative to `OUTDIR`.
-// ///
-// /// ```ignore
-// /// gio::resources_register_include!("compiled.gresource").unwrap();
-// /// ```
-// #[macro_export]
-// macro_rules! resources_register_include {
-//     ($path:expr) => {
-//         $crate::resources_register_include_impl(include_bytes!(concat!(
-//             env!("OUT_DIR"),
-//             "/",
-//             $path
-//         )))
-//     };
-// }
 
 fn init_gettext() {
     gettextrs::setlocale(LocaleCategory::LcAll, "");
@@ -56,9 +31,6 @@ pub fn init() {
 fn main() -> glib::ExitCode {
     init();
 
-    // Create a new application
     let app = Application::new();
-
-    // Run the application
     app.run()
 }

@@ -1,6 +1,6 @@
 mod constants;
+mod spawn;
 mod terminal;
-// mod flatpak_spawn;
 use std::{collections::HashMap, path::PathBuf};
 
 use glib::{closure_local, subclass::prelude::*, ObjectExt};

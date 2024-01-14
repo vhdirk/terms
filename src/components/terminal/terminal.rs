@@ -25,30 +25,56 @@ use shell_quote::Sh;
 use vte::{PopoverExt, PtyFlags, TerminalExt, TerminalExtManual, WidgetExt};
 
 use crate::components::search_toolbar::SearchToolbar;
+use crate::config::APP_NAME;
+use crate::pcre2::PCRE2Flags;
 use crate::services::settings::ScrollbackMode;
 use crate::services::settings::Settings;
 use crate::services::theme_provider::Theme;
 use crate::services::theme_provider::ThemeProvider;
 
-use super::constants::PCRE_MULTILINE;
 use super::constants::URL_REGEX_STRINGS;
+use super::spawn::get_spawner;
+use super::spawn::FlatpakSpawner;
+use super::spawn::NativeSpawner;
+use super::spawn::Spawner;
 use super::*;
 
-struct SpawnArgs {
+static TERMS_ENV: Lazy<HashMap<&'static str, String>> = Lazy::new(|| {
+    let mut env = HashMap::from([
+        ("TERM", "xterm-256color".to_string()),
+        ("COLORTERM", "truecolor".to_string()),
+        ("TERM_PROGRAM", APP_NAME.to_string()),
+        (
+            "VTE_VERSION",
+            format!(
+                "{}",
+                vte::ffi::VTE_MAJOR_VERSION * 10000 + vte::ffi::VTE_MINOR_VERSION * 100 + vte::ffi::VTE_MICRO_VERSION
+            ),
+        ),
+    ]);
+
+    if let Some(themes_dir) = ThemeProvider::user_themes_dir() {
+        env.insert("TERMS_THEMES_DIR", themes_dir.to_string_lossy().into());
+    }
+    env
+});
+
+#[derive(Debug, Clone)]
+pub struct SpawnArgs {
     pub cwd_path: PathBuf,
     pub argv: Vec<PathBuf>,
     pub envv: HashMap<String, String>,
 }
 
 #[derive(Debug)]
-enum SpawnCtx {
+pub enum SpawnCtx {
     Native,
     Flatpak,
 }
 
 #[derive(Debug, Default)]
 struct TerminalContext {
-    pub pid: Option<Pid>,
+    // pub pid: Option<Pid>,
     pub exit_handler: Option<SignalHandlerId>,
     pub spawn_handle: Option<JoinHandle<()>>,
     pub spawn_ctx: Option<SpawnCtx>,
@@ -57,10 +83,11 @@ struct TerminalContext {
     pub padding_provider: Option<gtk::CssProvider>,
 }
 
-#[derive(Debug, Default, CompositeTemplate)]
+#[derive(Debug, CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/terminal.ui")]
 pub struct Terminal {
     pub init_args: RefCell<TerminalInitArgs>,
+    pub spawner: Box<dyn Spawner>,
 
     pub settings: Settings,
     ctx: RefCell<TerminalContext>,
@@ -76,6 +103,21 @@ pub struct Terminal {
 
     #[template_child]
     scrolled: TemplateChild<gtk::ScrolledWindow>,
+}
+
+impl Default for Terminal {
+    fn default() -> Self {
+        Self {
+            init_args: Default::default(),
+            spawner: get_spawner(),
+            settings: Default::default(),
+            ctx: Default::default(),
+            term: Default::default(),
+            search_toolbar: Default::default(),
+            popover_menu: Default::default(),
+            scrolled: Default::default(),
+        }
+    }
 }
 
 #[glib::object_subclass]
@@ -199,6 +241,19 @@ impl Terminal {
         let spawn_handle = glib::spawn_future_local(clone!(@weak self as this => async move {
                                 let init_args = this.init_args.borrow().clone();
 
+                                let spawner = if ashpd::is_sandboxed().await {
+                                    Box::new(FlatpakSpawner::new()) as Box<dyn Spawner>
+                                    // this.spawn_sandboxed(spawn_args).await
+                                } else {
+                                    Box::new(NativeSpawner::new()) as Box<dyn Spawner>
+                                        // this.spawn_native(spawn_args).await
+                                } ;
+
+
+
+
+
+
                                 let spawn_args = SpawnArgs {
                                         // TODO: remove fallback when args are passed through
                                         cwd_path: init_args.working_dir.or(env::current_dir().ok()).unwrap_or(PathBuf::new()),
@@ -206,16 +261,13 @@ impl Terminal {
                                         envv: HashMap::new(),
                                 };
 
-                                let spawn_result = if ashpd::is_sandboxed().await {
-                                        this.spawn_sandboxed(spawn_args).await
-                                } else {
-                                        this.spawn_native(spawn_args).await
-                                } ;
 
-                                match spawn_result {
-                                        Ok(pid) => this.ctx.borrow_mut().pid = Some(pid),
-                                        Err(err) => error!("Could now spawn vte subprocess {:?}", err)
-                                };
+                                let spawn_result = spawner.spawn(&this.term, spawn_args).await;
+
+                                // match spawn_result {
+                                //         Ok(pid) => this.ctx.borrow_mut().pid = Some(glib::Pid::),
+                                //         Err(err) => error!("Could now spawn vte subprocess {:?}", err)
+                                // };
         }));
 
         self.ctx.borrow_mut().spawn_handle = Some(spawn_handle);
@@ -260,7 +312,7 @@ impl Terminal {
 
     fn setup_regexes(&self) {
         for reg_str in URL_REGEX_STRINGS {
-            if let Ok(reg) = vte::Regex::for_match(reg_str, PCRE_MULTILINE) {
+            if let Ok(reg) = vte::Regex::for_match(reg_str, PCRE2Flags::MULTILINE.bits()) {
                 let id = self.term.match_add_regex(&reg, 0);
                 self.term.match_set_cursor_name(id, "pointer")
             }
@@ -454,7 +506,7 @@ impl Terminal {
 
     fn on_child_exited(&self, status: u32) {
         dbg!("Terminal child exited with status {}", status);
-        self.ctx.borrow_mut().pid = None;
+        // self.ctx.borrow_mut().pid = None;
         let handler = self.ctx.borrow_mut().exit_handler.take();
         match handler {
             None => error!("missing exit signal handler"),
@@ -488,6 +540,9 @@ impl Terminal {
     }
 
     async fn spawn_native(&self, spawn_args: SpawnArgs) -> Result<Pid, glib::Error> {
+        let spawner = NativeSpawner {};
+        spawner.spawn(&*self.term, spawn_args.clone()).await;
+
         let SpawnArgs { cwd_path, argv, envv } = spawn_args;
 
         let args: Vec<&str> = argv.iter().map(|path| path.to_str().unwrap_or_default()).collect();

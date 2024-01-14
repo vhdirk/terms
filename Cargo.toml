@@ -4,6 +4,18 @@ version = "0.1.0"
 authors = ["Dirk Van Haerenborgh <vhdirk@gmail.com>"]
 edition = "2021"
 
+[[bin]]
+name="terms"
+path = "./src/main.rs"
+
+[[bin]]
+name="terms-toolbox"
+path = "./src/bin/toolbox.rs"
+
+[lib]
+name = "terms_toolbox"
+path = "src/lib/toolbox.rs"
+
 [profile.release]
 lto = true
 
@@ -26,8 +38,8 @@ adw = { package = "libadwaita", version = "0.5", features = ["v1_4"] }
 vte = { git = "https://gitlab.gnome.org/vhdirk/vte4-rs", package = "vte4", branch = "0.7", version = "0.7", features = [
     "v0_72",
 ] }
-ashpd = { version = "0.6.8" }
 rsvg = { package = "librsvg", version = "2.57" }
+ashpd = { version = "0.6.8" }
 gsettings-macro = "0.1.20"
 
 async-std = "1.12.0"
@@ -42,6 +54,13 @@ rand = "0.8.5"
 elementtree = "1.2.3"
 serde_yaml = "0.9.30"
 itertools = "0.12.0"
+bitflags = "2.4.1"
+async-trait = "0.1.77"
+clap = { version = "4.4.16", features = ["derive"] }
+libc = "0.2.152"
+thiserror = "1.0.56"
+anyhow = "1.0.79"
+zbus = "3.14.1"
 
 [build-dependencies]
 glib-build-tools = "0.18.0"
