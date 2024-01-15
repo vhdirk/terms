@@ -1,16 +1,18 @@
 use std::{
     ffi::{CString, NulError},
-    os::fd::RawFd,
+    os::fd::{AsRawFd, BorrowedFd, RawFd},
+    path::PathBuf,
 };
 use thiserror::Error;
+use tracing::*;
 
 #[derive(Error, Debug)]
 #[non_exhaustive]
 pub enum ToolboxError {
-    #[error("NulError error")]
+    #[error(transparent)]
     NulError(#[from] NulError),
 
-    #[error("Io error")]
+    #[error(transparent)]
     IoError(#[from] std::io::Error),
 
     #[error("Unknown error")]
@@ -22,8 +24,7 @@ pub fn passwd_line_filter(uid: libc::uid_t) -> impl FnMut(&Result<String, std::i
     move |line| {
         if let Ok(entry) = line {
             let fields: Vec<&str> = entry.split(':').collect();
-            if fields.get(0) == Some(&uid.as_str()) {
-                println!("Found user entry: {}", entry);
+            if fields.get(3) == Some(&uid.as_str()) {
                 return true;
             }
         }
@@ -65,28 +66,9 @@ pub async fn user_shell_async(uid: libc::uid_t) -> Result<String, ToolboxError> 
     shell_from_passwd_line(&passwd_line)
 }
 
-pub fn child_pid(fd: RawFd) -> Result<libc::pid_t, ToolboxError> {
-    let pid = unsafe { libc::tcgetpgrp(fd) };
-
-    if pid == -1 {
-        Err(std::io::Error::last_os_error().into())
-    } else {
-        Ok(pid)
-    }
-}
-
 pub fn process_libc_stat(pid: libc::pid_t) -> Result<libc::stat, ToolboxError> {
-    let path = CString::new(format!("/proc/{}/stat", pid))?;
-    let stat = unsafe {
-        let mut statbuf: libc::stat = std::mem::zeroed();
-        let ret = libc::stat(path.as_ptr(), &mut statbuf);
-
-        if ret == -1 {
-            return Err(std::io::Error::last_os_error().into());
-        }
-
-        statbuf
-    };
+    let path = PathBuf::from(format!("/proc/{}/stat", pid));
+    let stat = crate::libc_util::stat(&path)?;
     Ok(stat)
 }
 
@@ -121,4 +103,17 @@ pub fn process_cmdline(pid: libc::pid_t) -> Result<String, ToolboxError> {
 
 pub async fn process_cmdline_async(pid: libc::pid_t) -> Result<String, ToolboxError> {
     read_file_async(&format!("/proc/{}/cmdline", pid)).await
+}
+
+pub fn working_dir() -> Option<std::path::PathBuf> {
+    // get the current dir
+    let current_dir = std::env::current_dir();
+
+    if current_dir.is_ok() {
+        return current_dir.ok();
+    } else {
+        error!("Could not use current dir {}", current_dir.unwrap_err());
+    }
+
+    dirs::home_dir()
 }

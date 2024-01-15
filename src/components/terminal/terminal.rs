@@ -17,11 +17,11 @@ use vte::CursorShape;
 use vte::EventControllerExt;
 use vte::StyleContextExt;
 
+use std::time::Duration;
 use std::{cell::RefCell, collections::HashMap, env};
 
 use glib::{clone, subclass::Signal, JoinHandle, Pid, SignalHandlerId, SpawnFlags, StaticType, Type, Value};
 use once_cell::sync::Lazy;
-use shell_quote::Sh;
 use vte::{PopoverExt, PtyFlags, TerminalExt, TerminalExtManual, WidgetExt};
 
 use crate::components::search_toolbar::SearchToolbar;
@@ -39,13 +39,13 @@ use super::spawn::NativeSpawner;
 use super::spawn::Spawner;
 use super::*;
 
-static TERMS_ENV: Lazy<HashMap<&'static str, String>> = Lazy::new(|| {
+static TERMS_ENV: Lazy<HashMap<String, String>> = Lazy::new(|| {
     let mut env = HashMap::from([
-        ("TERM", "xterm-256color".to_string()),
-        ("COLORTERM", "truecolor".to_string()),
-        ("TERM_PROGRAM", APP_NAME.to_string()),
+        ("TERM".to_string(), "xterm-256color".to_string()),
+        ("COLORTERM".to_string(), "truecolor".to_string()),
+        ("TERM_PROGRAM".to_string(), APP_NAME.to_string()),
         (
-            "VTE_VERSION",
+            "VTE_VERSION".to_string(),
             format!(
                 "{}",
                 vte::ffi::VTE_MAJOR_VERSION * 10000 + vte::ffi::VTE_MINOR_VERSION * 100 + vte::ffi::VTE_MICRO_VERSION
@@ -54,10 +54,12 @@ static TERMS_ENV: Lazy<HashMap<&'static str, String>> = Lazy::new(|| {
     ]);
 
     if let Some(themes_dir) = ThemeProvider::user_themes_dir() {
-        env.insert("TERMS_THEMES_DIR", themes_dir.to_string_lossy().into());
+        env.insert("TERMS_THEMES_DIR".to_string(), themes_dir.to_string_lossy().into());
     }
     env
 });
+
+static TERMS_DEFAULT_SHELL: &str = "/bin/sh";
 
 #[derive(Debug, Clone)]
 pub struct SpawnArgs {
@@ -143,7 +145,7 @@ impl ObjectImpl for Terminal {
     }
 
     fn signals() -> &'static [Signal] {
-        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| vec![Signal::builder("exit").param_types([i64::static_type()]).build()]);
+        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| vec![Signal::builder("exit").param_types([i32::static_type()]).build()]);
         SIGNALS.as_ref()
     }
 
@@ -237,37 +239,70 @@ impl Terminal {
         self.term.add_controller(drop_target);
     }
 
+    async fn spawn_async(&self) {
+        let init_args = self.init_args.borrow().clone();
+
+        let env = self.spawner.env().await;
+        if let Err(err) = &env {
+            error!("Could not get spawn env: {}", err);
+            return;
+        }
+
+        // I don't think we need the extra env here
+        // let mut env = env.unwrap();
+        // env.extend(TERMS_ENV.clone());
+
+        let mut env = TERMS_ENV.clone();
+
+        let mut cmd = match self.settings.shell_command().map(|cmd| glib::shell_parse_argv(&cmd)) {
+            Some(Ok(shell_command)) => shell_command.iter().map(PathBuf::from).collect(),
+            _ => {
+                info!("Getting shell from spawner");
+
+                let shell = self.spawner.shell().await.unwrap_or(TERMS_DEFAULT_SHELL.to_string());
+                info!("Got shell: {:?}", shell);
+
+                let mut shell_command = vec![shell.into()];
+                if self.settings.command_as_login_shell() && init_args.command.is_none() {
+                    shell_command.push("--login".into())
+                }
+                shell_command
+            },
+        };
+
+        if let Some(command) = &init_args.command {
+            cmd.push("-c".into());
+            cmd.push(command.into());
+        }
+
+        let working_dir = match init_args.working_dir {
+            Some(working_dir) => working_dir,
+            None => self.spawner.working_dir().await.unwrap_or(PathBuf::from("/")),
+        };
+
+        let flags = vte::PtyFlags::DEFAULT;
+        info!("Spawning pty");
+
+        let exit_fut = match self.spawner.spawn(&*self.term, flags, working_dir, cmd, env, Duration::from_secs(1)).await {
+            Ok(handle) => {
+                info!("Spawned pty with id: {:?}", handle.pid);
+                handle.exit_fut
+            },
+            Err(err) => {
+                error!("Could not spawn pty: {:?}", err);
+                return;
+            },
+        };
+
+        // Wait for child to exit
+        self.on_child_exited(exit_fut.await);
+    }
+
     fn spawn(&self) {
+        info!("Spawn");
+
         let spawn_handle = glib::spawn_future_local(clone!(@weak self as this => async move {
-                                let init_args = this.init_args.borrow().clone();
-
-                                let spawner = if ashpd::is_sandboxed().await {
-                                    Box::new(FlatpakSpawner::new()) as Box<dyn Spawner>
-                                    // this.spawn_sandboxed(spawn_args).await
-                                } else {
-                                    Box::new(NativeSpawner::new()) as Box<dyn Spawner>
-                                        // this.spawn_native(spawn_args).await
-                                } ;
-
-
-
-
-
-
-                                let spawn_args = SpawnArgs {
-                                        // TODO: remove fallback when args are passed through
-                                        cwd_path: init_args.working_dir.or(env::current_dir().ok()).unwrap_or(PathBuf::new()),
-                                        argv: vec!["zsh".into()],
-                                        envv: HashMap::new(),
-                                };
-
-
-                                let spawn_result = spawner.spawn(&this.term, spawn_args).await;
-
-                                // match spawn_result {
-                                //         Ok(pid) => this.ctx.borrow_mut().pid = Some(glib::Pid::),
-                                //         Err(err) => error!("Could now spawn vte subprocess {:?}", err)
-                                // };
+            this.spawn_async().await
         }));
 
         self.ctx.borrow_mut().spawn_handle = Some(spawn_handle);
@@ -275,7 +310,7 @@ impl Terminal {
 
     fn connect_signals(&self) {
         let handler = self.term.connect_child_exited(clone!(@weak self as this => move |_, status| {
-                this.on_child_exited(status as u32)
+                this.on_child_exited(status)
         }));
         self.ctx.borrow_mut().exit_handler = Some(handler);
 
@@ -338,10 +373,6 @@ impl Terminal {
             .build();
 
         self.settings.bind_use_overlay_scrolling(&*self.scrolled, "overlay-scrolling").build();
-        // self.obj()
-        //     .bind_property("user-scrollback-lines", &self.term.clone(), "scrollback-lines")
-        //     .sync_create()
-        //     .build();
 
         self.settings
             .bind_show_scrollbars(&*self.scrolled, "vscrollbar-policy")
@@ -381,7 +412,7 @@ impl Terminal {
         }
 
         if let Ok(text) = value.get::<String>() {
-            self.term.feed_child(&Sh::quote(&text));
+            self.term.feed_child(glib::shell_quote(&text).as_encoded_bytes());
             self.term.feed_child(" ".as_bytes());
             return glib::Propagation::Proceed;
         }
@@ -499,14 +530,15 @@ impl Terminal {
 
     fn feed_child_file(&self, file: &gio::File) {
         if let Some(path) = file.path() {
-            self.term.feed_child(&Sh::quote(&path.to_string_lossy().to_string()));
+            self.term.feed_child(glib::shell_quote(&path).as_encoded_bytes());
             self.term.feed_child(" ".as_bytes());
         }
     }
 
-    fn on_child_exited(&self, status: u32) {
+    fn on_child_exited(&self, status: i32) {
         dbg!("Terminal child exited with status {}", status);
         // self.ctx.borrow_mut().pid = None;
+
         let handler = self.ctx.borrow_mut().exit_handler.take();
         match handler {
             None => error!("missing exit signal handler"),
@@ -539,49 +571,49 @@ impl Terminal {
         self.obj().emit_by_name::<()>("exit", &[&status]);
     }
 
-    async fn spawn_native(&self, spawn_args: SpawnArgs) -> Result<Pid, glib::Error> {
-        let spawner = NativeSpawner {};
-        spawner.spawn(&*self.term, spawn_args.clone()).await;
+    // async fn spawn_native(&self, spawn_args: SpawnArgs) -> Result<Pid, glib::Error> {
+    //     let spawner = NativeSpawner {};
+    //     spawner.spawn(&*self.term, spawn_args.clone()).await;
 
-        let SpawnArgs { cwd_path, argv, envv } = spawn_args;
+    //     let SpawnArgs { cwd_path, argv, envv } = spawn_args;
 
-        let args: Vec<&str> = argv.iter().map(|path| path.to_str().unwrap_or_default()).collect();
+    //     let args: Vec<&str> = argv.iter().map(|path| path.to_str().unwrap_or_default()).collect();
 
-        self.term
-            .spawn_future(
-                PtyFlags::DEFAULT,
-                Some(&cwd_path.to_string_lossy()),
-                &args,
-                &[],                 // TODO
-                SpawnFlags::DEFAULT, // TODO
-                || {},               // TODO
-                10,                  // TODO
-            )
-            .await
-    }
+    //     self.term
+    //         .spawn_future(
+    //             PtyFlags::DEFAULT,
+    //             Some(&cwd_path.to_string_lossy()),
+    //             &args,
+    //             &[],                 // TODO
+    //             SpawnFlags::DEFAULT, // TODO
+    //             || {},               // TODO
+    //             10,                  // TODO
+    //         )
+    //         .await
+    // }
 
-    async fn spawn_sandboxed(&self, spawn_args: SpawnArgs) -> Result<Pid, glib::Error> {
-        let SpawnArgs { cwd_path, argv, envv } = spawn_args;
+    // async fn spawn_sandboxed(&self, spawn_args: SpawnArgs) -> Result<Pid, glib::Error> {
+    //     let SpawnArgs { cwd_path, argv, envv } = spawn_args;
 
-        let proxy = ashpd::flatpak::Development::new().await.unwrap();
-        let fds = HashMap::new();
-        let envs: HashMap<&str, &str> = envv.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
-        let flags = HostCommandFlags::WatchBus;
+    //     let proxy = ashpd::flatpak::Development::new().await.unwrap();
+    //     let fds = HashMap::new();
+    //     let envs: HashMap<&str, &str> = envv.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
+    //     let flags = HostCommandFlags::WatchBus;
 
-        let pid = proxy.host_command(cwd_path, &argv, fds, envs, flags.into()).await.unwrap();
-        let mut spawn_exit = proxy.receive_spawn_exited().await.unwrap();
+    //     let pid = proxy.host_command(cwd_path, &argv, fds, envs, flags.into()).await.unwrap();
+    //     let mut spawn_exit = proxy.receive_spawn_exited().await.unwrap();
 
-        // proxy.host_command_signal(pid, signal, to_process_group)
-        let spawn_handle = glib::spawn_future_local(clone!(@weak self as this => async move {
+    //     // proxy.host_command_signal(pid, signal, to_process_group)
+    //     let spawn_handle = glib::spawn_future_local(clone!(@weak self as this => async move {
 
-            loop {
-                if let Some((pid, exit_status)) = spawn_exit.next().await {
-                    this.on_child_exited(exit_status);
-                }
-            }
+    //         loop {
+    //             if let Some((pid, exit_status)) = spawn_exit.next().await {
+    //                 this.on_child_exited(exit_status);
+    //             }
+    //         }
 
-        }));
+    //     }));
 
-        todo!("spawn sandboxed")
-    }
+    //     todo!("spawn sandboxed")
+    // }
 }

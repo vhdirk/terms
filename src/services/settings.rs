@@ -64,3 +64,13 @@ impl From<u32> for WorkingDirectoryMode {
         }
     }
 }
+
+impl Settings {
+    pub fn shell_command(&self) -> Option<String> {
+        if self.use_custom_command() && !self.custom_shell_command().is_empty() {
+            Some(self.custom_shell_command())
+        } else {
+            None
+        }
+    }
+}
