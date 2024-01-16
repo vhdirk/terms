@@ -172,25 +172,8 @@ impl PreferencesWindow {
     fn setup_widgets(&self) {
         self.connect_signals();
 
-        // TODO: this is very slow when dealing with lots of themes
-        for (name, theme) in ThemeProvider::default().themes().iter().sorted_by_key(|x| x.0) {
-            let thumb = ThemeThumbnail::new(theme);
-
-            let theme_name_to = name.clone();
-            let theme_name_from = name.clone();
-
-            self.obj()
-                .bind_property("selected-theme", &thumb, "selected")
-                .sync_create()
-                .bidirectional()
-                .transform_to(move |_, from: String| Some(from == theme_name_to))
-                .transform_from(move |_, to: bool| if to { Some(theme_name_from.clone()) } else { None })
-                .build();
-
-            self.preview_flow_box.append(&thumb);
-        }
-
         self.bind_data();
+        self.load_themes();
     }
 
     fn connect_signals(&self) {}
@@ -333,6 +316,25 @@ impl PreferencesWindow {
         self.set_themes_filter_func();
     }
 
+    fn load_themes(&self) {
+        for (name, theme) in ThemeProvider::default().themes().iter().sorted_by_key(|x| x.0) {
+            let thumb = ThemeThumbnail::new(theme);
+
+            let theme_name_to = name.clone();
+            let theme_name_from = name.clone();
+
+            self.obj()
+                .bind_property("selected-theme", &thumb, "selected")
+                .sync_create()
+                .bidirectional()
+                .transform_to(move |_, from: String| Some(from == theme_name_to))
+                .transform_from(move |_, to: bool| if to { Some(theme_name_from.clone()) } else { None })
+                .build();
+
+            self.preview_flow_box.append(&thumb);
+        }
+    }
+
     #[template_callback]
     fn on_custom_font_row_activated(&self, _row: &adw::ActionRow) {
         let dialog = gtk::FontDialog::builder().title(gettext("Terminal Font")).build();
@@ -354,7 +356,6 @@ impl PreferencesWindow {
         dialog.set_filter(Some(&filter));
 
         let font = pango::FontDescription::from_string(&self.settings.custom_font());
-        // TODO: for some reason, initial font doesn't do anything
         dialog.choose_font(
             Some(&self.obj().clone()),
             Some(&font),

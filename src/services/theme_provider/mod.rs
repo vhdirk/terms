@@ -27,7 +27,7 @@ glib::wrapper! {
 
 impl ThemeProvider {
     fn new() -> Self {
-        info!("Create theme provider");
+        info!("Creating theme provider");
         glib::Object::builder().build()
     }
 

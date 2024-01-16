@@ -1,6 +1,4 @@
-use async_std::task::JoinHandle;
-use elementtree::Element;
-/// ColorSchemeThumbnail.vala
+/// This file is derived work from
 ///
 /// Copyright 2021-2022 Paulo Queiroz
 ///
@@ -17,6 +15,7 @@ use elementtree::Element;
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ///
+use elementtree::Element;
 use glib::subclass::prelude::*;
 use glib::{Cast, IsA};
 use gtk::graphene;
@@ -25,8 +24,6 @@ use rand::Rng;
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
 use tracing::*;
 use vte::{FileExt, SnapshotExt};
-
-use std::cell::{Cell, RefCell};
 
 use gdk::subclass::prelude::*;
 use glib::subclass::prelude::*;
@@ -45,9 +42,6 @@ impl Default for ThemeThumbnailProvider {
     }
 }
 
-/// Used to load contents of "color-scheme-thumbnail.svg" as a color scheme
-/// thumbnail template. It can convert {@link Terminal.Scheme} to string that
-/// contains an edited version of "color-scheme-thumbnail.svg".
 #[derive(Clone)]
 struct ThemeThumbnailProvider {
     element: Option<Element>,
@@ -90,6 +84,8 @@ impl ThemeThumbnailProvider {
     }
 
     pub fn apply_theme(&self, theme: &Theme) -> Option<String> {
+        info!("Rerendering svg in theme {}", theme.name);
+
         if self.element.is_none() {
             return None;
         }
@@ -102,13 +98,15 @@ impl ThemeThumbnailProvider {
 
 mod imp {
     use gdk::cairo::Rectangle;
+    use once_cell::sync::OnceCell;
     use rsvg::{CairoRenderer, SvgHandle};
 
     use super::*;
 
     #[derive(Default)]
     pub struct ThemePreviewPaintable {
-        handle: RefCell<Option<SvgHandle>>,
+        handle: OnceCell<SvgHandle>,
+        theme: OnceCell<Theme>,
     }
 
     #[glib::object_subclass]
@@ -136,7 +134,7 @@ mod imp {
 
             let ctx = snapshot.append_cairo(&graphene::Rect::new(0.0, 0.0, width as f32, height as f32));
 
-            if let Some(handle) = self.handle.borrow().as_ref() {
+            if let Some(handle) = self.get_handle() {
                 let renderer = CairoRenderer::new(handle);
                 match renderer.render_document(&ctx, &Rectangle::new(0.0, 0.0, width, height)) {
                     Ok(_) => (),
@@ -148,15 +146,22 @@ mod imp {
 
     impl ThemePreviewPaintable {
         pub fn set_theme(&self, theme: &Theme) {
-            if let Some(themed) = ThemeThumbnailProvider::default().apply_theme(theme) {
-                let stream = gio::MemoryInputStream::from_bytes(&glib::Bytes::from_owned(themed));
-                match rsvg::Loader::new().read_stream(&stream, None::<&gio::File>, None::<&gio::Cancellable>) {
-                    Ok(handle) => {
-                        *self.handle.borrow_mut() = Some(handle);
-                    },
-                    Err(err) => warn!("Could not load svg {:?}", err),
+            let _ = self.theme.set(theme.clone());
+        }
+
+        pub fn get_handle(&self) -> Option<&SvgHandle> {
+            if self.handle.get().is_none() {
+                if let Some(themed) = self.theme.clone().get().as_ref().and_then(|t| ThemeThumbnailProvider::default().apply_theme(t)) {
+                    let stream = gio::MemoryInputStream::from_bytes(&glib::Bytes::from_owned(themed));
+                    match rsvg::Loader::new().read_stream(&stream, None::<&gio::File>, None::<&gio::Cancellable>) {
+                        Ok(handle) => {
+                            let _ = self.handle.set(handle);
+                        },
+                        Err(err) => warn!("Could not load svg {:?}", err),
+                    }
                 }
             }
+            self.handle.get()
         }
     }
 }
