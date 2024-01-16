@@ -37,11 +37,11 @@ Terms uses GTK4 and is written in Rust. The latter has no added value aside from
 - [x] Drag/drop support
 - [x] href/mailto regex matching
 - [x] Settings
-- [x] Theming (should be compatible with Black Box/Tilix)
+- [x] Theming. Compatible with Gogh
+- [x] Flatpak support
 - [ ] Tabs
 - [ ] Tiling
 - [ ] Profiles
-- [ ] Flatpak support
 - [ ] Store and load sessions like Tilix does
 - [ ] iTerm2-like support for tmux
 
