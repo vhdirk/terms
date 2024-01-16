@@ -97,7 +97,7 @@ pub enum SpawnError {
 
 pub struct SpawnHandle {
     pub pid: libc::pid_t,
-    pub exit_fut: Pin<Box<dyn Future<Output = i32>>>,
+    pub child_exit: Pin<Box<dyn Future<Output = i32>>>,
 }
 
 #[derive(Debug)]
@@ -218,7 +218,7 @@ impl Spawner for NativeSpawner {
         {
             Ok(pid) => Ok(SpawnHandle {
                 pid: pid.0,
-                exit_fut: exit_handler,
+                child_exit: exit_handler,
             }),
             Err(err) => Err(SpawnError::from(err)),
         }
@@ -354,7 +354,7 @@ impl Spawner for FlatpakSpawner {
 
         Ok(SpawnHandle {
             pid: pid as libc::pid_t,
-            exit_fut: Box::pin(exit_status),
+            child_exit: Box::pin(exit_status),
         })
     }
 }
