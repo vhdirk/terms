@@ -162,7 +162,7 @@ impl Spawner for NativeSpawner {
             Ok(current_dir) => Ok(current_dir),
             Err(err) => {
                 error!("Could not use current dir {}", err);
-                Ok(dirs::home_dir().unwrap_or(PathBuf::from("/")))
+                Ok(glib::home_dir())
             },
         }
     }

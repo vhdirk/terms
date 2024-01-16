@@ -105,15 +105,15 @@ pub async fn process_cmdline_async(pid: libc::pid_t) -> Result<String, ToolboxEr
     read_file_async(&format!("/proc/{}/cmdline", pid)).await
 }
 
-pub fn working_dir() -> Option<std::path::PathBuf> {
+pub fn working_dir() -> std::path::PathBuf {
     // get the current dir
     let current_dir = std::env::current_dir();
 
     if current_dir.is_ok() {
-        return current_dir.ok();
+        return current_dir.unwrap();
     } else {
         error!("Could not use current dir {}", current_dir.unwrap_err());
     }
 
-    dirs::home_dir()
+    glib::home_dir()
 }

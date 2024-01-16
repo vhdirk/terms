@@ -32,11 +32,7 @@ fn get_env() -> ExitCode {
 }
 
 fn get_home_directory() -> ExitCode {
-    if let Some(home_dir) = dirs::home_dir() {
-        println!("{}", home_dir.display());
-    } else {
-        println!("/")
-    }
+    println!("{}", glib::home_dir().display());
     ExitCode::SUCCESS
 }
 

@@ -372,7 +372,7 @@ impl PreferencesWindow {
 
     #[template_callback]
     fn set_custom_working_dir_to_home(&self, _btn: &gtk::Button) {
-        self.settings.set_custom_working_directory(&dirs::home_dir().unwrap_or(PathBuf::from("/")));
+        self.settings.set_custom_working_directory(&glib::home_dir());
     }
 
     fn set_custom_working_dir_row_visible(&self) {
@@ -416,12 +416,17 @@ impl PreferencesWindow {
     #[template_callback]
     fn on_open_themes_folder(&self) {
         glib::spawn_future_local(
-            gtk::FileLauncher::new(ThemeProvider::user_themes_dir().as_ref().map(gio::File::for_path).as_ref()).launch_future(Some(&self.obj().clone())),
+            gtk::FileLauncher::new(Some(&gio::File::for_path(&ThemeProvider::user_themes_dir()))).launch_future(Some(&self.obj().clone())),
         );
     }
 
     #[template_callback]
     fn on_get_more_themes_online(&self) {
         glib::spawn_future_local(gtk::UriLauncher::new(THEMES_URL).launch_future(Some(&self.obj().clone())));
+    }
+
+    #[template_callback]
+    fn on_reset_request(&self) {
+        self.settings.reset_all();
     }
 }

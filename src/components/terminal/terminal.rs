@@ -9,7 +9,7 @@ use glib::ObjectExt;
 use gtk::glib;
 use gtk::graphene;
 use gtk::CompositeTemplate;
-use gtk::SystemSetting;
+use gtk::Settings as SystemSettings;
 use tracing::*;
 use vte::BoxExt;
 use vte::CursorBlinkMode;
@@ -53,9 +53,8 @@ static TERMS_ENV: Lazy<HashMap<String, String>> = Lazy::new(|| {
         ),
     ]);
 
-    if let Some(themes_dir) = ThemeProvider::user_themes_dir() {
-        env.insert("TERMS_THEMES_DIR".to_string(), themes_dir.to_string_lossy().into());
-    }
+    env.insert("TERMS_THEMES_DIR".to_string(), ThemeProvider::user_themes_dir().to_string_lossy().into());
+
     env
 });
 
@@ -92,6 +91,7 @@ pub struct Terminal {
     pub spawner: Box<dyn Spawner>,
 
     pub settings: Settings,
+    pub system_settings: SystemSettings,
     ctx: RefCell<TerminalContext>,
 
     #[template_child]
@@ -113,6 +113,7 @@ impl Default for Terminal {
             init_args: Default::default(),
             spawner: get_spawner(),
             settings: Default::default(),
+            system_settings: SystemSettings::default().unwrap(),
             ctx: Default::default(),
             term: Default::default(),
             search_toolbar: Default::default(),
@@ -203,6 +204,10 @@ impl Terminal {
             this.on_font_changed();
         }));
         self.settings.connect_custom_font_changed(clone!(@weak self as this => move |_| {
+            this.on_font_changed();
+        }));
+
+        self.system_settings.connect_gtk_font_name_notify(clone!(@weak self as this => move |_| {
             this.on_font_changed();
         }));
 
@@ -309,11 +314,6 @@ impl Terminal {
     }
 
     fn connect_signals(&self) {
-        let handler = self.term.connect_child_exited(clone!(@weak self as this => move |_, status| {
-                this.on_child_exited(status)
-        }));
-        self.ctx.borrow_mut().exit_handler = Some(handler);
-
         let keypress_controller = gtk::EventControllerKey::builder().build();
         keypress_controller.connect_key_pressed(
             clone!(@weak self as this =>  @default-return glib::Propagation::Stop, move |_, key, keycode, modifier| {
@@ -451,9 +451,12 @@ impl Terminal {
     }
 
     fn on_font_changed(&self) {
-        // TODO: system font
-        let font = self.settings.custom_font();
-        self.term.set_font_desc(Some(&pango::FontDescription::from_string(&font)))
+        let font = if self.settings.system_font() {
+            self.system_settings.gtk_font_name().map(|f| f.to_string())
+        } else {
+            Some(self.settings.custom_font())
+        };
+        self.term.set_font_desc(font.map(|f| pango::FontDescription::from_string(&f)).as_ref())
     }
 
     fn on_padding_changed(&self) {
@@ -538,12 +541,6 @@ impl Terminal {
     fn on_child_exited(&self, status: i32) {
         dbg!("Terminal child exited with status {}", status);
         // self.ctx.borrow_mut().pid = None;
-
-        let handler = self.ctx.borrow_mut().exit_handler.take();
-        match handler {
-            None => error!("missing exit signal handler"),
-            Some(handler) => self.term.disconnect(handler),
-        };
 
         // TODO: terminal exit behaviour
         // let handler: SignalHandlerId = self.term.connect_child_exited(move |vte, _| {

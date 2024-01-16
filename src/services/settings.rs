@@ -1,6 +1,7 @@
 use crate::config::APP_ID;
 use gsettings_macro::gen_settings;
 use std::path::{Path, PathBuf};
+use vte::SettingsExt;
 
 #[gen_settings(file = "data/io.github.vhdirk.Terms.gschema.xml.in")]
 #[gen_settings_define(key_name = "custom-working-directory", arg_type = "&Path", ret_type = "PathBuf")]
@@ -71,6 +72,14 @@ impl Settings {
             Some(self.custom_shell_command())
         } else {
             None
+        }
+    }
+
+    pub fn reset_all(&self) {
+        if let Some(schema) = self.settings_schema() {
+            for key in schema.list_keys().iter() {
+                self.reset(key);
+            }
         }
     }
 }

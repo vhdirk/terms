@@ -20,7 +20,7 @@ color_14: '#C061CB'    # Bright Magenta
 color_15: '#4FD2FD'    # Bright Cyan
 color_16: '#F6F5F4'    # Bright White
 
-background: '#000000'  # Background
-foreground: '#ffffff'  # Foreground (Text)
+background: '#ffffff'  # Background
+foreground: '#1E1E1E'  # Foreground (Text)
 
-cursor: '#ffffff'      # Cursor
+cursor: '#1E1E1E'      # Cursor

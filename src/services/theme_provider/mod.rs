@@ -47,7 +47,7 @@ impl ThemeProvider {
         self.current_theme_name().and_then(|t| self.themes().get(&t).cloned())
     }
 
-    pub fn user_themes_dir() -> Option<PathBuf> {
+    pub fn user_themes_dir() -> PathBuf {
         imp::ThemeProvider::user_themes_dir()
     }
 }

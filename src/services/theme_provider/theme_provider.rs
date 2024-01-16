@@ -109,18 +109,16 @@ impl ObjectImpl for ThemeProvider {
 }
 
 impl ThemeProvider {
-    pub fn user_themes_dir() -> Option<PathBuf> {
-        dirs::data_local_dir().map(|d| d.join("terms").join("themes"))
+    pub fn user_themes_dir() -> PathBuf {
+        glib::user_data_dir().join("terms").join("themes")
     }
     pub fn app_themes_dir() -> PathBuf {
         PathBuf::from(PKGDATADIR).join("themes")
     }
 
     fn ensure_user_themes_dir_exists() {
-        if let Some(themes_dir) = Self::user_themes_dir() {
-            if let Err(err) = fs::create_dir_all(&themes_dir) {
-                error!("Error creating directory: {}", err);
-            }
+        if let Err(err) = fs::create_dir_all(&Self::user_themes_dir()) {
+            error!("Error creating directory: {}", err);
         }
     }
 
@@ -156,10 +154,8 @@ impl ThemeProvider {
     fn load_all_color_themes() -> HashMap<String, Theme> {
         let mut themes = vec![];
 
-        if let Some(themes_dir) = Self::user_themes_dir() {
-            themes.append(&mut Self::load_color_themes(&themes_dir));
-        }
         themes.append(&mut Self::load_color_themes(&Self::app_themes_dir()));
+        themes.append(&mut Self::load_color_themes(&Self::user_themes_dir()));
 
         themes.into_iter().fold(HashMap::new(), |mut acc, theme| {
             acc.insert(theme.name.clone(), theme);

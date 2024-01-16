@@ -544,12 +544,12 @@
           bind-flags="default" />
       </object>
     </child> -->
-    <!-- <child>
+    <child>
       <object class="AdwPreferencesPage">
         <property name="name">advanced</property>
         <property name="title" translatable="yes">Advanced</property>
         <property name="icon-name">applications-science-symbolic</property>
-        <child>
+        <!-- <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Experimental</property>
             <property name="description" translatable="yes">Features in this section are known to be
@@ -586,7 +586,7 @@
               </object>
             </child>
           </object>
-        </child>
+        </child> -->
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Danger Zone</property>
@@ -600,7 +600,7 @@
                     <property name="valign">center</property>
                     <property name="halign">end</property>
                     <property name="label" translatable="yes">Reset preferences</property>
-                    <signal name="clicked" handler="on_reset_request" swapped="no" />
+                    <signal name="clicked" handler="on_reset_request" swapped="yes" />
                     <style>
                       <class name="destructive-action" />
                     </style>
@@ -611,7 +611,7 @@
           </object>
         </child>
       </object>
-    </child> -->
+    </child>
   </template>
   <object class="GtkAdjustment" id="floating_controls_hover_area_adjustment">
     <property name="lower">2</property>

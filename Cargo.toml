@@ -3,6 +3,7 @@ name = "terms"
 version = "0.1.0"
 authors = ["Dirk Van Haerenborgh <vhdirk@gmail.com>"]
 edition = "2021"
+default-run = "terms"
 
 [[bin]]
 name = "terms"
@@ -47,7 +48,6 @@ async-std = "1.12.0"
 constcat = "0.4.0"
 serde_with = "3.4.0"
 ref_thread_local = "0.1.1"
-dirs = "5.0.1"
 serde_json = "1.0.111"
 rand = "0.8.5"
 elementtree = "1.2.3"
