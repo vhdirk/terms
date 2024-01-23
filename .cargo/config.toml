@@ -1,12 +1,10 @@
 [build]
+#why do I need this again?
 rustflags = ["--cfg", "ruma_identifiers_storage=\"Arc\""]
 
 [env]
 GSETTINGS_SCHEMA_DIR = { value = "target", relative = true }
 GETTEXT_PACKAGE = "terms"
 APP_ID = "io.github.vhdirk.Terms.Devel"
-
-
-[doc.extern-map.registries]
-crates-io = "https://docs.rs/"
+PROFILE = "Devel"
 

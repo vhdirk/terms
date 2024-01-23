@@ -1,4 +1,4 @@
-use glib::{clone, subclass::prelude::*, ObjectExt, ParamSpecBuilderExt, ToValue};
+use glib::{clone, subclass::prelude::*, ObjectExt, ParamSpecBuilderExt};
 use std::{
     cell::RefCell,
     collections::HashMap,
@@ -7,10 +7,7 @@ use std::{
 };
 use tracing::*;
 
-use crate::{
-    config::PKGDATADIR,
-    services::settings::{Settings, StylePreference},
-};
+use crate::{config::PKGDATADIR, settings::Settings};
 use once_cell::sync::Lazy;
 
 use super::theme::Theme;

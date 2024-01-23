@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="libadwaita" version="1.0" />
+  <template class="TermsShortcutsPreferencesPage" parent="AdwPreferencesPage">
+    <property name="title" translatable="yes">Shortcuts</property>
+    <property name="icon-name">preferences-desktop-keyboard-shortcuts-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Terminal</property>
+        <child>
+          <object class="TermsShortcutRow" id="copy_clipboard">
+            <property name="title" translatable="yes">Copy to Clipboard</property>
+            <property name="action">win.copy</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="paste_clipboard">
+            <property name="title" translatable="yes">Paste from Clipboard</property>
+            <property name="action">win.paste</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="select_all">
+            <property name="title" translatable="yes">Select All</property>
+            <property name="action">win.select-all</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="select_none">
+            <property name="title" translatable="yes">Clear Selection</property>
+            <property name="action">win.select-none</property>
+
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="reset">
+            <property name="title" translatable="yes">Reset</property>
+            <property name="action">win.reset</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="reset_and_clear">
+            <property name="title" translatable="yes">Reset and Clear</property>
+            <property name="action">win.reset-and-clear</property>
+
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="search">
+            <property name="title" translatable="yes">Search History</property>
+            <property name="action">win.search</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="popup_menu">
+            <property name="title" translatable="yes">Show Context Menu</property>
+            <property name="action">win.popup-menu</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Tabs</property>
+        <child>
+          <object class="TermsShortcutRow" id="new_session">
+            <property name="title" translatable="yes">New Tab</property>
+            <property name="subtitle" translatable="yes">Open a new tab in the current window</property>
+            <property name="action">win.new-session</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="new_window">
+            <property name="title" translatable="yes">New Window</property>
+            <property name="subtitle" translatable="yes">Open a new tab in a new window</property>
+            <property name="action">app.new-window</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="tab_overview">
+            <property name="title" translatable="yes">View Tab Overview</property>
+            <property name="subtitle" translatable="yes">Show an overview of all tabs within the window</property>
+            <property name="action">win.session-overview</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="close_session">
+            <property name="title" translatable="yes">Close Session</property>
+            <property name="subtitle" translatable="yes">Close the current session</property>
+            <property name="action">win.close-session</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="close_other_sessions">
+            <property name="title" translatable="yes">Close Other Sessions</property>
+            <property name="subtitle" translatable="yes">Close all sessions except the active session</property>
+            <property name="action">win.close-other-sessions</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="undo_close_session">
+            <property name="title" translatable="yes">Undo Close Tab</property>
+            <property name="subtitle" translatable="yes">Undo closing the last tab</property>
+            <property name="action">win.undo-close-session</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="rename_session">
+            <property name="title" translatable="yes">Rename Tab</property>
+            <property name="subtitle" translatable="yes">Rename the current tab</property>
+            <property name="action">win.rename-session</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_previous">
+            <property name="title" translatable="yes">Move to Previous Tab</property>
+            <property name="action">win.focus-session-previous</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_next">
+            <property name="title" translatable="yes">Move to Next Tab</property>
+            <property name="action">win.focus-session-next</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_first">
+            <property name="title" translatable="yes">Move to First Tab</property>
+            <property name="action">win.focus-session-first</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_last">
+            <property name="title" translatable="yes">Move to Last Tab</property>
+            <property name="action">win.focus-session-last</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="move_session_left">
+            <property name="title" translatable="yes">Move Tab Left</property>
+            <property name="subtitle" translatable="yes">Move the tab one position to the left</property>
+            <property name="action">win.move-session-left</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="move_session_right">
+            <property name="title" translatable="yes">Move Tab Right</property>
+            <property name="subtitle" translatable="yes">Move the tab one position to the right</property>
+            <property name="action">win.move-session-right</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="detach_session">
+            <property name="title" translatable="yes">Move Tab to New Window</property>
+            <property name="subtitle" translatable="yes">Detach the current tab and move it to a new window</property>
+            <property name="action">win.detach-session</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_1">
+            <property name="title" translatable="yes">Switch to Tab 1</property>
+            <property name="action">win.focus-session-1</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_2">
+            <property name="title" translatable="yes">Switch to Tab 2</property>
+            <property name="action">win.focus-session-2</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_3">
+            <property name="title" translatable="yes">Switch to Tab 3</property>
+            <property name="action">win.focus-session-3</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_4">
+            <property name="title" translatable="yes">Switch to Tab 4</property>
+            <property name="action">win.focus-session-4</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_5">
+            <property name="title" translatable="yes">Switch to Tab 5</property>
+            <property name="action">win.focus-session-5</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_6">
+            <property name="title" translatable="yes">Switch to Tab 6</property>
+            <property name="action">win.focus-session-6</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_7">
+            <property name="title" translatable="yes">Switch to Tab 7</property>
+            <property name="action">win.focus-session-7</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_8">
+            <property name="title" translatable="yes">Switch to Tab 8</property>
+            <property name="action">win.focus-session-8</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="focus_session_9">
+            <property name="title" translatable="yes">Switch to Tab 9</property>
+            <property name="action">win.focus-session-9</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Zoom</property>
+        <child>
+          <object class="TermsShortcutRow" id="zoom_in">
+            <property name="title" translatable="yes">Zoom In</property>
+            <property name="action">win.zoom-in</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="zoom_out">
+            <property name="title" translatable="yes">Zoom Out</property>
+            <property name="action">win.zoom-out</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="zoom_default">
+            <property name="title" translatable="yes">Reset Zoom</property>
+            <property name="action">win.zoom-default</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Application</property>
+        <child>
+          <object class="TermsShortcutRow" id="toggle_fullscreen">
+            <property name="title" translatable="yes">Toggle Fullscreen</property>
+            <property name="subtitle" translatable="yes">Toggle in and out of fullscreen</property>
+            <property name="action">win.toggle-fullscreen</property>
+          </object>
+        </child>
+        <child>
+          <object class="TermsShortcutRow" id="switch_headerbar_mode">
+            <property name="title" translatable="yes">Switch header mode</property>
+            <property name="subtitle" translatable="yes">Switch header bar mode</property>
+            <property name="action">win.switch-headerbar-mode</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="TermsShortcutRow" id="edit_preferences">
+            <property name="title" translatable="yes">Preferences</property>
+            <property name="subtitle" translatable="yes">Show this preferences window</property>
+            <property name="action">win.edit-preferences</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="TermsShortcutRow" id="show_help_overlay">
+            <property name="title" translatable="yes">Help</property>
+            <property name="subtitle" translatable="yes">Show help overlay</property>
+            <property name="action">win.show-help-overlay</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="AdwActionRow">
+            <property name="title" translatable="yes">Reset All Shortcuts</property>
+            <property name="subtitle" translatable="yes">This will reset all shortcuts to their default keybindings and overwrite your config file.</property>
+
+            <child type="suffix">
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Reset All</property>
+                <property name="action-name">shortcut-editor.reset-all</property>
+                <property name="valign">center</property>
+                <style>
+                  <class name="destructive-action" />
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

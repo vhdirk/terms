@@ -1,19 +1,14 @@
 use adw::subclass::prelude::*;
-use gio::SimpleAction;
-use glib::{clone, closure_local, RustClosure};
+use glib::clone;
 use gtk::prelude::*;
 use gtk::{gio, glib};
-// use panel::subclass::prelude::*;
 use std::cell::RefCell;
 
 use crate::components::PreferencesWindow;
 use crate::config::PROFILE;
-use crate::services::settings::{Settings, StylePreference};
+use crate::settings::Settings;
 
 use super::*;
-
-// var builder = new Gtk.Builder.from_resource ("/com/raggesilver/BlackBox/gtk/tab-menu.ui");
-// this.tab_view.menu_model = builder.get_object ("tab-menu") as GLib.Menu;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/window.ui")]
@@ -112,7 +107,18 @@ impl Window {
             }))
             .build();
 
-        self.obj().add_action_entries([preferences_action, new_session_action]);
+        let toggle_fullscreen_action = gio::ActionEntry::builder("toggle-fullscreen")
+            .activate(clone!(@weak self as this => move |win: &super::Window, _, _| {
+                if win.is_fullscreened() {
+                    win.unfullscreen();
+                } else {
+                    win.fullscreen();
+                }
+            }))
+            .build();
+
+        self.obj()
+            .add_action_entries([preferences_action, new_session_action, toggle_fullscreen_action]);
     }
 
     pub fn open_preferences(&self) {

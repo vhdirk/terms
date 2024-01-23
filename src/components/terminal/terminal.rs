@@ -27,10 +27,10 @@ use vte::{PopoverExt, PtyFlags, TerminalExt, TerminalExtManual, WidgetExt};
 use crate::components::search_toolbar::SearchToolbar;
 use crate::config::APP_NAME;
 use crate::pcre2::PCRE2Flags;
-use crate::services::settings::ScrollbackMode;
-use crate::services::settings::Settings;
-use crate::services::theme_provider::Theme;
-use crate::services::theme_provider::ThemeProvider;
+use crate::settings::ScrollbackMode;
+use crate::settings::Settings;
+use crate::theme_provider::Theme;
+use crate::theme_provider::ThemeProvider;
 
 use super::constants::URL_REGEX_STRINGS;
 use super::spawn::get_spawner;

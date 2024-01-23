@@ -7,9 +7,13 @@ use application::Application;
 mod application;
 mod components;
 mod config;
+mod error;
+mod i18n;
 mod pcre2;
 mod services;
-mod utils;
+mod settings;
+mod theme_provider;
+mod util;
 
 fn init_gettext() {
     gettextrs::setlocale(LocaleCategory::LcAll, "");
@@ -24,6 +28,7 @@ pub fn init() {
         .init();
 
     init_gettext();
+
     let res = gio::Resource::load(RESOURCES_FILE).expect("Could not load gresource file");
     gio::resources_register(&res);
 }

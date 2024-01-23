@@ -26,6 +26,8 @@ use tracing::*;
 use vte::{self, InputStreamExtManual, TerminalExt, TerminalExtManual};
 use zbus::zvariant::Fd;
 
+use crate::error::TermsError;
+
 const FLATPAK_INFO: &str = "/.flatpak-info";
 const TOOLBOX: &str = "terms-toolbox";
 
@@ -67,34 +69,6 @@ impl TrimOption for Option<String> {
     }
 }
 
-#[derive(Error, Debug)]
-#[non_exhaustive]
-pub enum SpawnError {
-    #[error(transparent)]
-    IoError(#[from] io::Error),
-
-    #[error(transparent)]
-    AshpdError(#[from] ashpd::Error),
-
-    #[error(transparent)]
-    GLibError(#[from] glib::Error),
-
-    #[error(transparent)]
-    FromUtf8Error(#[from] FromUtf8Error),
-
-    #[error(transparent)]
-    ToolboxError(#[from] toolbox::ToolboxError),
-
-    #[error(transparent)]
-    ParseIntError(#[from] ParseIntError),
-
-    #[error(transparent)]
-    SerdeError(#[from] serde_yaml::Error),
-
-    #[error("Unknown error")]
-    Unknown(String),
-}
-
 pub struct SpawnHandle {
     pub pid: libc::pid_t,
     pub child_exit: Pin<Box<dyn Future<Output = i32>>>,
@@ -111,9 +85,9 @@ pub trait Spawner: std::fmt::Debug {
     /// Get the preferred shell of the user
     async fn shell(&self) -> Option<String>;
 
-    async fn env(&self) -> Result<HashMap<String, String>, SpawnError>;
+    async fn env(&self) -> Result<HashMap<String, String>, TermsError>;
 
-    async fn working_dir(&self) -> Result<PathBuf, SpawnError>;
+    async fn working_dir(&self) -> Result<PathBuf, TermsError>;
 
     async fn spawn(
         &self,
@@ -123,14 +97,14 @@ pub trait Spawner: std::fmt::Debug {
         argv: Vec<PathBuf>,
         envv: HashMap<String, String>,
         timeout: Duration,
-    ) -> Result<SpawnHandle, SpawnError>;
+    ) -> Result<SpawnHandle, TermsError>;
 
     /// Determines if a child process is running in the terminal, and returns the pid
-    async fn foreground_pid(&self, pty: &vte::Pty) -> Result<libc::pid_t, SpawnError>;
+    async fn foreground_pid(&self, pty: &vte::Pty) -> Result<libc::pid_t, TermsError>;
 
-    async fn process_status(&self, pid: libc::pid_t) -> Result<String, SpawnError>;
+    async fn process_status(&self, pid: libc::pid_t) -> Result<String, TermsError>;
 
-    async fn process_cmdline(&self, pid: libc::pid_t) -> Result<String, SpawnError>;
+    async fn process_cmdline(&self, pid: libc::pid_t) -> Result<String, TermsError>;
 }
 
 #[async_trait(?Send)]
@@ -153,11 +127,11 @@ impl Spawner for NativeSpawner {
         }
     }
 
-    async fn env(&self) -> Result<HashMap<String, String>, SpawnError> {
+    async fn env(&self) -> Result<HashMap<String, String>, TermsError> {
         Ok(HashMap::from_iter(std::env::vars()))
     }
 
-    async fn working_dir(&self) -> Result<PathBuf, SpawnError> {
+    async fn working_dir(&self) -> Result<PathBuf, TermsError> {
         match std::env::current_dir() {
             Ok(current_dir) => Ok(current_dir),
             Err(err) => {
@@ -167,17 +141,17 @@ impl Spawner for NativeSpawner {
         }
     }
 
-    async fn foreground_pid(&self, pty: &vte::Pty) -> Result<libc::pid_t, SpawnError> {
+    async fn foreground_pid(&self, pty: &vte::Pty) -> Result<libc::pid_t, TermsError> {
         let fd = pty.fd().as_raw_fd();
         Ok(libc_util::tcgetpgrp(fd)?)
     }
 
-    async fn process_status(&self, pid: libc::pid_t) -> Result<String, SpawnError> {
+    async fn process_status(&self, pid: libc::pid_t) -> Result<String, TermsError> {
         let stat = toolbox::process_status_async(pid).await?;
         Ok(stat)
     }
 
-    async fn process_cmdline(&self, pid: libc::pid_t) -> Result<String, SpawnError> {
+    async fn process_cmdline(&self, pid: libc::pid_t) -> Result<String, TermsError> {
         let stat = toolbox::process_cmdline_async(pid).await?;
         Ok(stat)
     }
@@ -190,7 +164,7 @@ impl Spawner for NativeSpawner {
         argv: Vec<PathBuf>,
         envv: HashMap<String, String>,
         timeout: Duration,
-    ) -> Result<SpawnHandle, SpawnError> {
+    ) -> Result<SpawnHandle, TermsError> {
         let args: Vec<&str> = argv.iter().map(|path| path.to_str().unwrap_or_default()).collect();
         let env_list: Vec<String> = envv.iter().map(|(key, value)| format!("{}={}", key, value)).collect();
         let envs: Vec<&str> = env_list.iter().map(|value| value.as_str()).collect();
@@ -220,7 +194,7 @@ impl Spawner for NativeSpawner {
                 pid: pid.0,
                 child_exit: exit_handler,
             }),
-            Err(err) => Err(SpawnError::from(err)),
+            Err(err) => Err(TermsError::from(err)),
         }
     }
 }
@@ -237,7 +211,7 @@ impl Spawner for FlatpakSpawner {
         shell.trim_option()
     }
 
-    async fn env(&self) -> Result<HashMap<String, String>, SpawnError> {
+    async fn env(&self) -> Result<HashMap<String, String>, TermsError> {
         let out = Self::run_host_toolbox_command("env", None::<bool>, HashMap::new(), HashMap::new()).await?;
 
         let deser_map: serde_yaml::Mapping = serde_yaml::from_str(&out)?;
@@ -251,23 +225,23 @@ impl Spawner for FlatpakSpawner {
         Ok(varmap)
     }
 
-    async fn working_dir(&self) -> Result<PathBuf, SpawnError> {
+    async fn working_dir(&self) -> Result<PathBuf, TermsError> {
         let out = Self::run_host_toolbox_command("home-directory", None::<bool>, HashMap::new(), HashMap::new()).await?;
         Ok(PathBuf::from(out.trim().to_string()))
     }
 
-    async fn foreground_pid(&self, pty: &vte::Pty) -> Result<libc::pid_t, SpawnError> {
+    async fn foreground_pid(&self, pty: &vte::Pty) -> Result<libc::pid_t, TermsError> {
         let fds = HashMap::from([(3, Fd::from(pty.fd().as_raw_fd()))]);
         let out = Self::run_host_toolbox_command("child-pid", None::<bool>, fds, HashMap::new()).await?;
         Ok(out.parse::<libc::pid_t>()?)
     }
 
-    async fn process_status(&self, pid: libc::pid_t) -> Result<String, SpawnError> {
+    async fn process_status(&self, pid: libc::pid_t) -> Result<String, TermsError> {
         let out = Self::run_host_toolbox_command("process-status", Some(pid), HashMap::new(), HashMap::new()).await?;
         Ok(out)
     }
 
-    async fn process_cmdline(&self, pid: libc::pid_t) -> Result<String, SpawnError> {
+    async fn process_cmdline(&self, pid: libc::pid_t) -> Result<String, TermsError> {
         let out = Self::run_host_toolbox_command("process-cmdline", Some(pid), HashMap::new(), HashMap::new()).await?;
         Ok(out)
     }
@@ -280,7 +254,7 @@ impl Spawner for FlatpakSpawner {
         argv: Vec<PathBuf>,
         envv: HashMap<String, String>,
         timeout: Duration,
-    ) -> Result<SpawnHandle, SpawnError> {
+    ) -> Result<SpawnHandle, TermsError> {
         // Open a new PTY master
         let pty = term.pty_new_sync_future(flags | vte::PtyFlags::NO_CTTY).await.map_err(|err| {
             warn!("Failed to create pseudoterminal device {:?}", err);
@@ -370,7 +344,7 @@ impl FlatpakSpawner {
         Self {}
     }
 
-    async fn host_root() -> Result<PathBuf, SpawnError> {
+    async fn host_root() -> Result<PathBuf, TermsError> {
         let contents = async_std::fs::read(&PathBuf::from(FLATPAK_INFO)).await?;
         let keyfile = glib::KeyFile::new();
         keyfile.load_from_bytes(&glib::Bytes::from(&contents), glib::KeyFileFlags::NONE)?;
@@ -378,7 +352,7 @@ impl FlatpakSpawner {
         Ok(PathBuf::from(host_root).join("/bin"))
     }
 
-    async fn toolbox_path() -> Result<PathBuf, SpawnError> {
+    async fn toolbox_path() -> Result<PathBuf, TermsError> {
         // first try if toolbox is found as sibling
         if let Some(toolbox) = std::env::current_exe()
             .ok()
@@ -400,7 +374,7 @@ impl FlatpakSpawner {
         command_arg: Option<impl ToString>,
         mut fds: HashMap<u32, Fd>,
         envs: HashMap<&str, &str>,
-    ) -> Result<String, SpawnError> {
+    ) -> Result<String, TermsError> {
         let toolbox_path = Self::toolbox_path().await?;
 
         let mut argv = vec![toolbox_path, PathBuf::from(command)];
@@ -445,7 +419,7 @@ impl FlatpakSpawner {
         info!("Toolbox command exited with status: {}", exit_status);
         if exit_status != 0 {
             // TODO: can we read from stderr?
-            return Err(SpawnError::Unknown(format!("Toolbox command exited with status {}", exit_status)));
+            return Err(TermsError::Unknown(format!("Toolbox command exited with status {}", exit_status)));
         }
 
         let mut stdout_read = unsafe { async_std::fs::File::from_raw_fd(read_fd) };
@@ -456,7 +430,7 @@ impl FlatpakSpawner {
         info!("Toolbox command returned output: {}", out);
 
         if exit_status != 0 {
-            Err(SpawnError::Unknown(out))
+            Err(TermsError::Unknown(out))
         } else {
             Ok(out)
         }

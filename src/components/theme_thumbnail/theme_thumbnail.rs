@@ -26,7 +26,7 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 
 use super::thumbnail_paintable::ThemePreviewPaintable;
-use crate::services::theme_provider::Theme;
+use crate::theme_provider::Theme;
 
 #[derive(Debug, Default)]
 pub struct ThemeThumbnailCtx {

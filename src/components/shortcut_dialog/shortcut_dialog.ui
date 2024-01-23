@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="libadwaita" version="1.0" />
+  <template class="TermsShortcutDialog" parent="AdwWindow">
+    <property name="title" translatable="yes">Add Shortcut</property>
+    <property name="modal">true</property>
+    <property name="destroy-with-parent">true</property>
+    <property name="resizable">false</property>
+    <property name="width-request">400</property>
+    <property name="height-request">300</property>
+    <child>
+      <object class="GtkEventControllerKey" id="event_controller">
+        <property name="propagation-phase">capture</property>
+        <signal name="key-pressed" handler="key_pressed" swapped="true" />
+      </object>
+    </child>
+    <child>
+      <object class="AdwToolbarView">
+        <child type="top">
+          <!-- Header Bar -->
+          <object class="AdwHeaderBar">
+            <property name="show-start-title-buttons">false</property>
+            <property name="show-end-title-buttons">false</property>
+
+            <child type="start">
+              <object class="GtkButton" id="cancel_button">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="action-name">window.close</property>
+                <signal name="clicked" handler="cancel" swapped="yes" />
+              </object>
+            </child>
+
+            <child type="end">
+              <object class="GtkButton" id="accept_button">
+                <property name="label" translatable="yes">_Set</property>
+                <property name="use-underline">true</property>
+                <property name="sensitive">false</property>
+                <signal name="clicked" handler="apply" swapped="yes" />
+                <style>
+                  <class name="suggested-action" />
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Body -->
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="spacing">12</property>
+
+            <child>
+              <object class="GtkLabel" id="heading">
+                <style>
+                  <class name="heading" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkShortcutLabel" id="shortcut_label">
+                <property name="halign">center</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">This shortcut is already in use</property>
+                <property name="wrap">true</property>
+                <property name="width-chars">20</property>
+                <property name="max-width-chars">20</property>
+                <property name="visible" bind-source="TermsShortcutDialog" bind-property="is-in-use" bind-flags="sync-create" />
+                <style>
+                  <class name="error" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Press Escape to cancel or Backspace to disable shortcut</property>
+                <property name="wrap">true</property>
+                <property name="width-chars">20</property>
+                <property name="max-width-chars">20</property>
+                <property name="visible" bind-source="TermsShortcutDialog" bind-property="is-in-use" bind-flags="sync-create|invert-boolean" />
+                <style>
+                  <class name="dim-label" />
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+  <object class="GtkSizeGroup">
+    <widgets>
+      <widget name="cancel_button" />
+      <widget name="accept_button" />
+    </widgets>
+  </object>
+</interface>

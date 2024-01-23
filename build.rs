@@ -28,6 +28,7 @@ pub fn compile_schemas<P: AsRef<Path>>(gschemas: &[P]) {
 
     let schema_dir = env::var("GSETTINGS_SCHEMA_DIR").unwrap();
     let output = Command::new("glib-compile-schemas")
+        .arg("--strict")
         .arg("--targetdir")
         .arg(schema_dir)
         .arg(out_dir)

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
+  <template class="TermsShortcutRow" parent="AdwActionRow">
+    <property name="activatable-widget">menu_button</property>
+    <child type="suffix">
+      <object class="GtkBox" id="accelerators_box">
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
+        <property name="valign">center</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+      </object>
+    </child>
+    <child type="suffix">
+      <object class="GtkMenuButton" id="menu_button">
+        <property name="popover">popover</property>
+        <property name="icon-name">view-more-symbolic</property>
+        <property name="valign">center</property>
+        <style>
+          <class name="flat" />
+        </style>
+      </object>
+    </child>
+
+    <object class="GtkPopoverMenu" id="popover">
+    </object>
+  </template>
+</interface>

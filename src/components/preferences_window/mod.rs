@@ -1,4 +1,5 @@
 mod preferences_window;
+
 use glib::IsA;
 use preferences_window as imp;
 

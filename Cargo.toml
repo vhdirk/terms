@@ -63,3 +63,8 @@ zbus = "3.14.1"
 
 [build-dependencies]
 glib-build-tools = "0.18.0"
+
+[patch.crates-io]
+gsettings-macro = {git = "https://github.com/vhdirk/gsettings-macro.git", branch="multiple-schemas"}
+
+

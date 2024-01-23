@@ -30,7 +30,7 @@ use glib::subclass::prelude::*;
 use glib::subclass::{object::ObjectImpl, types::ObjectSubclass};
 use gtk::subclass::prelude::*;
 
-use crate::services::theme_provider::{Theme, ThemeProvider};
+use crate::theme_provider::{Theme, ThemeProvider};
 
 ref_thread_local! {
     static managed INSTANCE: Lazy<ThemeThumbnailProvider> = Lazy::new(|| ThemeThumbnailProvider::new());

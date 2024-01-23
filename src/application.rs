@@ -3,10 +3,11 @@ use std::{borrow::Cow, fmt, rc::Rc};
 use crate::{
     components::{TerminalInitArgs, Window},
     config::{self, APP_ID, APP_NAME, VERSION},
+    settings::Settings,
 };
 use adw;
 use gettextrs::gettext;
-use gio::{ApplicationFlags, Settings};
+use gio::ApplicationFlags;
 use glib::ExitCode;
 use gtk::{gio, glib, glib::clone, prelude::*, subclass::prelude::*};
 use serde::{Deserialize, Serialize};
@@ -61,7 +62,7 @@ mod imp {
     use crate::{
         components::{TerminalInitArgs, Window},
         config::APP_ID,
-        services::theme_provider::ThemeProvider,
+        theme_provider::ThemeProvider,
     };
 
     use super::*;
@@ -81,7 +82,7 @@ mod imp {
     impl Default for Application {
         fn default() -> Self {
             Self {
-                settings: Settings::new(APP_ID),
+                settings: Settings::default(),
                 // system_settings: Default::default(),
                 // session_list: Default::default(),
                 init_args: RefCell::default(),
@@ -99,10 +100,10 @@ mod imp {
     impl ObjectImpl for Application {
         fn constructed(&self) {
             self.parent_constructed();
-            let obj = self.obj();
+            let obj = self.obj().clone();
             obj.setup_gactions();
-            obj.set_accels_for_action("win.show-help-overlay", &["<Control>question"]);
-            obj.set_accels_for_action("win.edit-preferences", &["<Control>comma"]);
+
+            obj.setup_shortcuts();
 
             self.setup_command_line();
         }
@@ -260,6 +261,14 @@ impl Application {
             .build();
 
         self.add_action_entries([quit_action, about_action, new_window]);
+    }
+
+    fn setup_shortcuts(&self) {
+        // TODO: watch for changes
+        let shortcut_settings = self.imp().settings.shortcuts();
+        for (action, accels) in shortcut_settings.actionmap() {
+            self.set_accels_for_action(&action, &accels.iter().map(|a| a.as_str()).collect::<Vec<_>>())
+        }
     }
 
     fn new_window(&self) {

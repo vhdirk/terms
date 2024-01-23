@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
+  <template class="TermsTerminalPreferencesPage" parent="AdwPreferencesPage">
+    <property name="name">terminal</property>
+    <property name="title" translatable="yes">Terminal</property>
+    <property name="icon-name">utilities-terminal-symbolic</property>
+
+    <!--- Text section -->
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Text</property>
+
+        <child>
+          <object class="AdwSwitchRow" id="system_font_switch">
+            <property name="title" translatable="yes">Use system font</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow" id="custom_font_row">
+            <property name="activatable">True</property>
+            <property name="title" translatable="yes">Font</property>
+            <signal name="activated" handler="on_custom_font_row_activated" swapped="true" />
+            <child>
+              <object class="GtkLabel" id="custom_font_label">
+                <property name="valign">center</property>
+                <property name="label" translatable="no">Monospace 10</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwExpanderRow" id="cell_spacing_expander_row">
+            <property name="title" translatable="yes">Cell Spacing</property>
+            <child>
+              <object class="AdwSpinRow">
+                <property name="title" translatable="yes">Width</property>
+                <property name="valign">center</property>
+                <property name="digits">2</property>
+                <property name="adjustment">cell_width_spacing_adjustment</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow">
+                <property name="title" translatable="yes">Height</property>
+                <property name="valign">center</property>
+                <property name="digits">2</property>
+                <property name="adjustment">cell_height_spacing_adjustment</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwSwitchRow" id="bold_is_bright_switch">
+            <property name="title" translatable="yes">Bright Bold Text</property>
+            <property name="subtitle" translatable="yes">Use bright colors for bold text.</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwSwitchRow" id="easy_copy_paste_switch">
+            <property name="title" translatable="yes">Easy Copy &amp;amp; Paste</property>
+            <property name="subtitle" translatable="yes">Use ctrl+c/ctrl+v for copy/paste.</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Terminal</property>
+
+        <child>
+          <object class="AdwSwitchRow" id="terminal_bell_switch">
+            <property name="title" translatable="yes">Audible Bell</property>
+            <property name="subtitle" translatable="yes">If enabled, terminals might use an audible
+              bell to indicate events.</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwExpanderRow">
+            <property name="title" translatable="yes">Cursor</property>
+            <property name="subtitle" translatable="yes">Adjust cursor shape and behavior.</property>
+            <child>
+              <object class="AdwComboRow" id="cursor_shape_combo_row">
+                <property name="title" translatable="yes">Cursor Shape</property>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">Block</item>
+                      <item translatable="yes">IBeam</item>
+                      <item translatable="yes">Underline</item>
+                    </items>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwComboRow" id="cursor_blink_mode_combo_row">
+                <property name="title" translatable="yes">Cursor Blinking</property>
+                <property name="subtitle" translatable="yes">Whether or not the cursor should
+                  blink.</property>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">Follow System</item>
+                      <item translatable="yes">On</item>
+                      <item translatable="yes">Off</item>
+                    </items>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSpinRow" id="padding_spin_button">
+            <property name="title" translatable="yes">Padding</property>
+            <property name="adjustment">padding_spin_button_adjustment</property>
+            <property name="climb-rate">1</property>
+            <property name="numeric">1</property>
+            <property name="snap-to-ticks">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwSpinRow" id="opacity_spin_button">
+            <property name="title" translatable="yes">Opacity</property>
+            <property name="subtitle" translatable="yes">Terminal background opacity.</property>
+            <property name="adjustment">opacity_spin_button_adjustment</property>
+            <property name="climb-rate">1</property>
+            <property name="numeric">1</property>
+            <property name="snap-to-ticks">False</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <!-- <property name="title" translatable="yes">Working Directory</property> -->
+        <!-- <property name="description" translatable="yes">Set a directory to be used for new
+            tabs
+        and windows.</property> -->
+        <child>
+          <object class="AdwComboRow" id="working_directory_mode_combo_row">
+            <property name="title" translatable="yes">Working Directory</property>
+
+            <!--<binding
+            name="subtitle">
+                  <closure type="gchararray" function="explain_working_directory_mode">
+                    <lookup name="selected">working_directory_mode_combo_row</lookup>
+                  </closure>
+                </binding> -->
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item translatable="yes">Previous Session</item>
+                  <item translatable="yes">Home Directory</item>
+                  <item translatable="yes">Custom</item>
+                </items>
+              </object>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwEntryRow" id="custom_working_directory_entry_row">
+            <property name="title" translatable="yes">Custom Working Directory</property>
+            <child>
+              <object class="GtkButton">
+                <property name="valign">center</property>
+                <signal name="clicked" handler="set_custom_working_dir_to_home" swapped="true" />
+                <style>
+                  <class name="flat" />
+                </style>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">user-home-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Set to user's home</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Scrolling</property>
+        <child>
+          <object class="AdwExpanderRow" id="scrollbars_expander_row">
+            <property name="title" translatable="yes">Scrollbars</property>
+            <child>
+              <object class="AdwSwitchRow" id="show_scrollbars_switch">
+                <property name="title" translatable="yes">Show Scrollbars</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="use_overlay_scrolling_switch">
+                <property name="title" translatable="yes">Use Overlay Scrolling</property>
+                <property name="sensitive" bind-source="show_scrollbars_switch"
+                  bind-property="active" bind-flags="sync-create" />
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwComboRow" id="scrollback_mode_combo_row">
+            <property name="title" translatable="yes">Scrollback mode</property>
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item translatable="yes">Fixed Size</item>
+                  <item translatable="yes">Unlimited</item>
+                  <item translatable="yes">Disabled</item>
+                </items>
+              </object>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSpinRow" id="custom_scrollback_spin_button">
+            <property name="title" translatable="yes">Scrollback Lines</property>
+            <property name="valign">center</property>
+            <property name="width-chars">6</property>
+            <property name="adjustment">custom_scrollback_adjustment</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="scroll_on_keystroke_switch">
+            <property name="title" translatable="yes">Scroll on keystroke</property>
+            <property name="subtitle" translatable="yes">Whether to scroll to the bottom when a key is pressed.</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="scroll_on_output_switch">
+            <property name="title" translatable="yes">Scroll on output</property>
+            <property name="subtitle" translatable="yes">Whether to scroll to the bottom when there's new output.</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Command</property>
+        <child>
+          <object class="AdwSwitchRow" id="run_command_as_login_switch">
+            <property name="title" translatable="yes">Run Command as Login Shell</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwSwitchRow" id="use_custom_shell_command_switch">
+            <property name="title" translatable="yes">Use Custom Command</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwEntryRow" id="custom_command_entry_row">
+            <property name="title" translatable="yes">Custom Command</property>
+            <property name="sensitive" bind-source="use_custom_shell_command_switch"
+              bind-property="active" bind-flags="sync-create" />
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="AdwSwitchRow" id="notify_process_completion_switch">
+            <property name="title" translatable="yes">Notification on Completed Task</property>
+            <property name="subtitle" translatable="yes">Send a desktop notification when a command is completed on an unfocused tab.</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Appearance</property>
+        <child>
+          <object class="AdwComboRow" id="style_preference_combo_row">
+            <property name="title" translatable="yes">Application Style</property>
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item translatable="yes">Follow System</item>
+                  <item translatable="yes">Light</item>
+                  <item translatable="yes">Dark</item>
+                </items>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwSwitchRow" id="theme_integration_switch">
+            <property name="title" translatable="yes">Theme Integration</property>
+            <property name="subtitle" translatable="yes">Paint the whole app with colors from your colorscheme.</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Theme</property>
+        <property name="description" translatable="yes">Set your preferred theme for light and dark styles.</property>
+        <child type="header-suffix">
+          <object class="GtkBox">
+            <property name="valign">center</property>
+            <property name="halign">end</property>
+            <style>
+              <class name="linked" />
+              <class name="suggested-action" />
+            </style>
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">folder-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Open themes folder</property>
+                <signal name="clicked" handler="on_open_themes_folder" swapped="true" />
+                <style />
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">web-browser-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Get more themes online</property>
+                <signal name="clicked" handler="on_get_more_themes_online" swapped="true" />
+                <style />
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">15</property>
+            <child>
+              <object class="GtkBox">
+                <property name="hexpand">True</property>
+                <property name="homogeneous">True</property>
+                <style>
+                  <class name="linked" />
+                </style>
+                <child>
+                  <object class="GtkToggleButton" id="light_theme_toggle">
+                    <property name="label" translatable="yes">Light Theme</property>
+                    <property name="active">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="dark_theme_toggle">
+                    <property name="label" translatable="yes">Dark Theme</property>
+                    <property name="group">light_theme_toggle</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="filter_themes_check_button">
+                <property name="label" translatable="yes">Only display themes for the current style</property>
+                <property name="active">True</property>
+                <property name="halign">start</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">To ensure readability, "Theme Integration" will be disabled if you select a light color scheme while using the dark app style or a dark color scheme while using the light app style.</property>
+                <property name="wrap">True</property>
+                <property name="visible" bind-source="filter_themes_check_button"
+                  bind-property="active" bind-flags="sync-create|invert-boolean" />
+                <style>
+                  <class name="warning" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBox" id="preview_flow_box">
+                <property name="hexpand">True</property>
+                <property name="column-spacing">12</property>
+                <property name="row-spacing">12</property>
+                <property name="max-children-per-line">4</property>
+                <property name="max-children-per-line">4</property>
+                <property name="selection-mode">none</property>
+                <property name="homogeneous">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+  <object class="GtkAdjustment" id="cell_width_spacing_adjustment">
+    <property name="lower">1</property>
+    <property name="upper">2</property>
+    <property name="step-increment">0.05</property>
+  </object>
+  <object class="GtkAdjustment" id="cell_height_spacing_adjustment">
+    <property name="lower">1</property>
+    <property name="upper">2</property>
+    <property name="step-increment">0.05</property>
+  </object>
+  <object class="GtkAdjustment" id="padding_spin_button_adjustment">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="opacity_spin_button_adjustment">
+    <property name="lower">0</property>
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="custom_scrollback_adjustment">
+    <property name="lower">0</property>
+    <property name="upper">2147483647</property>
+    <property name="step-increment">1</property>
+  </object>
+</interface>

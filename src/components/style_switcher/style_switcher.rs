@@ -23,7 +23,7 @@ use gtk::subclass::prelude::*;
 use gtk::{prelude::*, CompositeTemplate};
 use tracing::*;
 
-use crate::services::settings::{Settings, StylePreference};
+use crate::settings::{Settings, StylePreference};
 
 #[derive(Debug, Default, CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/style_switcher.ui")]

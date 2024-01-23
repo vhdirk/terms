@@ -5,7 +5,7 @@
     <value nick="fixed-size" value="0" />
     <value nick="unlimited" value="1" />
     <value nick="disabled" value="2" />
-    </enum>
+  </enum>
 
   <enum id="@app-id@.WorkingDirectoryMode">
     <value nick="previous-terminal" value="0" />
@@ -80,7 +80,6 @@
       <summary>Whether to scroll to the bottom when there's new output</summary>
       <description>If true, whenever there's new output the terminal will scroll to the bottom.</description>
     </key>
-
 
 
     <key name="use-sixel" type="b">
@@ -202,7 +201,7 @@
     </key>
   </schema>
 
-  <!-- <schema id="@app-id@.search" path="/io/github/vhdirk/Terms/search" >
+  <schema id="@app-id@.search" path="/io/github/vhdirk/Terms/search/">
     <key name="wrap-around" type="b">
       <default>true</default>
       <summary>Whether clicking next on the last search result should return to the first</summary>
@@ -219,5 +218,668 @@
       <default>false</default>
       <summary>Whether search should be performed using regular expressions</summary>
     </key>
-  </schema> -->
+  </schema>
+
+  <schema id="@app-id@.shortcuts" path="/io/github/vhdirk/Terms/shortcuts/">
+    <!-- TODO: not finished -->
+    <key name="app-new-window" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;n']</default>
+      <summary>New Window</summary>
+      <description>The shortcut to create a new tab in a new window</description>
+    </key>
+    <key name="win-switch-headerbar-mode" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;h']</default>
+      <summary>WinSwitchHeaderBarMode</summary>
+    </key>
+    <key name="win-edit-preferences" type="as">
+      <default>['&lt;Control&gt;comma']</default>
+      <summary>Preferences</summary>
+      <description>The shortcut to show application preferences</description>
+    </key>
+    <key name="win-copy" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;c']</default>
+      <summary>Copy to Clipboard</summary>
+      <description>The shortcut to copy to clipboard</description>
+    </key>
+    <key name="win-paste" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;v']</default>
+      <summary>Paste from Clipboard</summary>
+      <description>The shortcut to paste from the clipboard</description>
+    </key>
+    <key name="win-copy-as-html" type="as">
+      <default>[]</default>
+      <summary>Keyboard shortcut to copy selected text in terminal as HTML</summary>
+    </key>
+    <key name="win-paste-primary" type="as">
+      <default>['&lt;Shift&gt;Insert']</default>
+      <summary>Keyboard shortcut to paste text in terminal from primary selection</summary>
+    </key>
+    <key name="win-advanced-paste" type="as">
+      <default>[]</default>
+      <summary>Keyboard shortcut to paste text in terminal from clipboard via advanced paste dialog</summary>
+    </key>
+    <key name="win-reset" type="as">
+      <default>[]</default>
+      <summary>Reset Terminal</summary>
+      <description>Reset the terminal state for misbehaving clients</description>
+    </key>
+    <key name="win-reset-and-clear" type="as">
+      <default>[]</default>
+      <summary>Reset Terminal and Clear History</summary>
+      <description>Reset the terminal state and clear history for misbehaving clients</description>
+    </key>
+    <key name="win-toggle-fullscreen" type="as">
+      <default>['F11']</default>
+      <summary>Toggle Fullscreen</summary>
+      <description>The shortcut to toggle fullscreen</description>
+    </key>
+    <key name="win-show-help-overlay" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;question']</default>
+      <summary>WinShowHelpOverlay</summary>
+    </key>
+    <key name="win-zoom-in" type="as">
+      <default>['&lt;Control&gt;plus']</default>
+      <summary>Zoom In</summary>
+      <description>The shortcut to zoom in</description>
+    </key>
+    <key name="win-zoom-out" type="as">
+      <default>['&lt;Control&gt;minus']</default>
+      <summary>Zoom Out</summary>
+      <description>The shortcut to zoom out</description>
+    </key>
+    <key name="win-zoom-default" type="as">
+      <default>['&lt;ctrl&gt;0', '&lt;Shift&gt;&lt;Control&gt;parenright']</default>
+      <summary>Reset Zoom</summary>
+      <description>The shortcut to reset zoom</description>
+    </key>
+    <key name="win-session-overview" type="as">
+      <default>['&lt;ctrl&gt;&lt;shift&gt;o']</default>
+      <summary>Session Overview</summary>
+      <description>The shortcut to show the session overview</description>
+    </key>
+    <key name="win-new-session" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;t']</default>
+      <summary>New Session</summary>
+      <description>The shortcut to create a new session in the current window</description>
+    </key>
+    <key name="win-close-session" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;w']</default>
+      <summary>Close Session</summary>
+      <description>Shortcut to close the current session</description>
+    </key>
+    <key name="win-close-other-sessions" type="as">
+      <default>[]</default>
+      <summary>Close Other Sessions</summary>
+      <description>Shortcut to close all session in the window but the current one</description>
+    </key>
+    <key name="win-rename-session" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;r']</default>
+      <summary>Rename Session</summary>
+      <description>Shortcut to rename the current session</description>
+    </key>
+    <key name="win-focus-session-next" type="as">
+      <default>['&lt;Control&gt;Tab']</default>
+      <summary>WinFocusNextSession</summary>
+    </key>
+    <key name="win-focus-session-previous" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;Tab']</default>
+      <summary>WinFocusPreviousSession</summary>
+    </key>
+    <key name="win-focus-session-1" type="as">
+      <default>['&lt;Alt&gt;1']</default>
+      <summary>Focus Session 1</summary>
+      <description>Shortcut to focus session 1</description>
+    </key>
+    <key name="win-focus-session-2" type="as">
+      <default>['&lt;Alt&gt;2']</default>
+      <summary>Focus Session 2</summary>
+      <description>Shortcut to focus session 2</description>
+    </key>
+    <key name="win-focus-session-3" type="as">
+      <default>['&lt;Alt&gt;3']</default>
+      <summary>Focus Session 3</summary>
+      <description>Shortcut to focus session 3</description>
+    </key>
+    <key name="win-focus-session-4" type="as">
+      <default>['&lt;Alt&gt;4']</default>
+      <summary>Focus Session 4</summary>
+      <description>Shortcut to focus session 4</description>
+    </key>
+    <key name="win-focus-session-5" type="as">
+      <default>['&lt;Alt&gt;5']</default>
+      <summary>Focus Session 5</summary>
+      <description>Shortcut to focus session 5</description>
+    </key>
+    <key name="win-focus-session-6" type="as">
+      <default>['&lt;Alt&gt;6']</default>
+      <summary>Focus Session 6</summary>
+      <description>Shortcut to focus session 6</description>
+    </key>
+    <key name="win-focus-session-7" type="as">
+      <default>['&lt;Alt&gt;7']</default>
+      <summary>Focus Session 7</summary>
+      <description>Shortcut to focus session 7</description>
+    </key>
+    <key name="win-focus-session-8" type="as">
+      <default>['&lt;Alt&gt;8']</default>
+      <summary>Focus Session 8</summary>
+      <description>Shortcut to focus session 8</description>
+    </key>
+    <key name="win-focus-session-9" type="as">
+      <default>['&lt;Alt&gt;9']</default>
+      <summary>Focus Session 9</summary>
+      <description>Shortcut to focus session 9</description>
+    </key>
+    <key name="win-focus-session-first" type="as">
+      <default>[]</default>
+      <summary>Focus First Session</summary>
+      <description>Shortcut to focus the first session</description>
+    </key>
+    <key name="win-focus-session-last" type="as">
+      <default>['&lt;Alt&gt;0']</default>
+      <summary>Focus Last Session</summary>
+      <description>Shortcut to focus the last session</description>
+    </key>
+    <key name="win-move-session-left" type="as">
+      <default>['&lt;ctrl&gt;&lt;shift&gt;Page_Up']</default>
+      <summary>Move Session Left</summary>
+      <description>Shortcut to move the current session to the left one position</description>
+    </key>
+    <key name="win-move-session-right" type="as">
+      <default>['&lt;ctrl&gt;&lt;shift&gt;Page_Down']</default>
+      <summary>Move Session Right</summary>
+      <description>Shortcut to move the current session to the right one position</description>
+    </key>
+    <key name="win-search" type="as">
+      <default>['&lt;Shift&gt;&lt;Control&gt;f']</default>
+      <summary>Search History</summary>
+      <description>Shortcut to begin searching the terminal history</description>
+    </key>
+    <key name="win-select-all" type="as">
+      <default>['&lt;ctrl&gt;&lt;shift&gt;a']</default>
+      <summary>Select All</summary>
+      <description>Shortcut to select all the entire terminal scrollback</description>
+    </key>
+    <key name="win-select-none" type="as">
+      <default>[]</default>
+      <summary>Select None</summary>
+      <description>Shortcut to clear the terminal selection</description>
+    </key>
+    <key name="win-session-synchronize-input" type="as">
+      <default>[]</default>
+      <summary>Keyboard shortcut to synchronize input for the session</summary>
+    </key>
+    <key name="win-undo-close-session" type="as">
+      <default>['&lt;ctrl&gt;&lt;shift&gt;&lt;alt&gt;t']</default>
+      <summary>Undo Close Session</summary>
+      <description>Undo closing of last session</description>
+    </key>
+    <key name="win-detach-session" type="as">
+      <default>[]</default>
+      <summary>Move Tab to New Window</summary>
+      <description>Shortcut to move the current tab into a new window</description>
+    </key>
+    <key name="win-session-open" type="as">
+      <default>['&lt;Shift&gt;&lt;Ctrl&gt;o']</default>
+      <summary>Keyboard shortcut to open a previously saved session</summary>
+    </key>
+    <key name="win-session-save" type="as">
+      <default>['&lt;Shift&gt;&lt;Ctrl&gt;s']</default>
+      <summary>Keyboard shortcut to save the current session</summary>
+    </key>
+    <key name="win-popup-menu" type="as">
+      <default>['&lt;shift&gt;F10']</default>
+      <summary>Popup Menu</summary>
+      <description>Shortcut to show the popup menu for the terminal</description>
+    </key>
+
+    <!--
+    <key name="session-close" type="s">
+      <default>'&lt;Shift&gt;&lt;Ctrl&gt;Q'</default>
+      <summary>Keyboard shortcut to close a session</summary>
+    </key>
+    <key name="session-save-as" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to save the current session as a new file</summary>
+    </key>
+
+    <key name="session-switch-to-terminal-up" type="s">
+      <default>'&lt;Alt&gt;Up'</default>
+      <summary>Keyboard shortcut to switch to terminal above</summary>
+    </key>
+    <key name="session-switch-to-terminal-down" type="s">
+      <default>'&lt;Alt&gt;Down'</default>
+      <summary>Keyboard shortcut to switch to terminal below</summary>
+    </key>
+    <key name="session-switch-to-terminal-left" type="s">
+      <default>'&lt;Alt&gt;Left'</default>
+      <summary>Keyboard shortcut to switch to terminal left</summary>
+    </key>
+    <key name="session-switch-to-terminal-right" type="s">
+      <default>'&lt;Alt&gt;Right'</default>
+      <summary>Keyboard shortcut to switch to terminal right</summary>
+    </key>
+    <key name="session-resize-terminal-up" type="s">
+      <default>'&lt;Shift&gt;&lt;Alt&gt;Up'</default>
+      <summary>Keyboard shortcut to resize terminal up</summary>
+    </key>
+    <key name="session-resize-terminal-down" type="s">
+      <default>'&lt;Shift&gt;&lt;Alt&gt;Down'</default>
+      <summary>Keyboard shortcut to resize terminal down</summary>
+    </key>
+    <key name="session-resize-terminal-left" type="s">
+      <default>'&lt;Shift&gt;&lt;Alt&gt;Left'</default>
+      <summary>Keyboard shortcut to resize terminal left</summary>
+    </key>
+    <key name="session-resize-terminal-right" type="s">
+      <default>'&lt;Shift&gt;&lt;Alt&gt;Right'</default>
+      <summary>Keyboard shortcut to resize terminal right</summary>
+    </key>
+    <key name="session-add-right" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;r'</default>
+      <summary>Keyboard shortcut to add new terminal right</summary>
+    </key>
+    <key name="session-add-down" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;d'</default>
+      <summary>Keyboard shortcut to add new terminal down</summary>
+    </key>
+    <key name="session-add-auto" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;a'</default>
+      <summary>Keyboard shortcut to add new terminal automatically</summary>
+    </key>
+    <key name="win-view-sidebar" type="s">
+      <default>'F12'</default>
+      <summary>Keyboard shortcut to view session sidebar</summary>
+    </key>
+    <key name="win-switch-to-session-0" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;0'</default>
+      <summary>Keyboard shortcut to switch to session 10</summary>
+    </key>
+    <key name="win-switch-to-session-1" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;1'</default>
+      <summary>Keyboard shortcut to switch to session 1</summary>
+    </key>
+    <key name="win-switch-to-session-2" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;2'</default>
+      <summary>Keyboard shortcut to switch to session 2</summary>
+    </key>
+    <key name="win-switch-to-session-3" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;3'</default>
+      <summary>Keyboard shortcut to switch to session 3</summary>
+    </key>
+    <key name="win-switch-to-session-4" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;4'</default>
+      <summary>Keyboard shortcut to switch to session 4</summary>
+    </key>
+    <key name="win-switch-to-session-5" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;5'</default>
+      <summary>Keyboard shortcut to switch to session 5</summary>
+    </key>
+    <key name="win-switch-to-session-6" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;6'</default>
+      <summary>Keyboard shortcut to switch to session 6</summary>
+    </key>
+    <key name="win-switch-to-session-7" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;7'</default>
+      <summary>Keyboard shortcut to switch to session 7</summary>
+    </key>
+    <key name="win-switch-to-session-8" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;8'</default>
+      <summary>Keyboard shortcut to switch to session 8</summary>
+    </key>
+    <key name="win-switch-to-session-9" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;9'</default>
+      <summary>Keyboard shortcut to switch to session 9</summary>
+    </key>
+    <key name="win-switch-to-next-session" type="s">
+      <default>'&lt;Ctrl&gt;Page_Down'</default>
+      <summary>Keyboard shortcut to switch to the next session</summary>
+    </key>
+    <key name="win-switch-to-previous-session" type="s">
+      <default>'&lt;Ctrl&gt;Page_Up'</default>
+      <summary>Keyboard shortcut to switch to the previous session</summary>
+    </key>
+    <key name="win-reorder-previous-session" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;Page_Up'</default>
+      <summary>Keyboard shortcut to reorder to the previous session</summary>
+    </key>
+    <key name="win-reorder-next-session" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;Page_Down'</default>
+      <summary>Keyboard shortcut to reorder to the next session</summary>
+    </key>
+    <key name="win-fullscreen" type="s">
+      <default>'F11'</default>
+      <summary>Keyboard shortcut to toggle fullscreen</summary>
+    </key>
+    <!- Can't use accelerators with tab, may need to hardwire this in VTE ->
+    <key name="session-switch-to-next-terminal" type="s">
+      <default>'&lt;Ctrl&gt;Tab'</default>
+      <summary>Keyboard shortcut to switch to the next terminal</summary>
+    </key>
+    <key name="session-switch-to-previous-terminal" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;Tab'</default>
+      <summary>Keyboard shortcut to switch to the previous terminal</summary>
+    </key>
+    <key name="terminal-find" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;f'</default>
+      <summary>Keyboard shortcut to find text in terminal</summary>
+    </key>
+    <key name="terminal-find-next" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;g'</default>
+      <summary>Keyboard shortcut to find next match in terminal</summary>
+    </key>
+    <key name="terminal-find-previous" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;h'</default>
+      <summary>Keyboard shortcut to find previous match in terminal</summary>
+    </key>
+    <key name="terminal-layout" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to set a customize layout options for the terminal</summary>
+    </key>
+    <key name="terminal-close" type="s">
+      <default>'&lt;Shift&gt;&lt;Ctrl&gt;W'</default>
+      <summary>Keyboard shortcut to close the terminal</summary>
+    </key>
+    <key name="terminal-maximize" type="s">
+      <default>'&lt;Shift&gt;&lt;Ctrl&gt;X'</default>
+      <summary>Keyboard shortcut to maximize or restore the terminal</summary>
+    </key>
+    <key name="terminal-profile-preference" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to edit the current profile</summary>
+    </key>
+    <key name="terminal-read-only" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to toggle whether the terminal is read-only</summary>
+    </key>
+
+
+
+    <key name="terminal-copy" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;c'</default>
+      <summary>Keyboard shortcut to copy selected text in terminal</summary>
+    </key>
+    <key name="terminal-copy-as-html" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to copy selected text in terminal as HTML</summary>
+    </key>
+    <key name="terminal-paste" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;v'</default>
+      <summary>Keyboard shortcut to paste text in terminal from clipboard</summary>
+    </key>
+    <key name="terminal-paste-primary" type="s">
+      <default>'&lt;Shift&gt;Insert'</default>
+      <summary>Keyboard shortcut to paste text in terminal from primary selection</summary>
+    </key>
+    <key name="terminal-advanced-paste" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to paste text in terminal from clipboard via advanced paste
+    dialog</summary>
+    </key>
+    <key name="terminal-select-all" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;a'</default>
+      <summary>Keyboard shortcut to select all text in terminal</summary>
+    </key>
+    <key name="terminal-unselect-all" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to unselect all text in terminal</summary>
+    </key>
+    <key name="terminal-zoom-in" type="s">
+      <default>'&lt;Ctrl&gt;plus'</default>
+      <summary>Keyboard shortcut to make font larger</summary>
+    </key>
+    <key name="terminal-zoom-out" type="s">
+      <default>'&lt;Ctrl&gt;minus'</default>
+      <summary>Keyboard shortcut to make font smaller</summary>
+    </key>
+    <key name="terminal-zoom-normal" type="s">
+      <default>'&lt;Ctrl&gt;0'</default>
+      <summary>Keyboard shortcut to make font normal-size</summary>
+    </key>
+    <key name="terminal-save" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to save terminal contents</summary>
+    </key>
+    <key name="terminal-insert-number" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to insert the current terminal number</summary>
+    </key>
+    <key name="terminal-insert-password" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to insert a password into the terminal</summary>
+    </key>
+    <key name="terminal-title-style" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to cycle the terminal title styles</summary>
+    </key>
+    <key name="terminal-select-bookmark" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;b'</default>
+      <summary>Keyboard shortcut to select a bookmark</summary>
+    </key>
+    <key name="terminal-add-bookmark" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to add a bookmark</summary>
+    </key>
+    <key name="terminal-scroll-up" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;Up'</default>
+      <summary>Keyboard shortcut to scroll up</summary>
+    </key>
+    <key name="terminal-scroll-down" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Shift&gt;Down'</default>
+      <summary>Keyboard shortcut to scroll down</summary>
+    </key>
+    <key name="terminal-page-up" type="s">
+      <default>'&lt;Shift&gt;Page_Up'</default>
+      <summary>Keyboard shortcut to page up</summary>
+    </key>
+    <key name="terminal-page-down" type="s">
+      <default>'&lt;Shift&gt;Page_Down'</default>
+      <summary>Keyboard shortcut to page down</summary>
+    </key>
+    <key name="terminal-monitor-silence" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to toggle silence monitor</summary>
+    </key>
+    <key name="terminal-sync-input-override" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to toggle input synchronization override</summary>
+    </key>
+    <key name="terminal-file-browser" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to open directory in file browser</summary>
+    </key>
+    <!- Move between prompts ->
+    <key name="terminal-next-prompt" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to move to next prompt</summary>
+    </key>
+    <key name="terminal-previous-prompt" type="s">
+      <default>'disabled'</default>
+      <summary>Keyboard shortcut to move to previous prompt</summary>
+    </key>
+    <key name="terminal-toggle-margin" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;m'</default>
+      <summary>Keyboard shortcut to toggle margin display</summary>
+    </key>
+    <!- Nautilus Shortcut for Open in Tilix ->
+    <key name="nautilus-open" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;t'</default>
+      <summary>Keyboard shortcut used in Nautilus for Open Here extension</summary>
+    </key> -->
+
+
+    <!--
+    <key name="tab-overview" type="s">
+      <default>'&lt;ctrl&gt;&lt;shift&gt;o'</default>
+      <summary>Tab Overview</summary>
+      <description>The shortcut to show the tab overview</description>
+    </key>
+
+    <key name="preferences" type="s">
+      <default>'&lt;ctrl&gt;comma'</default>
+      <summary>Preferences</summary>
+      <description>The shortcut to show application preferences</description>
+    </key>
+
+    <key name="zoom-out" type="s">
+      <default>'&lt;ctrl&gt;minus'</default>
+      <summary>Zoom Out</summary>
+      <description>The shortcut to zoom out</description>
+    </key>
+
+    <key name="zoom-one" type="s">
+      <default>'&lt;ctrl&gt;0'</default>
+      <summary>Reset Zoom</summary>
+      <description>The shortcut to reset zoom</description>
+    </key>
+
+    <key name="zoom-in" type="s">
+      <default>'&lt;ctrl&gt;plus'</default>
+      <summary>Zoom In</summary>
+      <description>The shortcut to zoom in</description>
+    </key>
+
+    <key name="toggle-fullscreen" type="s">
+      <default>'F11'</default>
+      <summary>Toggle Fullscreen</summary>
+      <description>The shortcut to toggle fullscreen</description>
+    </key>
+
+    <key name="reset" type="s">
+      <default>''</default>
+      <summary>Reset Terminal</summary>
+      <description>Reset the terminal state for misbehaving clients</description>
+    </key>
+
+    <key name="reset-and-clear" type="s">
+      <default>''</default>
+      <summary>Reset Terminal and Clear History</summary>
+      <description>Reset the terminal state and clear history for misbehaving clients</description>
+    </key>
+
+    <key name="search" type="s">
+      <default>'&lt;ctrl&gt;&lt;shift&gt;f'</default>
+      <summary>Search History</summary>
+      <description>Shortcut to begin searching the terminal history</description>
+    </key>
+
+    <key name="select-all" type="s">
+      <default>'&lt;ctrl&gt;&lt;shift&gt;a'</default>
+      <summary>Select All</summary>
+      <description>Shortcut to select all the entire terminal scrollback</description>
+    </key>
+
+    <key name="select-none" type="s">
+      <default>''</default>
+      <summary>Select None</summary>
+      <description>Shortcut to clear the terminal selection</description>
+    </key>
+
+    <key name="popup-menu" type="s">
+      <default>'&lt;shift&gt;F10'</default>
+      <summary>Popup Menu</summary>
+      <description>Shortcut to show the popup menu for the terminal</description>
+    </key>
+
+    <key name="move-previous-tab" type="s">
+      <default>'&lt;ctrl&gt;Page_Up'</default>
+      <summary>Move to Previous Tab</summary>
+      <description>Shortcut to move to the previous tab</description>
+    </key>
+
+    <key name="move-next-tab" type="s">
+      <default>'&lt;ctrl&gt;Page_Down'</default>
+      <summary>Move to Next Tab</summary>
+      <description>Shortcut to move to the next tab</description>
+    </key>
+
+
+
+    <key name="detach-tab" type="s">
+      <default>''</default>
+      <summary>Move Tab to New Window</summary>
+      <description>Shortcut to move the current tab into a new window</description>
+    </key>
+
+    <key name="close-tab" type="s">
+      <default>''</default>
+      <summary>Close Tab</summary>
+      <description>Shortcut to close the current tab</description>
+    </key>
+
+    <key name="close-other-tabs" type="s">
+      <default>''</default>
+      <summary>Close Other Tabs</summary>
+      <description>Shortcut to close all tabs in the window but the current one</description>
+    </key>
+
+    <key name="focus-tab-1" type="s">
+      <default>'&lt;alt&gt;1'</default>
+      <summary>Focus Tab 1</summary>
+      <description>Shortcut to focus tab 1</description>
+    </key>
+
+    <key name="focus-tab-2" type="s">
+      <default>'&lt;alt&gt;2'</default>
+      <summary>Focus Tab 2</summary>
+      <description>Shortcut to focus tab 2</description>
+    </key>
+
+    <key name="focus-tab-3" type="s">
+      <default>'&lt;alt&gt;3'</default>
+      <summary>Focus Tab 3</summary>
+      <description>Shortcut to focus tab 3</description>
+    </key>
+
+    <key name="focus-tab-4" type="s">
+      <default>'&lt;alt&gt;4'</default>
+      <summary>Focus Tab 4</summary>
+      <description>Shortcut to focus tab 4</description>
+    </key>
+
+    <key name="focus-tab-5" type="s">
+      <default>'&lt;alt&gt;5'</default>
+      <summary>Focus Tab 5</summary>
+      <description>Shortcut to focus tab 5</description>
+    </key>
+
+    <key name="focus-tab-6" type="s">
+      <default>'&lt;alt&gt;6'</default>
+      <summary>Focus Tab 6</summary>
+      <description>Shortcut to focus tab 6</description>
+    </key>
+
+    <key name="focus-tab-7" type="s">
+      <default>'&lt;alt&gt;7'</default>
+      <summary>Focus Tab 7</summary>
+      <description>Shortcut to focus tab 7</description>
+    </key>
+
+    <key name="focus-tab-8" type="s">
+      <default>'&lt;alt&gt;8'</default>
+      <summary>Focus Tab 8</summary>
+      <description>Shortcut to focus tab 8</description>
+    </key>
+
+    <key name="focus-tab-9" type="s">
+      <default>'&lt;alt&gt;9'</default>
+      <summary>Focus Tab 9</summary>
+      <description>Shortcut to focus tab 9</description>
+    </key>
+
+    <key name="focus-tab-10" type="s">
+      <default>'&lt;alt&gt;0'</default>
+      <summary>Focus Tab 10</summary>
+      <description>Shortcut to focus tab 10</description>
+    </key>
+
+    <key name="undo-close-tab" type="s">
+      <default>'&lt;ctrl&gt;&lt;shift&gt;&lt;alt&gt;t'</default>
+      <summary>Undo Close Tab</summary>
+      <description>Undo closing of last tab</description>
+    </key> -->
+
+
+  </schema>
+
 </schemalist>

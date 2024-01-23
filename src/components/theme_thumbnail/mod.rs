@@ -2,7 +2,7 @@ use glib::subclass::prelude::*;
 mod theme_thumbnail;
 use theme_thumbnail as imp;
 
-use crate::services::theme_provider::Theme;
+use crate::theme_provider::Theme;
 
 mod thumbnail_paintable;
 
