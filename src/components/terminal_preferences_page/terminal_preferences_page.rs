@@ -163,9 +163,9 @@ impl TerminalPreferencesPage {
 
     fn bind_data(&self) {
         // Terminal - Text
-        self.settings.bind_system_font(&*self.system_font_switch, "active").build();
+        self.settings.bind_use_system_font(&*self.system_font_switch, "active").build();
         self.settings.bind_custom_font(&*self.custom_font_label, "label").build();
-        self.settings.bind_system_font(&*self.custom_font_row, "visible").invert_boolean().build();
+        self.settings.bind_use_system_font(&*self.custom_font_row, "visible").invert_boolean().build();
         self.settings.bind_terminal_cell_width(&*self.cell_width_spacing_adjustment, "value").build();
         self.settings.bind_terminal_cell_height(&*self.cell_height_spacing_adjustment, "value").build();
         self.settings.bind_theme_bold_is_bright(&*self.bold_is_bright_switch, "active").build();

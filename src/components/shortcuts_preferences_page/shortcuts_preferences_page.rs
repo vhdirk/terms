@@ -61,27 +61,13 @@ impl ObjectSubclass for ShortcutsPreferencesPage {
 }
 
 #[glib::derived_properties]
-impl ObjectImpl for ShortcutsPreferencesPage {
-    fn constructed(&self) {
-        self.parent_constructed();
-
-        self.setup_widgets();
-    }
-}
+impl ObjectImpl for ShortcutsPreferencesPage {}
 
 impl WidgetImpl for ShortcutsPreferencesPage {}
 impl PreferencesPageImpl for ShortcutsPreferencesPage {}
 
 #[gtk::template_callbacks]
 impl ShortcutsPreferencesPage {
-    fn setup_widgets(&self) {
-        self.connect_signals();
-
-        self.bind_data();
-    }
-
-    fn connect_signals(&self) {}
-
     fn add_shortcut(&self, title: &str, action: &str) {
         info!("Request to add shortcut for {:?} ({:?})", title, action);
         let shortcut_settings = self.settings.shortcuts();
@@ -122,18 +108,5 @@ impl ShortcutsPreferencesPage {
 
         // TODO: confirmation needed?
         shortcut_settings.reset_all();
-    }
-
-    fn bind_data(&self) {
-        //<property name="action">win.switch-headerbar-mode</property>
-
-        //<property name="action">win.search</property>
-
-        //popup_menu
-        //reset
-        //reset_and_clear
-        //select_all
-        //select_none
-        //tab_overview
     }
 }

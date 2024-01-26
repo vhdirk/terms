@@ -3,6 +3,7 @@ use gettextrs::gettext;
 use gio::prelude::{SettingsExt, SettingsExtManual};
 use glib::{BoolError, IsA, PropertyGet};
 use gsettings_macro::gen_settings;
+use gtk::Settings as SystemSettings;
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
@@ -94,6 +95,10 @@ impl Settings {
 
     pub fn shortcuts(&self) -> ShortcutSettings {
         ShortcutSettings::default()
+    }
+
+    pub fn system_settings(&self) -> SystemSettings {
+        SystemSettings::default().unwrap()
     }
 }
 

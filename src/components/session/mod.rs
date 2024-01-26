@@ -1,7 +1,11 @@
 mod session;
+use std::path::PathBuf;
+
 use glib::{closure_local, subclass::prelude::*};
 use gtk::prelude::*;
 use session as imp;
+
+use crate::util::EnvMap;
 
 use super::TerminalInitArgs;
 
@@ -12,10 +16,12 @@ glib::wrapper! {
 }
 
 impl Session {
-    pub fn new(init_args: TerminalInitArgs) -> Self {
-        let obj: Self = glib::Object::builder().build();
-        obj.imp().set_init_args(init_args);
-        obj
+    pub fn new(working_directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
+        glib::Object::builder()
+            .property("working-directory", working_directory)
+            .property("command", command)
+            .property("env", env)
+            .build()
     }
 
     pub fn connect_close<F: Fn(&Self) + 'static>(&self, f: F) -> glib::SignalHandlerId {

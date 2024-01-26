@@ -43,11 +43,6 @@
       <default>false</default>
     </key>
 
-    <key name="show-menu-button" type="b">
-      <default>true</default>
-      <summary>Whether or not to display a menu button in the headerbar</summary>
-    </key>
-
     <key name="show-scrollbars" type="b">
       <default>true</default>
       <summary>Whether or not to show scrollbars</summary>
@@ -81,7 +76,6 @@
       <description>If true, whenever there's new output the terminal will scroll to the bottom.</description>
     </key>
 
-
     <key name="use-sixel" type="b">
       <default>false</default>
       <summary>If enabled, terminals will render sixel escape sequences</summary>
@@ -99,9 +93,28 @@
       <default>400</default>
       <summary>Delay time before showing floating controls</summary>
     </key>
+    <key name="fill-tabs" type="b">
+      <default>true</default>
+      <summary>Whether or not tabs should expand to fill tab bar</summary>
+    </key>
+    <key name="show-headerbar" type="b">
+      <default>true</default>
+      <summary>Whether the headerbar should be shown or not</summary>
+    </key>
+    <key name="context-aware-header-bar" type="b">
+      <default>true</default>
+      <summary>If enabled, the header bar will be colored differently for root and ssh contexts</summary>
+    </key>
+    <key name="show-menu-button" type="b">
+      <default>true</default>
+      <summary>Whether or not to display a menu button in the headerbar</summary>
+    </key>
+    <key name="headerbar-drag-area" type="b">
+      <default>false</default>
+      <summary>Whether or not to reserve an area for dragging the header bar</summary>
+    </key>
 
-
-    <key name="system-font" type="b">
+    <key name="use-system-font" type="b">
       <default>true</default>
       <summary>If enabled, uses the system font for terminal</summary>
     </key>

@@ -10,12 +10,14 @@
     <property name="name">terms_main_window</property>
 
     <property name="content">
-      <object class="GtkOverlay">
+      <object class="GtkOverlay" id="overlay">
         <child>
-          <object class="GtkBox" id="layout_box">
+          <object class="GtkBox" id="container">
             <property name="orientation">vertical</property>
             <child>
-              <object class="TermsHeaderBar" id="header_bar"></object>
+              <object class="TermsHeaderBar" id="header_bar">
+              </object>
+
             </child>
             <child>
               <object class="AdwTabBar" id="tab_bar">
@@ -25,8 +27,7 @@
               </object>
             </child>
             <child>
-              <object class="AdwTabView" id="tab_view" >
-
+              <object class="AdwTabView" id="tab_view">
 
 
               </object>

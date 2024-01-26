@@ -1,23 +1,33 @@
 use crate::components::{SearchToolbar, Terminal, TerminalInitArgs};
+use crate::util::EnvMap;
 use adw::subclass::prelude::*;
 use glib::ObjectExt;
+use glib::Properties;
 use gtk::glib;
 use gtk::CompositeTemplate;
 use tracing::*;
 
 use std::cell::RefCell;
+use std::path::PathBuf;
 
 use glib::{clone, subclass::Signal};
 use once_cell::sync::Lazy;
 
-#[derive(Debug, Default, CompositeTemplate)]
+#[derive(Debug, Default, CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_frame.ui")]
-// #[properties(wrapper_type = super::TerminalFrame)]
+#[properties(wrapper_type = super::TerminalFrame)]
 pub struct TerminalFrame {
-    pub init_args: RefCell<TerminalInitArgs>,
-
     #[template_child]
     terminal: TemplateChild<Terminal>,
+
+    #[property(get, set, construct, nullable)]
+    working_directory: RefCell<Option<PathBuf>>,
+
+    #[property(set, get, construct, nullable)]
+    command: RefCell<Option<String>>,
+
+    #[property(set, get, construct, nullable)]
+    env: RefCell<Option<EnvMap>>,
 }
 
 #[glib::object_subclass]
@@ -28,6 +38,7 @@ impl ObjectSubclass for TerminalFrame {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.bind_template_callbacks();
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -35,7 +46,7 @@ impl ObjectSubclass for TerminalFrame {
     }
 }
 
-// #[glib::derived_properties]
+#[glib::derived_properties]
 impl ObjectImpl for TerminalFrame {
     fn constructed(&self) {
         self.parent_constructed();
@@ -54,11 +65,6 @@ impl BoxImpl for TerminalFrame {}
 
 #[gtk::template_callbacks]
 impl TerminalFrame {
-    pub fn set_init_args(&self, init_args: TerminalInitArgs) {
-        let mut args = self.init_args.borrow_mut();
-        *args = init_args;
-    }
-
     fn setup_widgets(&self) {
         self.connect_signals();
     }

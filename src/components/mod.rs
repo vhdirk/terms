@@ -1,5 +1,6 @@
 mod header_bar;
 mod preferences_window;
+mod process_manager;
 mod search_toolbar;
 mod session;
 mod shortcut_dialog;
@@ -14,6 +15,7 @@ mod window;
 
 pub use header_bar::*;
 pub use preferences_window::*;
+pub use process_manager::*;
 pub use search_toolbar::*;
 pub use session::*;
 pub use shortcut_dialog::*;

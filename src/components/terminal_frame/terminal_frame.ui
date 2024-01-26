@@ -8,7 +8,11 @@
     <property name="vexpand">true</property>
 
     <child>
-      <object class="TermsTerminal" id="terminal"></object>
+      <object class="TermsTerminal" id="terminal">
+        <property name="working-directory" bind-source="TermsTerminalFrame" bind-property="working-directory" bind-flags="bidirectional|sync-create" />
+        <property name="command" bind-source="TermsTerminalFrame" bind-property="command" bind-flags="bidirectional|sync-create" />
+        <property name="env" bind-source="TermsTerminalFrame" bind-property="env" bind-flags="bidirectional|sync-create" />
+      </object>
     </child>
   </template>
 </interface>

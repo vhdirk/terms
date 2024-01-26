@@ -210,7 +210,7 @@ mod imp {
             let app = self.obj();
 
             // TODO: if init_args is none, we have to get them from the last terminal?
-
+            info!("Window init args: {:?}", init_args);
             let window = Window::new(&*app, init_args.unwrap());
 
             // Ask the window manager/compositor to present the window

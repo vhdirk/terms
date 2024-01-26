@@ -1,12 +1,9 @@
 mod header_bar;
-use gtk::prelude::*;
 use header_bar as imp;
-
-use crate::{application::AppProfile, config::PROFILE};
 
 glib::wrapper! {
         pub struct HeaderBar(ObjectSubclass<imp::HeaderBar>)
-                @extends gtk::Widget, gtk::Window, gtk::HeaderBar,
+                @extends gtk::Widget, adw::Bin,
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Actionable;
 }
 

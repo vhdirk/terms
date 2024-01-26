@@ -3,8 +3,10 @@ mod spawn;
 mod terminal;
 use std::{collections::HashMap, path::PathBuf};
 
-use glib::{closure_local, subclass::prelude::*, ObjectExt};
+use glib::{closure_local, ObjectExt};
 use terminal as imp;
+
+use crate::util::EnvMap;
 
 #[derive(Debug, Default, Clone)]
 pub struct TerminalInitArgs {
@@ -21,10 +23,12 @@ glib::wrapper! {
 
 #[gtk::template_callbacks]
 impl Terminal {
-    pub fn new(init_args: TerminalInitArgs) -> Self {
-        let obj: Self = glib::Object::builder().build();
-        obj.imp().set_init_args(init_args);
-        obj
+    pub fn new(working_directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
+        glib::Object::builder()
+            .property("working-directory", working_directory)
+            .property("command", command)
+            .property("env", env)
+            .build()
     }
 
     pub fn connect_exit<F: Fn(&Self, i32) + 'static>(&self, f: F) -> glib::SignalHandlerId {

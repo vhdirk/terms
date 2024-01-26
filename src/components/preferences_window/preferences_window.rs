@@ -17,6 +17,21 @@ pub struct PreferencesWindow {
     pub remember_window_size_switch: TemplateChild<adw::SwitchRow>,
 
     #[template_child]
+    pub show_headerbar_switch: TemplateChild<adw::SwitchRow>,
+
+    #[template_child]
+    pub show_menu_button_switch: TemplateChild<adw::SwitchRow>,
+
+    #[template_child]
+    pub floating_controls_switch: TemplateChild<adw::SwitchRow>,
+
+    #[template_child]
+    pub floating_controls_hover_area_adjustment: TemplateChild<gtk::Adjustment>,
+
+    #[template_child]
+    pub floating_controls_delay_adjustment: TemplateChild<gtk::Adjustment>,
+
+    #[template_child]
     pub terminal_preferences_page: TemplateChild<TerminalPreferencesPage>,
 
     #[template_child]
@@ -69,10 +84,22 @@ impl PreferencesWindow {
     fn bind_data(&self) {
         // Behavior
         self.settings.bind_remember_window_size(&*self.remember_window_size_switch, "active").build();
+
+        self.settings.bind_show_menu_button(&*self.show_menu_button_switch, "active").build();
+        self.settings.bind_show_headerbar(&*self.show_headerbar_switch, "active").build();
+
+        self.settings.bind_floating_controls(&*self.floating_controls_switch, "active").build();
+        self.settings
+            .bind_floating_controls_hover_area(&*self.floating_controls_hover_area_adjustment, "value")
+            .build();
+        self.settings
+            .bind_delay_before_showing_floating_controls(&*self.floating_controls_delay_adjustment, "value")
+            .build();
     }
 
     #[template_callback]
     fn on_reset_request(&self) {
+        // TODO: confirmation dialog
         self.settings.reset_all();
     }
 }

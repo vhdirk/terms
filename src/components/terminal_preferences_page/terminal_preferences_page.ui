@@ -72,8 +72,7 @@
         <child>
           <object class="AdwSwitchRow" id="terminal_bell_switch">
             <property name="title" translatable="yes">Audible Bell</property>
-            <property name="subtitle" translatable="yes">If enabled, terminals might use an audible
-              bell to indicate events.</property>
+            <property name="subtitle" translatable="yes">If enabled, terminals might use an audible bell to indicate events.</property>
           </object>
         </child>
 
@@ -98,8 +97,7 @@
             <child>
               <object class="AdwComboRow" id="cursor_blink_mode_combo_row">
                 <property name="title" translatable="yes">Cursor Blinking</property>
-                <property name="subtitle" translatable="yes">Whether or not the cursor should
-                  blink.</property>
+                <property name="subtitle" translatable="yes">Whether or not the cursor should blink.</property>
                 <property name="model">
                   <object class="GtkStringList">
                     <items>
@@ -146,8 +144,7 @@
           <object class="AdwComboRow" id="working_directory_mode_combo_row">
             <property name="title" translatable="yes">Working Directory</property>
 
-            <!--<binding
-            name="subtitle">
+            <!--<binding name="subtitle">
                   <closure type="gchararray" function="explain_working_directory_mode">
                     <lookup name="selected">working_directory_mode_combo_row</lookup>
                   </closure>
@@ -201,8 +198,7 @@
             <child>
               <object class="AdwSwitchRow" id="use_overlay_scrolling_switch">
                 <property name="title" translatable="yes">Use Overlay Scrolling</property>
-                <property name="sensitive" bind-source="show_scrollbars_switch"
-                  bind-property="active" bind-flags="sync-create" />
+                <property name="sensitive" bind-source="show_scrollbars_switch" bind-property="active" bind-flags="sync-create" />
               </object>
             </child>
           </object>
@@ -264,8 +260,7 @@
         <child>
           <object class="AdwEntryRow" id="custom_command_entry_row">
             <property name="title" translatable="yes">Custom Command</property>
-            <property name="sensitive" bind-source="use_custom_shell_command_switch"
-              bind-property="active" bind-flags="sync-create" />
+            <property name="sensitive" bind-source="use_custom_shell_command_switch" bind-property="active" bind-flags="sync-create" />
           </object>
         </child>
       </object>
@@ -377,8 +372,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">To ensure readability, "Theme Integration" will be disabled if you select a light color scheme while using the dark app style or a dark color scheme while using the light app style.</property>
                 <property name="wrap">True</property>
-                <property name="visible" bind-source="filter_themes_check_button"
-                  bind-property="active" bind-flags="sync-create|invert-boolean" />
+                <property name="visible" bind-source="filter_themes_check_button" bind-property="active" bind-flags="sync-create|invert-boolean" />
                 <style>
                   <class name="warning" />
                 </style>

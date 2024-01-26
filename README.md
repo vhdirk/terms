@@ -39,6 +39,7 @@ Terms uses GTK4 and is written in Rust. The latter has no added value aside from
 - [x] Settings
 - [x] Theming. Compatible with Gogh
 - [x] Flatpak support
+- [x] Shortcuts
 - [ ] Tabs
 - [ ] Tiling
 - [ ] Profiles

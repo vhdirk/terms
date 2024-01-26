@@ -7,6 +7,7 @@ use std::cell::RefCell;
 use crate::components::PreferencesWindow;
 use crate::config::PROFILE;
 use crate::settings::Settings;
+use crate::util::EnvMap;
 
 use super::*;
 
@@ -18,6 +19,12 @@ pub struct Window {
 
     #[template_child]
     pub header_bar: TemplateChild<HeaderBar>,
+
+    #[template_child]
+    pub overlay: TemplateChild<gtk::Overlay>,
+
+    #[template_child]
+    pub container: TemplateChild<gtk::Box>,
 
     #[template_child]
     pub tab_view: TemplateChild<adw::TabView>,
@@ -47,8 +54,9 @@ impl ObjectImpl for Window {
             obj.add_css_class("devel");
         }
 
-        self.setup_gactions();
         self.setup_widgets();
+        self.setup_gactions();
+        self.connect_signals();
     }
 }
 
@@ -60,12 +68,14 @@ impl AdwApplicationWindowImpl for Window {}
 
 impl Window {
     fn setup_widgets(&self) {
+        self.header_bar.set_container(Some(&*self.container));
+        self.header_bar.set_overlay(Some(&*self.overlay));
+
         if self.settings.remember_window_size() {
             self.load_window_size();
         }
 
-        self.connect_signals();
-        self.new_session(Some(self.init_args.borrow().clone()));
+        // self.new_session(Some(self.init_args.borrow().clone()));
     }
 
     fn load_window_size(&self) {
@@ -92,6 +102,10 @@ impl Window {
         self.obj().connect_maximized_notify(clone!(@weak self as this => move |w| {
             this.settings.set_was_maximized(w.is_maximized());
         }));
+
+        self.obj().connect_fullscreened_notify(clone!(@weak self as this => move |w| {
+            this.header_bar.set_fullscreened(w.is_fullscreened());
+        }));
     }
 
     fn setup_gactions(&self) {
@@ -108,13 +122,7 @@ impl Window {
             .build();
 
         let toggle_fullscreen_action = gio::ActionEntry::builder("toggle-fullscreen")
-            .activate(clone!(@weak self as this => move |win: &super::Window, _, _| {
-                if win.is_fullscreened() {
-                    win.unfullscreen();
-                } else {
-                    win.fullscreen();
-                }
-            }))
+            .activate(move |win: &super::Window, _, _| win.set_fullscreened(!win.is_fullscreened()))
             .build();
 
         self.obj()
@@ -128,19 +136,25 @@ impl Window {
 
     pub fn set_init_args(&self, init_args: TerminalInitArgs) {
         let mut args = self.init_args.borrow_mut();
-        *args = init_args;
+        *args = init_args.clone();
+
+        self.new_session(Some(init_args.clone()));
     }
 
     pub fn new_session(&self, init_args: Option<TerminalInitArgs>) {
-        let session = Session::new(init_args.unwrap());
+        let command = init_args.as_ref().and_then(|a| a.command.clone());
+        let working_directory = init_args.as_ref().and_then(|a| a.working_dir.clone());
+        let env = init_args.as_ref().map(|a| EnvMap::from(a.env.clone()));
+
+        let session = Session::new(working_directory, command, env);
         self.tab_view.append(&session);
 
         session.connect_close(clone!(@weak self as this => move |session: &Session| {
-                                this.tab_view.close_page(&this.tab_view.page(session));
+            this.tab_view.close_page(&this.tab_view.page(session));
 
-                                if this.tab_view.n_pages() == 0 {
-                                        this.obj().close();
-                                }
+            if this.tab_view.n_pages() == 0 {
+                    this.obj().close();
+            }
         }));
     }
 }

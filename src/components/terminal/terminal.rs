@@ -1,36 +1,33 @@
+use std::marker::PhantomData;
+use std::time::Duration;
+use std::{cell::RefCell, collections::HashMap};
+
 use adw::subclass::prelude::*;
-use ashpd::flatpak::HostCommandFlags;
-use async_std::stream::StreamExt;
 use gio::prelude::*;
-use gio::SettingsBindFlags;
 use glib::translate::FromGlib;
 use glib::translate::IntoGlib;
 use glib::ObjectExt;
+use glib::Properties;
 use gtk::glib;
 use gtk::graphene;
 use gtk::CompositeTemplate;
 use gtk::Settings as SystemSettings;
 use tracing::*;
-use vte::BoxExt;
-use vte::CursorBlinkMode;
-use vte::CursorShape;
-use vte::EventControllerExt;
-use vte::StyleContextExt;
+use vte::prelude::*;
+use vte::{CursorBlinkMode, CursorShape};
 
-use std::time::Duration;
-use std::{cell::RefCell, collections::HashMap, env};
-
-use glib::{clone, subclass::Signal, JoinHandle, Pid, SignalHandlerId, SpawnFlags, StaticType, Type, Value};
+use glib::{clone, subclass::Signal, JoinHandle, StaticType, Value};
 use once_cell::sync::Lazy;
-use vte::{PopoverExt, PtyFlags, TerminalExt, TerminalExtManual, WidgetExt};
 
 use crate::components::search_toolbar::SearchToolbar;
+use crate::components::ProcessManager;
 use crate::config::APP_NAME;
 use crate::pcre2::PCRE2Flags;
 use crate::settings::ScrollbackMode;
 use crate::settings::Settings;
 use crate::theme_provider::Theme;
 use crate::theme_provider::ThemeProvider;
+use crate::util::EnvMap;
 
 use super::constants::URL_REGEX_STRINGS;
 use super::spawn::get_spawner;
@@ -57,24 +54,28 @@ static TERMS_ENV: Lazy<HashMap<String, String>> = Lazy::new(|| {
     env
 });
 
-#[derive(Debug, Default)]
-struct TerminalContext {
-    // pub pid: Option<libc::pid_t>,
-    pub spawn_handle: Option<JoinHandle<()>>,
-    pub drop_handler_id: Option<SignalHandlerId>,
-
-    pub padding_provider: Option<gtk::CssProvider>,
-}
-
-#[derive(Debug, CompositeTemplate)]
+#[derive(Debug, CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/terminal.ui")]
+#[properties(wrapper_type=super::Terminal)]
 pub struct Terminal {
-    pub init_args: RefCell<TerminalInitArgs>,
     pub spawner: Box<dyn Spawner>,
 
     pub settings: Settings,
-    pub system_settings: SystemSettings,
-    ctx: RefCell<TerminalContext>,
+
+    spawn_handle: RefCell<Option<JoinHandle<()>>>,
+
+    padding_provider: RefCell<Option<gtk::CssProvider>>,
+
+    process_manager: ProcessManager,
+
+    #[property(get, set, construct, nullable)]
+    working_directory: RefCell<Option<PathBuf>>,
+
+    #[property(get, set, construct, nullable)]
+    command: RefCell<Option<String>>,
+
+    #[property(get, set, construct, nullable)]
+    env: RefCell<Option<EnvMap>>,
 
     #[template_child]
     term: TemplateChild<vte::Terminal>,
@@ -92,15 +93,18 @@ pub struct Terminal {
 impl Default for Terminal {
     fn default() -> Self {
         Self {
-            init_args: Default::default(),
             spawner: get_spawner(),
             settings: Default::default(),
-            system_settings: SystemSettings::default().unwrap(),
-            ctx: Default::default(),
+            spawn_handle: Default::default(),
+            process_manager: ProcessManager::new(),
+            padding_provider: Default::default(),
             term: Default::default(),
             search_toolbar: Default::default(),
             popover_menu: Default::default(),
             scrolled: Default::default(),
+            working_directory: Default::default(),
+            command: Default::default(),
+            env: Default::default(),
         }
     }
 }
@@ -120,6 +124,7 @@ impl ObjectSubclass for Terminal {
     }
 }
 
+#[glib::derived_properties]
 impl ObjectImpl for Terminal {
     fn constructed(&self) {
         self.parent_constructed();
@@ -132,35 +137,12 @@ impl ObjectImpl for Terminal {
         SIGNALS.as_ref()
     }
 
-    fn properties() -> &'static [glib::ParamSpec] {
-        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| vec![]);
-
-        PROPERTIES.as_ref()
-    }
-
-    fn set_property(&self, _id: usize, _value: &Value, pspec: &glib::ParamSpec) {
-        match pspec.name() {
-            _ => unimplemented!(),
-        }
-    }
-
-    fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
-        match pspec.name() {
-            _ => unimplemented!(),
-        }
-    }
-
     fn dispose(&self) {
-        if let Some(spawn_handle) = self.ctx.borrow_mut().spawn_handle.take() {
+        if let Some(spawn_handle) = self.spawn_handle.borrow_mut().take() {
             if spawn_handle.as_raw_source_id().is_some() {
                 spawn_handle.abort()
             }
         }
-
-        // if let Some(drop_handler_id) = self.ctx.borrow_mut().drop_handler_id.take() {
-        //     drop_handler_id.
-        //     // if drop_handler_id.
-        // }
     }
 }
 
@@ -169,12 +151,9 @@ impl BoxImpl for Terminal {}
 
 #[gtk::template_callbacks]
 impl Terminal {
-    pub fn set_init_args(&self, init_args: TerminalInitArgs) {
-        let mut args = self.init_args.borrow_mut();
-        *args = init_args;
-    }
-
     fn setup_widgets(&self) {
+        self.process_manager.set_terminal(&*self.term);
+
         ThemeProvider::default().connect_notify_local(
             Some("current-theme"),
             clone!(@weak self as this => move |_, _| {
@@ -182,16 +161,18 @@ impl Terminal {
             }),
         );
 
-        self.settings.connect_system_font_changed(clone!(@weak self as this => move |_| {
+        self.settings.connect_use_system_font_changed(clone!(@weak self as this => move |_| {
             this.on_font_changed();
         }));
         self.settings.connect_custom_font_changed(clone!(@weak self as this => move |_| {
             this.on_font_changed();
         }));
 
-        self.system_settings.connect_gtk_font_name_notify(clone!(@weak self as this => move |_| {
-            this.on_font_changed();
-        }));
+        self.settings
+            .system_settings()
+            .connect_gtk_font_name_notify(clone!(@weak self as this => move |_| {
+                this.on_font_changed();
+            }));
 
         self.settings.connect_terminal_padding_changed(clone!(@weak self as this => move |_| {
             this.on_padding_changed();
@@ -217,18 +198,14 @@ impl Terminal {
 
         drop_target.set_types(&[gio::File::static_type(), String::static_type(), gdk::FileList::static_type()]);
 
-        let drop_handler_id = drop_target.connect_drop(clone!(@weak self as this => @default-return true, move |_, value, _, _| {
+        drop_target.connect_drop(clone!(@weak self as this => @default-return true, move |_, value, _, _| {
             this.on_drop(value).into()
         }));
-
-        self.ctx.borrow_mut().drop_handler_id = Some(drop_handler_id);
 
         self.term.add_controller(drop_target);
     }
 
     async fn spawn_async(&self) {
-        let init_args = self.init_args.borrow().clone();
-
         let env = self.spawner.env().await;
         if let Err(err) = &env {
             error!("Could not get spawn env: {}", err);
@@ -249,20 +226,22 @@ impl Terminal {
                 info!("Got shell: {:?}", shell);
 
                 let mut shell_command = vec![shell.into()];
-                if self.settings.command_as_login_shell() && init_args.command.is_none() {
+                if self.settings.command_as_login_shell() && self.command.borrow().is_none() {
                     shell_command.push("--login".into())
                 }
                 shell_command
             },
         };
 
-        if let Some(command) = &init_args.command {
+        if let Some(command) = self.command.borrow().as_ref() {
             cmd.push("-c".into());
             cmd.push(command.into());
         }
 
-        let working_dir = match init_args.working_dir {
-            Some(working_dir) => working_dir,
+        info!("Working directory {:?}", self.working_directory.borrow());
+
+        let working_dir = match self.working_directory.borrow().as_ref() {
+            Some(working_dir) => working_dir.clone(),
             None => self.spawner.working_dir().await.unwrap_or(PathBuf::from("/")),
         };
 
@@ -290,7 +269,7 @@ impl Terminal {
             this.spawn_async().await
         }));
 
-        self.ctx.borrow_mut().spawn_handle = Some(spawn_handle);
+        self.spawn_handle.borrow_mut().replace(spawn_handle);
     }
 
     fn connect_signals(&self) {
@@ -431,8 +410,8 @@ impl Terminal {
     }
 
     fn on_font_changed(&self) {
-        let font = if self.settings.system_font() {
-            self.system_settings.gtk_font_name().map(|f| f.to_string())
+        let font = if self.settings.use_system_font() {
+            self.settings.system_settings().gtk_font_name().map(|f| f.to_string())
         } else {
             Some(self.settings.custom_font())
         };
@@ -441,7 +420,7 @@ impl Terminal {
 
     fn on_padding_changed(&self) {
         // TODO: move to themeprovider
-        if let Some(padding_provider) = self.ctx.borrow_mut().padding_provider.take() {
+        if let Some(padding_provider) = self.padding_provider.borrow_mut().take() {
             self.term.style_context().remove_provider(&padding_provider);
         }
 
@@ -451,7 +430,7 @@ impl Terminal {
         provider.load_from_data(&format!("vte-terminal {{ padding: {}px {}px {}px {}px; }}", top, right, bottom, left));
 
         self.term.style_context().add_provider(&provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
-        self.ctx.borrow_mut().padding_provider = Some(provider);
+        self.padding_provider.borrow_mut().replace(provider);
     }
 
     fn background_color(&self, theme: &Theme) -> Option<gdk::RGBA> {
