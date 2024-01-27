@@ -564,9 +564,9 @@ dependencies = [
 
 [[package]]
 name = "constcat"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "325bfa454baa4898475be5c0ec5f3a5dd3c2e4c4a9ef5e951a25427e9928de1f"
+checksum = "7d5cd0c57ef83705837b1cb872c973eff82b070846d3e23668322b2c0f8246d0"
 
 [[package]]
 name = "core-foundation-sys"
