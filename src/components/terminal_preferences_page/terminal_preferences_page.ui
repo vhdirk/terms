@@ -152,7 +152,7 @@
             <property name="model">
               <object class="GtkStringList">
                 <items>
-                  <item translatable="yes">Previous Session</item>
+                  <item translatable="yes">Previous Tab</item>
                   <item translatable="yes">Home Directory</item>
                   <item translatable="yes">Custom</item>
                 </items>

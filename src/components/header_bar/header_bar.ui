@@ -18,18 +18,16 @@
     </section> -->
     <section>
       <item>
-        <attribute name="id">new-session</attribute>
-        <attribute name="label" translatable="yes">New _Session</attribute>
-        <attribute name="action">win.new-session</attribute>
-        <attribute name="target" type="(ss)">('default','')</attribute>
-        <!-- <attribute name="hidden-when">action-disabled</attribute> -->
+        <attribute name="id">new-tab</attribute>
+        <attribute name="label" translatable="yes">New _Tab</attribute>
+        <attribute name="action">win.new-tab</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
       </item>
       <item>
         <attribute name="id">new-window</attribute>
         <attribute name="label" translatable="yes">New _Window</attribute>
         <attribute name="action">app.new-window</attribute>
-        <attribute name="target" type="(ss)">('default','')</attribute>
-        <!-- <attribute name="hidden-when">action-disabled</attribute> -->
+        <attribute name="hidden-when">action-disabled</attribute>
       </item>
     </section>
     <section>
@@ -66,69 +64,81 @@
         <property name="reveal-child">True</property>
         <property name="transition-duration">250</property>
         <child>
+          <object class="GtkBox" id="header_box">
+            <property name="orientation">vertical</property>
+            <property name="spacing">0</property>
+            <property name="valign">center</property>
+            <child>
+              <object class="AdwHeaderBar" id="header_bar">
+                <property name="hexpand">true</property>
 
-          <object class="AdwHeaderBar" id="header_bar">
-            <property name="hexpand">true</property>
+                <!-- <child type="start"></child> -->
 
-            <!-- <child type="start"></child> -->
-
-            <property name="title-widget">
-              <object class="AdwWindowTitle" id="title_widget">
-                <property name="title">Terms</property>
-              </object>
-            </property>
-
-            <child type="end">
-              <object class="GtkMenuButton" id="menu_button">
-                <property name="tooltip-text" translatable="yes">Menu</property>
-                <property name="icon-name">open-menu-symbolic</property>
-
-                <property name="popover">
-                  <object class="GtkPopoverMenu">
-                    <property name="menu-model">main-menu</property>
-                    <child type="style-switcher">
-                      <object class="TermsStyleSwitcher" id="style_switcher"></object>
-                    </child>
+                <property name="title-widget">
+                  <object class="AdwWindowTitle" id="title_widget">
+                    <property name="visible">true</property>
+                    <property name="title" bind-source="TermsHeaderBar" bind-property="title" bind-flags="sync-create">Terms</property>
                   </object>
+
+
                 </property>
+
+                <child type="end">
+                  <object class="GtkMenuButton" id="menu_button">
+                    <property name="tooltip-text" translatable="yes">Menu</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+
+                    <property name="popover">
+                      <object class="GtkPopoverMenu">
+                        <property name="menu-model">main-menu</property>
+                        <child type="style-switcher">
+                          <object class="TermsStyleSwitcher" id="style_switcher"></object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
               </object>
+
+
+
+
+              <!-- <child>
+                                <object class="GtkWindowControls">
+                                  <property name="side">end</property>
+
+                                  <!- <binding name="visible">
+                                    <closure type="gboolean" function="show_window_controls">
+                                      <lookup name="fullscreened">
+                                        <lookup name="window">TerminalHeaderBar</lookup>
+                                      </lookup>
+                                      <lookup name="floating-mode">TerminalHeaderBar</lookup>
+                                      <lookup name="single-tab-mode">TerminalHeaderBar</lookup>
+                                      <constant type="gboolean">false</constant>
+                                    </closure>
+                                  </binding> ->
+                                </object>
+                              </child>
+                            </object>
+                          </child> -->
+              <!-- <object class="AdwHeaderBar">
+                              <property name="hexpand">true</property>
+                              <property name="title-widget">
+                                <object class="AdwWindowTitle" id="title_widget">
+                                  <property name="title">Terms</property>
+                                </object>
+                              </property>
+
+  -->
             </child>
 
           </object>
 
-
-                            <!-- <child>
-                              <object class="GtkWindowControls">
-                                <property name="side">end</property>
-
-                                <!- <binding name="visible">
-                                  <closure type="gboolean" function="show_window_controls">
-                                    <lookup name="fullscreened">
-                                      <lookup name="window">TerminalHeaderBar</lookup>
-                                    </lookup>
-                                    <lookup name="floating-mode">TerminalHeaderBar</lookup>
-                                    <lookup name="single-tab-mode">TerminalHeaderBar</lookup>
-                                    <constant type="gboolean">false</constant>
-                                  </closure>
-                                </binding> ->
-                              </object>
-                            </child>
-                          </object>
-                        </child> -->
-          <!-- <object class="AdwHeaderBar">
-                            <property name="hexpand">true</property>
-                            <property name="title-widget">
-                              <object class="AdwWindowTitle" id="title_widget">
-                                <property name="title">Terms</property>
-                              </object>
-                            </property>
-
--->
         </child>
+
       </object>
-
     </child>
-
 
   </template>
 </interface>

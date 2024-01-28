@@ -17,13 +17,13 @@ window:not(.about) headerbar,
   background-color: @window_bg_color;
 }
 
-#terms_main_window.context-root .custom-headerbar {
+/* #terms_main_window.context-root .custom-headerbar {
   background-color: @root_context_color;
 }
 
 #terms_main_window.context-ssh .custom-headerbar {
   background-color: @ssh_context_color;
-}
+} */
 
 /* .custom-headerbar windowhandle>box {
   padding-top: 0;

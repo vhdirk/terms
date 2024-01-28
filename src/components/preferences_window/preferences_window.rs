@@ -20,6 +20,9 @@ pub struct PreferencesWindow {
     pub show_headerbar_switch: TemplateChild<adw::SwitchRow>,
 
     #[template_child]
+    pub headerbar_integrated_tabbar_switch: TemplateChild<adw::SwitchRow>,
+
+    #[template_child]
     pub show_menu_button_switch: TemplateChild<adw::SwitchRow>,
 
     #[template_child]
@@ -87,6 +90,9 @@ impl PreferencesWindow {
 
         self.settings.bind_show_menu_button(&*self.show_menu_button_switch, "active").build();
         self.settings.bind_show_headerbar(&*self.show_headerbar_switch, "active").build();
+        self.settings
+            .bind_headerbar_integrated_tabbar(&*self.headerbar_integrated_tabbar_switch, "active")
+            .build();
 
         self.settings.bind_floating_controls(&*self.floating_controls_switch, "active").build();
         self.settings

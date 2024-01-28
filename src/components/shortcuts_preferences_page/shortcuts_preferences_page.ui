@@ -78,12 +78,12 @@
     </child>
     <child>
       <object class="AdwPreferencesGroup">
-        <property name="title" translatable="yes">Sessions</property>
+        <property name="title" translatable="yes">Tabs</property>
         <child>
-          <object class="TermsShortcutRow" id="new_session">
-            <property name="title" translatable="yes">New session</property>
-            <property name="subtitle" translatable="yes">Open a new session in the current window</property>
-            <property name="action">win.new-session</property>
+          <object class="TermsShortcutRow" id="new_tab">
+            <property name="title" translatable="yes">New tab</property>
+            <property name="subtitle" translatable="yes">Open a new tab in the current window</property>
+            <property name="action">win.new-tab</property>
           </object>
         </child>
         <child>
@@ -99,9 +99,9 @@
       <object class="AdwPreferencesGroup">
         <child>
           <object class="TermsShortcutRow" id="tab_overview">
-            <property name="title" translatable="yes">Open Session Overview</property>
-            <property name="subtitle" translatable="yes">Show an overview of all sessions within the window</property>
-            <property name="action">win.session-overview</property>
+            <property name="title" translatable="yes">Open Tab Overview</property>
+            <property name="subtitle" translatable="yes">Show an overview of all tabs within the window</property>
+            <property name="action">win.tab-overview</property>
           </object>
         </child>
       </object>
@@ -109,31 +109,31 @@
     <child>
       <object class="AdwPreferencesGroup">
         <child>
-          <object class="TermsShortcutRow" id="close_session">
-            <property name="title" translatable="yes">Close Session</property>
-            <property name="subtitle" translatable="yes">Close the current session</property>
-            <property name="action">win.close-session</property>
+          <object class="TermsShortcutRow" id="close_tab">
+            <property name="title" translatable="yes">Close Tab</property>
+            <property name="subtitle" translatable="yes">Close the current tab</property>
+            <property name="action">win.close-tab</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="close_other_sessions">
-            <property name="title" translatable="yes">Close Other Sessions</property>
-            <property name="subtitle" translatable="yes">Close all sessions except the active session</property>
-            <property name="action">win.close-other-sessions</property>
+          <object class="TermsShortcutRow" id="close_other_tabs">
+            <property name="title" translatable="yes">Close Other Tabs</property>
+            <property name="subtitle" translatable="yes">Close all tabs except the active tab</property>
+            <property name="action">win.close-other-tabs</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="undo_close_session">
+          <object class="TermsShortcutRow" id="undo_close_tab">
             <property name="title" translatable="yes">Undo Close Tab</property>
             <property name="subtitle" translatable="yes">Undo closing the last tab</property>
-            <property name="action">win.undo-close-session</property>
+            <property name="action">win.undo-close-tab</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="rename_session">
+          <object class="TermsShortcutRow" id="rename_tab">
             <property name="title" translatable="yes">Rename Tab</property>
             <property name="subtitle" translatable="yes">Rename the current tab</property>
-            <property name="action">win.rename-session</property>
+            <property name="action">win.rename-tab</property>
           </object>
         </child>
       </object>
@@ -141,27 +141,27 @@
     <child>
       <object class="AdwPreferencesGroup">
         <child>
-          <object class="TermsShortcutRow" id="focus_session_previous">
+          <object class="TermsShortcutRow" id="focus_tab_previous">
             <property name="title" translatable="yes">Move to Previous Tab</property>
-            <property name="action">win.focus-session-previous</property>
+            <property name="action">win.focus-tab-previous</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_next">
+          <object class="TermsShortcutRow" id="focus_tab_next">
             <property name="title" translatable="yes">Move to Next Tab</property>
-            <property name="action">win.focus-session-next</property>
+            <property name="action">win.focus-tab-next</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_first">
+          <object class="TermsShortcutRow" id="focus_tab_first">
             <property name="title" translatable="yes">Move to First Tab</property>
-            <property name="action">win.focus-session-first</property>
+            <property name="action">win.focus-tab-first</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_last">
+          <object class="TermsShortcutRow" id="focus_tab_last">
             <property name="title" translatable="yes">Move to Last Tab</property>
-            <property name="action">win.focus-session-last</property>
+            <property name="action">win.focus-tab-last</property>
           </object>
         </child>
       </object>
@@ -169,24 +169,24 @@
     <child>
       <object class="AdwPreferencesGroup">
         <child>
-          <object class="TermsShortcutRow" id="move_session_left">
+          <object class="TermsShortcutRow" id="move_tab_left">
             <property name="title" translatable="yes">Move Tab Left</property>
             <property name="subtitle" translatable="yes">Move the tab one position to the left</property>
-            <property name="action">win.move-session-left</property>
+            <property name="action">win.move-tab-left</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="move_session_right">
+          <object class="TermsShortcutRow" id="move_tab_right">
             <property name="title" translatable="yes">Move Tab Right</property>
             <property name="subtitle" translatable="yes">Move the tab one position to the right</property>
-            <property name="action">win.move-session-right</property>
+            <property name="action">win.move-tab-right</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="detach_session">
+          <object class="TermsShortcutRow" id="detach_tab">
             <property name="title" translatable="yes">Move Tab to New Window</property>
             <property name="subtitle" translatable="yes">Detach the current tab and move it to a new window</property>
-            <property name="action">win.detach-session</property>
+            <property name="action">win.detach-tab</property>
           </object>
         </child>
       </object>
@@ -194,57 +194,57 @@
     <child>
       <object class="AdwPreferencesGroup">
         <child>
-          <object class="TermsShortcutRow" id="focus_session_1">
-            <property name="title" translatable="yes">Switch to session 1</property>
-            <property name="action">win.focus-session-1</property>
+          <object class="TermsShortcutRow" id="focus_tab_1">
+            <property name="title" translatable="yes">Switch to tab 1</property>
+            <property name="action">win.focus-tab-1</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_2">
-            <property name="title" translatable="yes">Switch to session 2</property>
-            <property name="action">win.focus-session-2</property>
+          <object class="TermsShortcutRow" id="focus_tab_2">
+            <property name="title" translatable="yes">Switch to tab 2</property>
+            <property name="action">win.focus-tab-2</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_3">
-            <property name="title" translatable="yes">Switch to session 3</property>
-            <property name="action">win.focus-session-3</property>
+          <object class="TermsShortcutRow" id="focus_tab_3">
+            <property name="title" translatable="yes">Switch to tab 3</property>
+            <property name="action">win.focus-tab-3</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_4">
-            <property name="title" translatable="yes">Switch to session 4</property>
-            <property name="action">win.focus-session-4</property>
+          <object class="TermsShortcutRow" id="focus_tab_4">
+            <property name="title" translatable="yes">Switch to tab 4</property>
+            <property name="action">win.focus-tab-4</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_5">
-            <property name="title" translatable="yes">Switch to session 5</property>
-            <property name="action">win.focus-session-5</property>
+          <object class="TermsShortcutRow" id="focus_tab_5">
+            <property name="title" translatable="yes">Switch to tab 5</property>
+            <property name="action">win.focus-tab-5</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_6">
-            <property name="title" translatable="yes">Switch to session 6</property>
-            <property name="action">win.focus-session-6</property>
+          <object class="TermsShortcutRow" id="focus_tab_6">
+            <property name="title" translatable="yes">Switch to tab 6</property>
+            <property name="action">win.focus-tab-6</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_7">
-            <property name="title" translatable="yes">Switch to session 7</property>
-            <property name="action">win.focus-session-7</property>
+          <object class="TermsShortcutRow" id="focus_tab_7">
+            <property name="title" translatable="yes">Switch to tab 7</property>
+            <property name="action">win.focus-tab-7</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_8">
-            <property name="title" translatable="yes">Switch to session 8</property>
-            <property name="action">win.focus-session-8</property>
+          <object class="TermsShortcutRow" id="focus_tab_8">
+            <property name="title" translatable="yes">Switch to tab 8</property>
+            <property name="action">win.focus-tab-8</property>
           </object>
         </child>
         <child>
-          <object class="TermsShortcutRow" id="focus_session_9">
-            <property name="title" translatable="yes">Switch to session 9</property>
-            <property name="action">win.focus-session-9</property>
+          <object class="TermsShortcutRow" id="focus_tab_9">
+            <property name="title" translatable="yes">Switch to tab 9</property>
+            <property name="action">win.focus-tab-9</property>
           </object>
         </child>
       </object>

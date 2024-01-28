@@ -32,7 +32,8 @@ Terms uses GTK4 and is written in Rust. The latter has no added value aside from
 
 ## Status
 
-- [x] Single terminal mode. No tiling, no tabs.
+Terms is still very much in development. The following features are present but may still need some work to stabilize.
+
 - [x] Multiple windows
 - [x] Drag/drop support
 - [x] href/mailto regex matching
@@ -40,10 +41,10 @@ Terms uses GTK4 and is written in Rust. The latter has no added value aside from
 - [x] Theming. Compatible with Gogh
 - [x] Flatpak support
 - [x] Shortcuts
-- [ ] Tabs
+- [x] Tabs
 - [ ] Tiling
 - [ ] Profiles
-- [ ] Store and load sessions like Tilix does
+- [ ] Store and load session like Tilix and Prompt do
 - [ ] iTerm2-like support for tmux
 
 

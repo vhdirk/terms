@@ -8,13 +8,6 @@ use terminal as imp;
 
 use crate::util::EnvMap;
 
-#[derive(Debug, Default, Clone)]
-pub struct TerminalInitArgs {
-    pub working_dir: Option<PathBuf>,
-    pub command: Option<String>,
-    pub env: HashMap<String, String>,
-}
-
 glib::wrapper! {
         pub struct Terminal(ObjectSubclass<imp::Terminal>)
                 @extends gtk::Widget, gtk::Box,
@@ -23,9 +16,9 @@ glib::wrapper! {
 
 #[gtk::template_callbacks]
 impl Terminal {
-    pub fn new(working_directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
+    pub fn new(directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
         glib::Object::builder()
-            .property("working-directory", working_directory)
+            .property("directory", directory)
             .property("command", command)
             .property("env", env)
             .build()

@@ -16,12 +16,12 @@ pub enum HostCommandFlags {
     /// Clear the environment.
     ClearEnv,
     #[doc(alias = "FLATPAK_HOST_COMMAND_FLAGS_WATCH_BUS")]
-    /// Kill the sandbox when the caller disappears from the session bus.
+    /// Kill the sandbox when the caller disappears from the tab bus.
     WatchBus,
 }
 
 /// The Development interface lets any client, possibly in a sandbox if it has
-/// access to the session helper, spawn a process on the host, outside any
+/// access to the tab helper, spawn a process on the host, outside any
 /// sandbox.
 ///
 /// Wrapper of the DBus interface: [`org.freedesktop.Flatpak.Development`](https://docs.flatpak.org/en/latest/libflatpak-api-reference.html#gdbus-org.freedesktop.Flatpak.Development)
@@ -48,7 +48,7 @@ impl<'a> Development<'a> {
     }
 
     /// This method lets trusted applications (insider or outside a sandbox) run
-    /// arbitrary commands in the user's session, outside any sandbox.
+    /// arbitrary commands in the user's tab, outside any sandbox.
     ///
     /// # Arguments
     ///

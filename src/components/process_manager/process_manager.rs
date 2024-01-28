@@ -38,7 +38,7 @@ impl ObjectImpl for ProcessManager {}
 //   public int terminal_fd { get; construct set; }
 
 //   /**
-//    * This is the controlling PID for a terminal session. It will point to the
+//    * This is the controlling PID for a terminal tab. It will point to the
 //    * user's shell, in most cases. If the terminal was created with a different
 //    * command (i.e., `blackbox --command "sleep 300"`), this will point to the
 //    * spawned process instead.
@@ -48,7 +48,7 @@ impl ObjectImpl for ProcessManager {}
 //   /**
 //    * This is the PID of the process currently running at the top of the user's
 //    * shell (e.g., if the user opened a terminal with bash, then opened Neovim
-//    * with `nvim`, the foreground task for this session, and, consequently, this
+//    * with `nvim`, the foreground task for this tab, and, consequently, this
 //    * PID, will point to Neovim).
 //    */
 //   public Pid foreground_pid { get; set; default = -1; }

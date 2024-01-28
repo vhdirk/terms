@@ -1,22 +1,22 @@
-mod terminal_frame;
+mod terminal_panel;
 use std::path::PathBuf;
 
 use glib::{closure_local, ObjectExt};
-use terminal_frame as imp;
+use terminal_panel as imp;
 
 use crate::util::EnvMap;
 
 glib::wrapper! {
-        pub struct TerminalFrame(ObjectSubclass<imp::TerminalFrame>)
+        pub struct TerminalPanel(ObjectSubclass<imp::TerminalPanel>)
                 @extends gtk::Widget, gtk::Box,
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
 }
 
 #[gtk::template_callbacks]
-impl TerminalFrame {
-    pub fn new(working_directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
+impl TerminalPanel {
+    pub fn new(directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
         glib::Object::builder()
-            .property("working-directory", working_directory)
+            .property("directory", directory)
             .property("command", command)
             .property("env", env)
             .build()
@@ -26,7 +26,7 @@ impl TerminalFrame {
         self.connect_closure(
             "exit",
             true,
-            closure_local!(move |obj: TerminalFrame| {
+            closure_local!(move |obj: TerminalPanel| {
                 f(&obj);
             }),
         )

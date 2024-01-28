@@ -68,14 +68,7 @@ pub struct Terminal {
 
     process_manager: ProcessManager,
 
-    #[property(get, set, construct, nullable)]
-    working_directory: RefCell<Option<PathBuf>>,
-
-    #[property(get, set, construct, nullable)]
-    command: RefCell<Option<String>>,
-
-    #[property(get, set, construct, nullable)]
-    env: RefCell<Option<EnvMap>>,
+    update_source: Option<glib::SourceId>,
 
     #[template_child]
     term: TemplateChild<vte::Terminal>,
@@ -88,23 +81,39 @@ pub struct Terminal {
 
     #[template_child]
     scrolled: TemplateChild<gtk::ScrolledWindow>,
+
+    #[property(get, set, construct, nullable)]
+    directory: RefCell<Option<PathBuf>>,
+
+    #[property(get, set, construct, nullable)]
+    command: RefCell<Option<String>>,
+
+    #[property(get, set, construct, nullable)]
+    env: RefCell<Option<EnvMap>>,
+
+    #[property(get, set, construct, nullable)]
+    title: RefCell<Option<String>>,
 }
 
 impl Default for Terminal {
     fn default() -> Self {
         Self {
             spawner: get_spawner(),
+            process_manager: ProcessManager::new(),
+
             settings: Default::default(),
             spawn_handle: Default::default(),
-            process_manager: ProcessManager::new(),
             padding_provider: Default::default(),
             term: Default::default(),
             search_toolbar: Default::default(),
             popover_menu: Default::default(),
             scrolled: Default::default(),
-            working_directory: Default::default(),
+
+            directory: Default::default(),
             command: Default::default(),
             env: Default::default(),
+            title: Default::default(),
+            update_source: Default::default(),
         }
     }
 }
@@ -117,6 +126,7 @@ impl ObjectSubclass for Terminal {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.bind_template_callbacks();
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -238,9 +248,9 @@ impl Terminal {
             cmd.push(command.into());
         }
 
-        info!("Working directory {:?}", self.working_directory.borrow());
+        info!("Working directory {:?}", self.directory.borrow());
 
-        let working_dir = match self.working_directory.borrow().as_ref() {
+        let working_dir = match self.directory.borrow().as_ref() {
             Some(working_dir) => working_dir.clone(),
             None => self.spawner.working_dir().await.unwrap_or(PathBuf::from("/")),
         };
@@ -273,7 +283,7 @@ impl Terminal {
     }
 
     fn connect_signals(&self) {
-        let keypress_controller = gtk::EventControllerKey::builder().build();
+        let keypress_controller = gtk::EventControllerKey::builder().propagation_phase(gtk::PropagationPhase::Capture).build();
         keypress_controller.connect_key_pressed(
             clone!(@weak self as this =>  @default-return glib::Propagation::Stop, move |_, key, keycode, modifier| {
                 this.on_key_pressed(key, keycode, modifier)
@@ -281,8 +291,8 @@ impl Terminal {
         );
         self.term.add_controller(keypress_controller);
 
-        let primary_click = gtk::GestureClick::builder().button(gdk::BUTTON_PRIMARY).build();
-        primary_click.connect_pressed(clone!(@weak self as this => move |gesture: &gtk::GestureClick, _: i32, x: f64, y: f64| {
+        let primary_click_controller = gtk::GestureClick::builder().button(gdk::BUTTON_PRIMARY).build();
+        primary_click_controller.connect_pressed(clone!(@weak self as this => move |gesture: &gtk::GestureClick, _: i32, x: f64, y: f64| {
             if let Some(event) = gesture.current_event() {
                 if let (Some(match_str), _tag) = this.term.check_match_at(x, y) {
                     if event.modifier_state().contains(gdk::ModifierType::CONTROL_MASK) {
@@ -293,15 +303,14 @@ impl Terminal {
                 }
             }
         }));
+        self.term.add_controller(primary_click_controller);
 
-        self.term.add_controller(primary_click);
-
-        let secondary_click = gtk::GestureClick::builder().button(gdk::BUTTON_SECONDARY).build();
-        secondary_click.connect_pressed(clone!(@weak self as this => move |_: &gtk::GestureClick, _: i32, x: f64, y: f64| {
+        let secondary_click_controller = gtk::GestureClick::builder().button(gdk::BUTTON_SECONDARY).build();
+        secondary_click_controller.connect_pressed(clone!(@weak self as this => move |_: &gtk::GestureClick, _: i32, x: f64, y: f64| {
                                 this.show_menu(x, y);
         }));
 
-        self.term.add_controller(secondary_click);
+        self.term.add_controller(secondary_click_controller);
     }
 
     fn setup_regexes(&self) {
@@ -381,31 +390,36 @@ impl Terminal {
     }
 
     fn on_key_pressed(&self, key: gdk::Key, _keycode: u32, modifier: gdk::ModifierType) -> glib::Propagation {
-        if !modifier.contains(gdk::ModifierType::CONTROL_MASK) {
+        if self.update_source.is_none() && !modifier.contains(gdk::ModifierType::CONTROL_MASK) {
             return glib::Propagation::Proceed;
         }
 
-        // TODO: get shortcuts from system settings?
-        match key.name().as_ref().map(glib::GString::as_str) {
-            Some("c") => {
-                if self.term.has_selection() && self.settings.easy_copy_paste() {
-                    // TODO: allow html?
-                    self.term.copy_clipboard_format(vte::Format::Text);
-                    self.term.unselect_all();
-                    glib::Propagation::Stop
-                } else {
-                    glib::Propagation::Proceed
-                }
-            },
-            Some("v") => {
-                if self.settings.easy_copy_paste() {
-                    self.term.paste_clipboard();
-                    glib::Propagation::Stop
-                } else {
-                    glib::Propagation::Proceed
-                }
-            },
-            _ => glib::Propagation::Proceed,
+        if let Some(update_source) = self.update_source.as_ref() {
+            glib::Propagation::Proceed
+        } else {
+            // Handle easy copy/paste
+            // TODO: get shortcuts from system settings?
+            match key.name().as_ref().map(glib::GString::as_str) {
+                Some("c") => {
+                    if self.term.has_selection() && self.settings.easy_copy_paste() {
+                        // TODO: allow html?
+                        self.term.copy_clipboard_format(vte::Format::Text);
+                        self.term.unselect_all();
+                        glib::Propagation::Stop
+                    } else {
+                        glib::Propagation::Proceed
+                    }
+                },
+                Some("v") => {
+                    if self.settings.easy_copy_paste() {
+                        self.term.paste_clipboard();
+                        glib::Propagation::Stop
+                    } else {
+                        glib::Propagation::Proceed
+                    }
+                },
+                _ => glib::Propagation::Proceed,
+            }
         }
     }
 
@@ -526,4 +540,87 @@ impl Terminal {
 
         self.obj().emit_by_name::<()>("exit", &[&status]);
     }
+
+    #[template_callback]
+    fn on_contents_changed(&self) {
+        self.enqueue_update();
+    }
+
+    #[template_callback]
+    fn on_current_directory_uri_changed(&self) {
+        let current_dir = self
+            .term
+            .current_directory_uri()
+            .and_then(|uri_string| glib::Uri::parse(&uri_string, glib::UriFlags::NONE).ok())
+            .map(|uri| PathBuf::from(uri.path()));
+        *(self.directory.borrow_mut()) = current_dir;
+        self.obj().notify_directory();
+
+        self.update_title();
+    }
+
+    #[template_callback]
+    fn update_title(&self) {
+        let title = self.term.window_title().map(|t| t.to_string());
+
+        // TODO: substitutions
+        // ${title} 	The title of the terminal as reported by the terminal
+        // ${iconTitle} 	The icon title of the terminal
+        // ??? ${id} 	The numeric terminal ID (i.e. 1,2,3,4)
+        // ${directory} 	The current working directory in the terminal
+        // ${columns} 	The number of columns in the terminal
+        // ${rows} 	the number of rows in the terminal
+        // ${hostname} 	the hostname of the current session, availability dependent on the VTE script being configured on remote systems or triggers
+        // ${username} 	the current username, requires trigger support and an appropriate trigger be configured
+
+        *self.title.borrow_mut() = title;
+        self.obj().notify_title();
+    }
+
+    fn enqueue_update(&self) {
+        // glib::timeout_add(interval, func)
+
+        //   if G_UNLIKELY (self->update_source == NULL)
+        //     {
+        //       self->update_source = g_source_new ((GSourceFuncs *)&source_funcs, sizeof (GSource));
+        //       g_source_set_callback (self->update_source,
+        //                              prompt_tab_monitor_update_source_func,
+        //                              self, NULL);
+        //       g_source_set_static_name (self->update_source, "[prompt-tab-monitor]");
+        //       g_source_set_priority (self->update_source, G_PRIORITY_LOW);
+        //       prompt_tab_monitor_reset_delay (self);
+        //       g_source_attach (self->update_source, NULL);
+        //       return;
+        //     }
+
+        //   if G_UNLIKELY (self->current_delay_msec > DELAY_MIN_MSEC)
+        //     {
+        //       prompt_tab_monitor_reset_delay (self);
+        //       return;
+        //     }
+    }
+
+    // static gboolean
+    // prompt_tab_monitor_update_source_func (gpointer user_data)
+    // {
+    //   PromptTabMonitor *self = user_data;
+    //   g_autoptr(PromptTab) tab = NULL;
+    //   PromptIpcProcess *process;
+
+    //   g_assert (PROMPT_IS_TAB_MONITOR (self));
+
+    //   if ((tab = g_weak_ref_get (&self->tab_wr)) &&
+    //       (process = prompt_tab_get_process (tab)))
+    //     {
+    //       if (prompt_tab_poll_agent (tab))
+    //         prompt_tab_monitor_reset_delay (self);
+    //       else
+    //         prompt_tab_monitor_backoff_delay (self);
+
+    //       return G_SOURCE_CONTINUE;
+    //     }
+
+    //   g_clear_pointer (&self->update_source, g_source_unref);
+
+    //   return G_SOURC
 }

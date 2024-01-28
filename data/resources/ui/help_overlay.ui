@@ -16,20 +16,20 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">New session</property>
-                <property name="action-name">win.new-session</property>
+                <property name="title" translatable="yes" context="shortcut window">New tab</property>
+                <property name="action-name">win.new-tab</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Close session</property>
-                <property name="action-name">win.close-session</property>
+                <property name="title" translatable="yes" context="shortcut window">Close tab</property>
+                <property name="action-name">win.close-tab</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Rename session</property>
-                <property name="action-name">win.rename-session</property>
+                <property name="title" translatable="yes" context="shortcut window">Rename tab</property>
+                <property name="action-name">win.rename-tab</property>
               </object>
             </child>
             <child>
@@ -92,75 +92,75 @@
             <property name="title" translatable="yes" context="shortcut window">Navigation</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus next session</property>
-                <property name="action-name">app.focus-session-next</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus next tab</property>
+                <property name="action-name">app.focus-tab-next</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus previous session</property>
-                <property name="action-name">app.focus-session-previous</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus previous tab</property>
+                <property name="action-name">app.focus-tab-previous</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 1</property>
-                <property name="action-name">win.focus-session-1</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 1</property>
+                <property name="action-name">win.focus-tab-1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 2</property>
-                <property name="action-name">win.focus-session-2</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 2</property>
+                <property name="action-name">win.focus-tab-2</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 3</property>
-                <property name="action-name">win.focus-session-3</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 3</property>
+                <property name="action-name">win.focus-tab-3</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 4</property>
-                <property name="action-name">win.focus-session-4</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 4</property>
+                <property name="action-name">win.focus-tab-4</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 5</property>
-                <property name="action-name">win.focus-session-5</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 5</property>
+                <property name="action-name">win.focus-tab-5</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 6</property>
-                <property name="action-name">win.focus-session-6</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 6</property>
+                <property name="action-name">win.focus-tab-6</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 7</property>
-                <property name="action-name">win.focus-session-7</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 7</property>
+                <property name="action-name">win.focus-tab-7</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 8</property>
-                <property name="action-name">win.focus-session-8</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 8</property>
+                <property name="action-name">win.focus-tab-8</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Focus Session 9</property>
-                <property name="action-name">win.focus-session-9</property>
+                <property name="title" translatable="yes" context="shortcut window">Focus Tab 9</property>
+                <property name="action-name">win.focus-tab-9</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Switch to last
                   Tab</property>
-                <property name="action-name">win.focus-session-last</property>
+                <property name="action-name">win.focus-tab-last</property>
               </object>
             </child>
           </object>

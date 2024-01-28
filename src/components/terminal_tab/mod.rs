@@ -1,24 +1,22 @@
-mod session;
+mod terminal_tab;
 use std::path::PathBuf;
 
-use glib::{closure_local, subclass::prelude::*};
+use glib::closure_local;
 use gtk::prelude::*;
-use session as imp;
+use terminal_tab as imp;
 
 use crate::util::EnvMap;
 
-use super::TerminalInitArgs;
-
 glib::wrapper! {
-        pub struct Session(ObjectSubclass<imp::Session>)
+        pub struct TerminalTab(ObjectSubclass<imp::TerminalTab>)
                 @extends gtk::Widget, adw::Bin,
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
 }
 
-impl Session {
-    pub fn new(working_directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
+impl TerminalTab {
+    pub fn new(directory: Option<PathBuf>, command: Option<String>, env: Option<EnvMap>) -> Self {
         glib::Object::builder()
-            .property("working-directory", working_directory)
+            .property("directory", directory)
             .property("command", command)
             .property("env", env)
             .build()
@@ -28,7 +26,7 @@ impl Session {
         self.connect_closure(
             "close",
             true,
-            closure_local!(move |obj: Session| {
+            closure_local!(move |obj: TerminalTab| {
                 f(&obj);
             }),
         )

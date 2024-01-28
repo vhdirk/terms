@@ -18,6 +18,7 @@ impl ObjectSubclass for SearchToolbar {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.bind_template_callbacks();
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -27,3 +28,6 @@ impl ObjectSubclass for SearchToolbar {
 
 impl ObjectImpl for SearchToolbar {}
 impl WidgetImpl for SearchToolbar {}
+
+#[gtk::template_callbacks]
+impl SearchToolbar {}

@@ -1,8 +1,12 @@
 mod window;
+use std::path::PathBuf;
+
 use glib::subclass::prelude::*;
 use window as imp;
 
-use super::{HeaderBar, Session, TerminalInitArgs};
+use crate::util::EnvMap;
+
+use super::{HeaderBar, TerminalTab};
 
 glib::wrapper! {
         pub struct Window(ObjectSubclass<imp::Window>)
@@ -11,10 +15,12 @@ glib::wrapper! {
 }
 
 impl Window {
-    pub fn new<P: glib::IsA<gtk::Application>>(application: &P, init_args: TerminalInitArgs) -> Self {
-        let this: Self = glib::Object::builder().property("application", application).build();
-        this.imp().set_init_args(init_args);
-
-        this
+    pub fn new<P: glib::IsA<gtk::Application>>(application: &P, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) -> Self {
+        glib::Object::builder()
+            .property("application", application)
+            .property("command", command)
+            .property("directory", directory)
+            .property("env", env)
+            .build()
     }
 }

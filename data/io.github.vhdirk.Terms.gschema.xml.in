@@ -47,6 +47,7 @@
       <default>true</default>
       <summary>Whether or not to show scrollbars</summary>
     </key>
+
     <key name="use-overlay-scrolling" type="b">
       <default>true</default>
       <summary>Whether overlay scrolling should be enabled</summary>
@@ -100,6 +101,10 @@
     <key name="show-headerbar" type="b">
       <default>true</default>
       <summary>Whether the headerbar should be shown or not</summary>
+    </key>
+    <key name="headerbar-integrated-tabbar" type="b">
+      <default>true</default>
+      <summary>Whether the tab bar should be integrated in the headerbar</summary>
     </key>
     <key name="context-aware-header-bar" type="b">
       <default>true</default>
@@ -305,103 +310,103 @@
       <summary>Reset Zoom</summary>
       <description>The shortcut to reset zoom</description>
     </key>
-    <key name="win-session-overview" type="as">
+    <key name="win-tab-overview" type="as">
       <default>['&lt;ctrl&gt;&lt;shift&gt;o']</default>
-      <summary>Session Overview</summary>
-      <description>The shortcut to show the session overview</description>
+      <summary>Tab Overview</summary>
+      <description>The shortcut to show the tab overview</description>
     </key>
-    <key name="win-new-session" type="as">
+    <key name="win-new-tab" type="as">
       <default>['&lt;Shift&gt;&lt;Control&gt;t']</default>
-      <summary>New Session</summary>
-      <description>The shortcut to create a new session in the current window</description>
+      <summary>New Tab</summary>
+      <description>The shortcut to create a new tab in the current window</description>
     </key>
-    <key name="win-close-session" type="as">
+    <key name="win-close-tab" type="as">
       <default>['&lt;Shift&gt;&lt;Control&gt;w']</default>
-      <summary>Close Session</summary>
-      <description>Shortcut to close the current session</description>
+      <summary>Close Tab</summary>
+      <description>Shortcut to close the current tab</description>
     </key>
-    <key name="win-close-other-sessions" type="as">
+    <key name="win-close-other-tabs" type="as">
       <default>[]</default>
-      <summary>Close Other Sessions</summary>
-      <description>Shortcut to close all session in the window but the current one</description>
+      <summary>Close Other Tabs</summary>
+      <description>Shortcut to close all tab in the window but the current one</description>
     </key>
-    <key name="win-rename-session" type="as">
+    <key name="win-rename-tab" type="as">
       <default>['&lt;Shift&gt;&lt;Control&gt;r']</default>
-      <summary>Rename Session</summary>
-      <description>Shortcut to rename the current session</description>
+      <summary>Rename Tab</summary>
+      <description>Shortcut to rename the current tab</description>
     </key>
-    <key name="win-focus-session-next" type="as">
+    <key name="win-focus-tab-next" type="as">
       <default>['&lt;Control&gt;Tab']</default>
-      <summary>WinFocusNextSession</summary>
+      <summary>WinFocusNextTab</summary>
     </key>
-    <key name="win-focus-session-previous" type="as">
+    <key name="win-focus-tab-previous" type="as">
       <default>['&lt;Shift&gt;&lt;Control&gt;Tab']</default>
-      <summary>WinFocusPreviousSession</summary>
+      <summary>WinFocusPreviousTab</summary>
     </key>
-    <key name="win-focus-session-1" type="as">
+    <key name="win-focus-tab-1" type="as">
       <default>['&lt;Alt&gt;1']</default>
-      <summary>Focus Session 1</summary>
-      <description>Shortcut to focus session 1</description>
+      <summary>Focus Tab 1</summary>
+      <description>Shortcut to focus tab 1</description>
     </key>
-    <key name="win-focus-session-2" type="as">
+    <key name="win-focus-tab-2" type="as">
       <default>['&lt;Alt&gt;2']</default>
-      <summary>Focus Session 2</summary>
-      <description>Shortcut to focus session 2</description>
+      <summary>Focus Tab 2</summary>
+      <description>Shortcut to focus tab 2</description>
     </key>
-    <key name="win-focus-session-3" type="as">
+    <key name="win-focus-tab-3" type="as">
       <default>['&lt;Alt&gt;3']</default>
-      <summary>Focus Session 3</summary>
-      <description>Shortcut to focus session 3</description>
+      <summary>Focus Tab 3</summary>
+      <description>Shortcut to focus tab 3</description>
     </key>
-    <key name="win-focus-session-4" type="as">
+    <key name="win-focus-tab-4" type="as">
       <default>['&lt;Alt&gt;4']</default>
-      <summary>Focus Session 4</summary>
-      <description>Shortcut to focus session 4</description>
+      <summary>Focus Tab 4</summary>
+      <description>Shortcut to focus tab 4</description>
     </key>
-    <key name="win-focus-session-5" type="as">
+    <key name="win-focus-tab-5" type="as">
       <default>['&lt;Alt&gt;5']</default>
-      <summary>Focus Session 5</summary>
-      <description>Shortcut to focus session 5</description>
+      <summary>Focus Tab 5</summary>
+      <description>Shortcut to focus tab 5</description>
     </key>
-    <key name="win-focus-session-6" type="as">
+    <key name="win-focus-tab-6" type="as">
       <default>['&lt;Alt&gt;6']</default>
-      <summary>Focus Session 6</summary>
-      <description>Shortcut to focus session 6</description>
+      <summary>Focus Tab 6</summary>
+      <description>Shortcut to focus tab 6</description>
     </key>
-    <key name="win-focus-session-7" type="as">
+    <key name="win-focus-tab-7" type="as">
       <default>['&lt;Alt&gt;7']</default>
-      <summary>Focus Session 7</summary>
-      <description>Shortcut to focus session 7</description>
+      <summary>Focus Tab 7</summary>
+      <description>Shortcut to focus tab 7</description>
     </key>
-    <key name="win-focus-session-8" type="as">
+    <key name="win-focus-tab-8" type="as">
       <default>['&lt;Alt&gt;8']</default>
-      <summary>Focus Session 8</summary>
-      <description>Shortcut to focus session 8</description>
+      <summary>Focus Tab 8</summary>
+      <description>Shortcut to focus tab 8</description>
     </key>
-    <key name="win-focus-session-9" type="as">
+    <key name="win-focus-tab-9" type="as">
       <default>['&lt;Alt&gt;9']</default>
-      <summary>Focus Session 9</summary>
-      <description>Shortcut to focus session 9</description>
+      <summary>Focus Tab 9</summary>
+      <description>Shortcut to focus tab 9</description>
     </key>
-    <key name="win-focus-session-first" type="as">
+    <key name="win-focus-tab-first" type="as">
       <default>[]</default>
-      <summary>Focus First Session</summary>
-      <description>Shortcut to focus the first session</description>
+      <summary>Focus First Tab</summary>
+      <description>Shortcut to focus the first tab</description>
     </key>
-    <key name="win-focus-session-last" type="as">
+    <key name="win-focus-tab-last" type="as">
       <default>['&lt;Alt&gt;0']</default>
-      <summary>Focus Last Session</summary>
-      <description>Shortcut to focus the last session</description>
+      <summary>Focus Last Tab</summary>
+      <description>Shortcut to focus the last tab</description>
     </key>
-    <key name="win-move-session-left" type="as">
+    <key name="win-move-tab-left" type="as">
       <default>['&lt;ctrl&gt;&lt;shift&gt;Page_Up']</default>
-      <summary>Move Session Left</summary>
-      <description>Shortcut to move the current session to the left one position</description>
+      <summary>Move Tab Left</summary>
+      <description>Shortcut to move the current tab to the left one position</description>
     </key>
-    <key name="win-move-session-right" type="as">
+    <key name="win-move-tab-right" type="as">
       <default>['&lt;ctrl&gt;&lt;shift&gt;Page_Down']</default>
-      <summary>Move Session Right</summary>
-      <description>Shortcut to move the current session to the right one position</description>
+      <summary>Move Tab Right</summary>
+      <description>Shortcut to move the current tab to the right one position</description>
     </key>
     <key name="win-search" type="as">
       <default>['&lt;Shift&gt;&lt;Control&gt;f']</default>
@@ -418,27 +423,27 @@
       <summary>Select None</summary>
       <description>Shortcut to clear the terminal selection</description>
     </key>
-    <key name="win-session-synchronize-input" type="as">
+    <key name="win-tab-synchronize-input" type="as">
       <default>[]</default>
-      <summary>Keyboard shortcut to synchronize input for the session</summary>
+      <summary>Keyboard shortcut to synchronize input for the tab</summary>
     </key>
-    <key name="win-undo-close-session" type="as">
+    <key name="win-undo-close-tab" type="as">
       <default>['&lt;ctrl&gt;&lt;shift&gt;&lt;alt&gt;t']</default>
-      <summary>Undo Close Session</summary>
-      <description>Undo closing of last session</description>
+      <summary>Undo Close Tab</summary>
+      <description>Undo closing of last tab</description>
     </key>
-    <key name="win-detach-session" type="as">
+    <key name="win-detach-tab" type="as">
       <default>[]</default>
       <summary>Move Tab to New Window</summary>
       <description>Shortcut to move the current tab into a new window</description>
     </key>
-    <key name="win-session-open" type="as">
+    <key name="win-tab-open" type="as">
       <default>['&lt;Shift&gt;&lt;Ctrl&gt;o']</default>
-      <summary>Keyboard shortcut to open a previously saved session</summary>
+      <summary>Keyboard shortcut to open a previously saved tab</summary>
     </key>
-    <key name="win-session-save" type="as">
+    <key name="win-tab-save" type="as">
       <default>['&lt;Shift&gt;&lt;Ctrl&gt;s']</default>
-      <summary>Keyboard shortcut to save the current session</summary>
+      <summary>Keyboard shortcut to save the current tab</summary>
     </key>
     <key name="win-popup-menu" type="as">
       <default>['&lt;shift&gt;F10']</default>
@@ -447,129 +452,129 @@
     </key>
 
     <!--
-    <key name="session-close" type="s">
+    <key name="tab-close" type="s">
       <default>'&lt;Shift&gt;&lt;Ctrl&gt;Q'</default>
-      <summary>Keyboard shortcut to close a session</summary>
+      <summary>Keyboard shortcut to close a tab</summary>
     </key>
-    <key name="session-save-as" type="s">
+    <key name="tab-save-as" type="s">
       <default>'disabled'</default>
-      <summary>Keyboard shortcut to save the current session as a new file</summary>
+      <summary>Keyboard shortcut to save the current tab as a new file</summary>
     </key>
 
-    <key name="session-switch-to-terminal-up" type="s">
+    <key name="tab-switch-to-terminal-up" type="s">
       <default>'&lt;Alt&gt;Up'</default>
       <summary>Keyboard shortcut to switch to terminal above</summary>
     </key>
-    <key name="session-switch-to-terminal-down" type="s">
+    <key name="tab-switch-to-terminal-down" type="s">
       <default>'&lt;Alt&gt;Down'</default>
       <summary>Keyboard shortcut to switch to terminal below</summary>
     </key>
-    <key name="session-switch-to-terminal-left" type="s">
+    <key name="tab-switch-to-terminal-left" type="s">
       <default>'&lt;Alt&gt;Left'</default>
       <summary>Keyboard shortcut to switch to terminal left</summary>
     </key>
-    <key name="session-switch-to-terminal-right" type="s">
+    <key name="tab-switch-to-terminal-right" type="s">
       <default>'&lt;Alt&gt;Right'</default>
       <summary>Keyboard shortcut to switch to terminal right</summary>
     </key>
-    <key name="session-resize-terminal-up" type="s">
+    <key name="tab-resize-terminal-up" type="s">
       <default>'&lt;Shift&gt;&lt;Alt&gt;Up'</default>
       <summary>Keyboard shortcut to resize terminal up</summary>
     </key>
-    <key name="session-resize-terminal-down" type="s">
+    <key name="tab-resize-terminal-down" type="s">
       <default>'&lt;Shift&gt;&lt;Alt&gt;Down'</default>
       <summary>Keyboard shortcut to resize terminal down</summary>
     </key>
-    <key name="session-resize-terminal-left" type="s">
+    <key name="tab-resize-terminal-left" type="s">
       <default>'&lt;Shift&gt;&lt;Alt&gt;Left'</default>
       <summary>Keyboard shortcut to resize terminal left</summary>
     </key>
-    <key name="session-resize-terminal-right" type="s">
+    <key name="tab-resize-terminal-right" type="s">
       <default>'&lt;Shift&gt;&lt;Alt&gt;Right'</default>
       <summary>Keyboard shortcut to resize terminal right</summary>
     </key>
-    <key name="session-add-right" type="s">
+    <key name="tab-add-right" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;r'</default>
       <summary>Keyboard shortcut to add new terminal right</summary>
     </key>
-    <key name="session-add-down" type="s">
+    <key name="tab-add-down" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;d'</default>
       <summary>Keyboard shortcut to add new terminal down</summary>
     </key>
-    <key name="session-add-auto" type="s">
+    <key name="tab-add-auto" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;a'</default>
       <summary>Keyboard shortcut to add new terminal automatically</summary>
     </key>
     <key name="win-view-sidebar" type="s">
       <default>'F12'</default>
-      <summary>Keyboard shortcut to view session sidebar</summary>
+      <summary>Keyboard shortcut to view tab sidebar</summary>
     </key>
-    <key name="win-switch-to-session-0" type="s">
+    <key name="win-switch-to-tab-0" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;0'</default>
-      <summary>Keyboard shortcut to switch to session 10</summary>
+      <summary>Keyboard shortcut to switch to tab 10</summary>
     </key>
-    <key name="win-switch-to-session-1" type="s">
+    <key name="win-switch-to-tab-1" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;1'</default>
-      <summary>Keyboard shortcut to switch to session 1</summary>
+      <summary>Keyboard shortcut to switch to tab 1</summary>
     </key>
-    <key name="win-switch-to-session-2" type="s">
+    <key name="win-switch-to-tab-2" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;2'</default>
-      <summary>Keyboard shortcut to switch to session 2</summary>
+      <summary>Keyboard shortcut to switch to tab 2</summary>
     </key>
-    <key name="win-switch-to-session-3" type="s">
+    <key name="win-switch-to-tab-3" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;3'</default>
-      <summary>Keyboard shortcut to switch to session 3</summary>
+      <summary>Keyboard shortcut to switch to tab 3</summary>
     </key>
-    <key name="win-switch-to-session-4" type="s">
+    <key name="win-switch-to-tab-4" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;4'</default>
-      <summary>Keyboard shortcut to switch to session 4</summary>
+      <summary>Keyboard shortcut to switch to tab 4</summary>
     </key>
-    <key name="win-switch-to-session-5" type="s">
+    <key name="win-switch-to-tab-5" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;5'</default>
-      <summary>Keyboard shortcut to switch to session 5</summary>
+      <summary>Keyboard shortcut to switch to tab 5</summary>
     </key>
-    <key name="win-switch-to-session-6" type="s">
+    <key name="win-switch-to-tab-6" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;6'</default>
-      <summary>Keyboard shortcut to switch to session 6</summary>
+      <summary>Keyboard shortcut to switch to tab 6</summary>
     </key>
-    <key name="win-switch-to-session-7" type="s">
+    <key name="win-switch-to-tab-7" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;7'</default>
-      <summary>Keyboard shortcut to switch to session 7</summary>
+      <summary>Keyboard shortcut to switch to tab 7</summary>
     </key>
-    <key name="win-switch-to-session-8" type="s">
+    <key name="win-switch-to-tab-8" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;8'</default>
-      <summary>Keyboard shortcut to switch to session 8</summary>
+      <summary>Keyboard shortcut to switch to tab 8</summary>
     </key>
-    <key name="win-switch-to-session-9" type="s">
+    <key name="win-switch-to-tab-9" type="s">
       <default>'&lt;Ctrl&gt;&lt;Alt&gt;9'</default>
-      <summary>Keyboard shortcut to switch to session 9</summary>
+      <summary>Keyboard shortcut to switch to tab 9</summary>
     </key>
-    <key name="win-switch-to-next-session" type="s">
+    <key name="win-switch-to-next-tab" type="s">
       <default>'&lt;Ctrl&gt;Page_Down'</default>
-      <summary>Keyboard shortcut to switch to the next session</summary>
+      <summary>Keyboard shortcut to switch to the next tab</summary>
     </key>
-    <key name="win-switch-to-previous-session" type="s">
+    <key name="win-switch-to-previous-tab" type="s">
       <default>'&lt;Ctrl&gt;Page_Up'</default>
-      <summary>Keyboard shortcut to switch to the previous session</summary>
+      <summary>Keyboard shortcut to switch to the previous tab</summary>
     </key>
-    <key name="win-reorder-previous-session" type="s">
+    <key name="win-reorder-previous-tab" type="s">
       <default>'&lt;Ctrl&gt;&lt;Shift&gt;Page_Up'</default>
-      <summary>Keyboard shortcut to reorder to the previous session</summary>
+      <summary>Keyboard shortcut to reorder to the previous tab</summary>
     </key>
-    <key name="win-reorder-next-session" type="s">
+    <key name="win-reorder-next-tab" type="s">
       <default>'&lt;Ctrl&gt;&lt;Shift&gt;Page_Down'</default>
-      <summary>Keyboard shortcut to reorder to the next session</summary>
+      <summary>Keyboard shortcut to reorder to the next tab</summary>
     </key>
     <key name="win-fullscreen" type="s">
       <default>'F11'</default>
       <summary>Keyboard shortcut to toggle fullscreen</summary>
     </key>
     <!- Can't use accelerators with tab, may need to hardwire this in VTE ->
-    <key name="session-switch-to-next-terminal" type="s">
+    <key name="tab-switch-to-next-terminal" type="s">
       <default>'&lt;Ctrl&gt;Tab'</default>
       <summary>Keyboard shortcut to switch to the next terminal</summary>
     </key>
-    <key name="session-switch-to-previous-terminal" type="s">
+    <key name="tab-switch-to-previous-terminal" type="s">
       <default>'&lt;Ctrl&gt;&lt;Shift&gt;Tab'</default>
       <summary>Keyboard shortcut to switch to the previous terminal</summary>
     </key>

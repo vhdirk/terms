@@ -119,7 +119,9 @@
             <property name="allow-hyperlink">true</property>
             <property name="receives-default">true</property>
             <property name="scroll-unit-is-pixels">true</property>
-
+            <signal name="contents-changed" handler="on_contents_changed" swapped="true" />
+            <signal name="notify::window-title" handler="update_title" swapped="true"/>
+            <signal name="current-directory-uri-changed" handler="on_current_directory_uri_changed" swapped="true"/>
           </object>
         </child>
       </object>

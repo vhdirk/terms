@@ -1,20 +1,17 @@
-use std::{borrow::Cow, fmt, rc::Rc};
-
-use crate::{
-    components::{TerminalInitArgs, Window},
-    config::{self, APP_ID, APP_NAME, VERSION},
-    settings::Settings,
-};
 use adw;
 use gettextrs::gettext;
 use gio::ApplicationFlags;
 use glib::ExitCode;
-use gtk::{gio, glib, glib::clone, prelude::*, subclass::prelude::*};
-use serde::{Deserialize, Serialize};
+use gtk::{gio, glib, prelude::*, subclass::prelude::*};
 use std::{cell::RefCell, path::PathBuf};
+use std::{fmt, rc::Rc};
 use tracing::*;
 
-// use crate::{config, session_list::SessionList, spawn, system_settings::SystemSettings, Window};
+use crate::{
+    components::Window,
+    config::{self, APP_ID, APP_NAME, VERSION},
+    settings::Settings,
+};
 
 /// The profile that was built.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -54,40 +51,20 @@ impl fmt::Display for AppProfile {
 
 mod imp {
 
-    use std::{collections::HashMap, env};
-
     use adw::subclass::prelude::AdwApplicationImpl;
     // use panel::{prelude::WorkbenchExt, subclass::prelude::PanelApplicationImpl};
 
-    use crate::{
-        components::{TerminalInitArgs, Window},
-        config::APP_ID,
-        theme_provider::ThemeProvider,
-    };
+    use crate::{components::Window, config::APP_ID, theme_provider::ThemeProvider, util::EnvMap};
 
     use super::*;
 
-    #[derive(Debug)]
+    #[derive(Debug, Default)]
     pub struct Application {
-        /// The application settings.
         pub settings: Settings,
-        // pub theme_provider: ThemeProvider,
-        // /// The system settings.
-        // pub system_settings: SystemSettings,
-        // /// The list of logged-in sessions.
-        // pub session_list: SessionList,
-        pub init_args: RefCell<TerminalInitArgs>,
-    }
 
-    impl Default for Application {
-        fn default() -> Self {
-            Self {
-                settings: Settings::default(),
-                // system_settings: Default::default(),
-                // session_list: Default::default(),
-                init_args: RefCell::default(),
-            }
-        }
+        pub command: RefCell<Option<String>>,
+        pub directory: RefCell<Option<PathBuf>>,
+        pub env: RefCell<Option<EnvMap>>,
     }
 
     #[glib::object_subclass]
@@ -110,15 +87,11 @@ mod imp {
     }
 
     impl ApplicationImpl for Application {
-        // We connect to the activate callback to create a window when the application
-        // has been launched. Additionally, this callback notifies us when the user
-        // tries to launch a "second instance" of the application. When they try
-        // to do that, we'll just present any existing window.
         fn activate(&self) {
-            // init the theme provider
+            // late-init the theme provider
             ThemeProvider::default();
 
-            self.new_window(Some(self.init_args.borrow().clone()));
+            self.new_window(self.command.borrow().clone(), self.directory.borrow().clone(), self.env.borrow().clone());
         }
 
         fn startup(&self) {
@@ -147,18 +120,12 @@ mod imp {
                 return ExitCode::SUCCESS;
             }
 
-            let working_dir = options
-                .lookup_value("working-directory", None)
-                .and_then(|w| w.get::<PathBuf>())
-                .or(env::current_dir().ok());
+            let working_dir = options.lookup_value("working-directory", None).and_then(|w| w.get::<PathBuf>());
 
             let command = options.lookup_value("command", None).and_then(|w| w.get::<String>());
 
-            self.set_init_args(TerminalInitArgs {
-                working_dir,
-                command,
-                env: HashMap::new(),
-            });
+            *self.command.borrow_mut() = command;
+            *self.directory.borrow_mut() = working_dir;
 
             self.parent_handle_local_options(options)
         }
@@ -200,20 +167,12 @@ mod imp {
             );
         }
 
-        fn set_init_args(&self, init_args: TerminalInitArgs) {
-            let mut args = self.init_args.borrow_mut();
-            *args = init_args;
-        }
-
-        pub fn new_window(&self, init_args: Option<TerminalInitArgs>) {
-            // Get the current window or create one if necessary
+        pub fn new_window(&self, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) {
             let app = self.obj();
 
-            // TODO: if init_args is none, we have to get them from the last terminal?
-            info!("Window init args: {:?}", init_args);
-            let window = Window::new(&*app, init_args.unwrap());
+            info!("Window init args: {:?} {:?} {:?}", command, directory, env);
+            let window = Window::new(&*app, command, directory, env);
 
-            // Ask the window manager/compositor to present the window
             info!("Add window");
             app.add_window(&window);
             window.present();
@@ -264,7 +223,7 @@ impl Application {
     }
 
     fn setup_shortcuts(&self) {
-        // TODO: watch for changes
+        // TODO: watch for changes in shortcuts
         let shortcut_settings = self.imp().settings.shortcuts();
         for (action, accels) in shortcut_settings.actionmap() {
             self.set_accels_for_action(&action, &accels.iter().map(|a| a.as_str()).collect::<Vec<_>>())
@@ -272,7 +231,11 @@ impl Application {
     }
 
     fn new_window(&self) {
-        self.imp().new_window(None);
+        // TODO: this fails if the last active window was not a 'Window' but perhaps preferences
+        let directory = self.active_window().and_downcast::<Window>().and_then(|window| window.directory());
+
+        // TODO: respect working_directory_mode setting
+        self.imp().new_window(None, directory, None);
     }
 
     fn show_about(&self) {
@@ -285,7 +248,7 @@ impl Application {
             .application_name(APP_NAME)
             .license_type(gtk::License::Gpl30)
             .developer_name("Dirk Van Haerenborgh")
-            .copyright("© 2022 Dirk Van Haerenborgh")
+            .copyright("© 2023 Dirk Van Haerenborgh")
             .website("https://github.com/vhdirk/terms/")
             .issue_url("https://github.com/vhdirk/terms/issues")
             // .translator_credits(gettext("translator-credits").replace("\\n", "\n"))

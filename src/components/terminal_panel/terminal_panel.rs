@@ -1,4 +1,4 @@
-use crate::components::{SearchToolbar, Terminal, TerminalInitArgs};
+use crate::components::Terminal;
 use crate::util::EnvMap;
 use adw::subclass::prelude::*;
 use glib::ObjectExt;
@@ -14,26 +14,29 @@ use glib::{clone, subclass::Signal};
 use once_cell::sync::Lazy;
 
 #[derive(Debug, Default, CompositeTemplate, Properties)]
-#[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_frame.ui")]
-#[properties(wrapper_type = super::TerminalFrame)]
-pub struct TerminalFrame {
+#[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_panel.ui")]
+#[properties(wrapper_type = super::TerminalPanel)]
+pub struct TerminalPanel {
     #[template_child]
     terminal: TemplateChild<Terminal>,
 
     #[property(get, set, construct, nullable)]
-    working_directory: RefCell<Option<PathBuf>>,
+    directory: RefCell<Option<PathBuf>>,
 
     #[property(set, get, construct, nullable)]
     command: RefCell<Option<String>>,
 
     #[property(set, get, construct, nullable)]
     env: RefCell<Option<EnvMap>>,
+
+    #[property(get, set, construct, nullable)]
+    title: RefCell<Option<String>>,
 }
 
 #[glib::object_subclass]
-impl ObjectSubclass for TerminalFrame {
-    const NAME: &'static str = "TermsTerminalFrame";
-    type Type = super::TerminalFrame;
+impl ObjectSubclass for TerminalPanel {
+    const NAME: &'static str = "TermsTerminalPanel";
+    type Type = super::TerminalPanel;
     type ParentType = gtk::Box;
 
     fn class_init(klass: &mut Self::Class) {
@@ -47,7 +50,7 @@ impl ObjectSubclass for TerminalFrame {
 }
 
 #[glib::derived_properties]
-impl ObjectImpl for TerminalFrame {
+impl ObjectImpl for TerminalPanel {
     fn constructed(&self) {
         self.parent_constructed();
 
@@ -60,11 +63,11 @@ impl ObjectImpl for TerminalFrame {
     }
 }
 
-impl WidgetImpl for TerminalFrame {}
-impl BoxImpl for TerminalFrame {}
+impl WidgetImpl for TerminalPanel {}
+impl BoxImpl for TerminalPanel {}
 
 #[gtk::template_callbacks]
-impl TerminalFrame {
+impl TerminalPanel {
     fn setup_widgets(&self) {
         self.connect_signals();
     }
@@ -81,18 +84,18 @@ impl TerminalFrame {
 // // //     <child>
 // // //       <object class="GtkScrolledWindow" id="scrolled">
 // // //         <!-- <property name="child">
-// // //           <lookup name="TerminalFrame">TerminalFrameSession</lookup>
+// // //           <lookup name="TerminalPanel">TerminalPanelTab</lookup>
 // // //         </property> -->
 // // //       </object>
 // // //     </child>
 
 // // //     <child>
-// // //       <object class="TerminalFrameSearchToolbar" id="search_toolbar">
-// // //         <!-- <binding name="TerminalFrame">
-// // //           <lookup name="TerminalFrame">TerminalFrameSession</lookup>
+// // //       <object class="TerminalPanelSearchToolbar" id="search_toolbar">
+// // //         <!-- <binding name="TerminalPanel">
+// // //           <lookup name="TerminalPanel">TerminalPanelTab</lookup>
 // // //         </binding> -->
 
-// // //         <property name="TerminalFrame" bind-source="TerminalFrameSession" bind-property="TerminalFrame" bind-flags="sync-create" />
+// // //         <property name="TerminalPanel" bind-source="TerminalPanelTab" bind-property="TerminalPanel" bind-flags="sync-create" />
 // // //       </object>
 // // //     </child>
 // // //   </template>

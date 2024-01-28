@@ -45,6 +45,11 @@
                 <property name="title" translatable="yes">Show Header Bar</property>
               </object>
             </child>
+            <child>
+              <object class="AdwSwitchRow" id="headerbar_integrated_tabbar_switch">
+                <property name="title" translatable="yes">Integrate tab bar in header bar</property>
+              </object>
+            </child>
             <!-- <child>
               <object class="AdwActionRow">
                 <property name="activatable-widget">context_aware_header_bar_switch</property>

@@ -1,8 +1,9 @@
 use adw::subclass::prelude::*;
-use glib::clone;
+use glib::{clone, Properties};
 use gtk::prelude::*;
 use gtk::{gio, glib};
 use std::cell::RefCell;
+use std::path::PathBuf;
 
 use crate::components::PreferencesWindow;
 use crate::config::PROFILE;
@@ -11,11 +12,23 @@ use crate::util::EnvMap;
 
 use super::*;
 
-#[derive(Debug, Default, gtk::CompositeTemplate)]
+#[derive(Debug, Default, gtk::CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/window.ui")]
+#[properties(wrapper_type=super::Window)]
 pub struct Window {
     pub settings: Settings,
-    pub init_args: RefCell<TerminalInitArgs>,
+
+    /// The initial working directory for a new terminal
+    #[property(get, set, construct, nullable)]
+    directory: RefCell<Option<PathBuf>>,
+
+    /// The foreground command for a new terminal
+    #[property(set, get, construct, nullable)]
+    command: RefCell<Option<String>>,
+
+    /// The initial env for a new terminal
+    #[property(set, get, construct, nullable)]
+    env: RefCell<Option<EnvMap>>,
 
     #[template_child]
     pub header_bar: TemplateChild<HeaderBar>,
@@ -28,6 +41,9 @@ pub struct Window {
 
     #[template_child]
     pub tab_view: TemplateChild<adw::TabView>,
+
+    #[template_child]
+    pub tab_bar: TemplateChild<adw::TabBar>,
 }
 
 #[glib::object_subclass]
@@ -38,6 +54,7 @@ impl ObjectSubclass for Window {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.bind_template_callbacks();
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -45,6 +62,7 @@ impl ObjectSubclass for Window {
     }
 }
 
+#[glib::derived_properties]
 impl ObjectImpl for Window {
     fn constructed(&self) {
         self.parent_constructed();
@@ -66,19 +84,20 @@ impl AdwWindowImpl for Window {}
 impl ApplicationWindowImpl for Window {}
 impl AdwApplicationWindowImpl for Window {}
 
+#[gtk::template_callbacks]
 impl Window {
     fn setup_widgets(&self) {
         self.header_bar.set_container(Some(&*self.container));
         self.header_bar.set_overlay(Some(&*self.overlay));
 
         if self.settings.remember_window_size() {
-            self.load_window_size();
+            self.restore_window_size();
         }
 
-        // self.new_session(Some(self.init_args.borrow().clone()));
+        self.new_tab();
     }
 
-    fn load_window_size(&self) {
+    fn restore_window_size(&self) {
         let obj = self.obj();
         obj.set_default_width(self.settings.window_width() as i32);
         obj.set_default_height(self.settings.window_height() as i32);
@@ -106,6 +125,14 @@ impl Window {
         self.obj().connect_fullscreened_notify(clone!(@weak self as this => move |w| {
             this.header_bar.set_fullscreened(w.is_fullscreened());
         }));
+
+        self.tab_view
+            .connect_close_page(clone!(@weak self as this => @default-return false, move |tv, _| {
+                if tv.n_pages() <= 1 {
+                    this.obj().close();
+                }
+                false
+            }));
     }
 
     fn setup_gactions(&self) {
@@ -115,9 +142,9 @@ impl Window {
             }))
             .build();
 
-        let new_session_action = gio::ActionEntry::builder("new-session")
+        let new_tab_action = gio::ActionEntry::builder("new-tab")
             .activate(clone!(@weak self as this => move |_win: &super::Window, _, _| {
-                this.new_session(None);
+                this.new_tab();
             }))
             .build();
 
@@ -125,8 +152,7 @@ impl Window {
             .activate(move |win: &super::Window, _, _| win.set_fullscreened(!win.is_fullscreened()))
             .build();
 
-        self.obj()
-            .add_action_entries([preferences_action, new_session_action, toggle_fullscreen_action]);
+        self.obj().add_action_entries([preferences_action, new_tab_action, toggle_fullscreen_action]);
     }
 
     pub fn open_preferences(&self) {
@@ -134,27 +160,36 @@ impl Window {
         prefs_window.set_visible(true);
     }
 
-    pub fn set_init_args(&self, init_args: TerminalInitArgs) {
-        let mut args = self.init_args.borrow_mut();
-        *args = init_args.clone();
+    pub fn new_tab(&self) {
+        let command = self.command.borrow().clone();
+        let directory = self.directory.borrow().clone();
+        let env = self.env.borrow().clone();
 
-        self.new_session(Some(init_args.clone()));
+        let tab = TerminalTab::new(directory, command, env);
+        let page = self.tab_view.append(&tab);
+
+        self.tab_view.set_selected_page(&page);
+
+        tab.connect_close(clone!(@weak self as this => move |tab: &TerminalTab| {
+            this.tab_view.close_page(&this.tab_view.page(tab));
+        }));
+
+        tab.connect_title_notify(clone!(@weak self as this => move |t| {
+            let term_title = t.title();
+            let title = term_title.as_ref().map(String::as_str);
+            if let Some(title) = title{
+                page.set_title(title);
+            }
+            this.obj().set_title(title);
+        }));
+
+        tab.connect_directory_notify(clone!(@weak self as this => move |t| {
+            this.update_directory(t.directory());
+        }));
     }
 
-    pub fn new_session(&self, init_args: Option<TerminalInitArgs>) {
-        let command = init_args.as_ref().and_then(|a| a.command.clone());
-        let working_directory = init_args.as_ref().and_then(|a| a.working_dir.clone());
-        let env = init_args.as_ref().map(|a| EnvMap::from(a.env.clone()));
-
-        let session = Session::new(working_directory, command, env);
-        self.tab_view.append(&session);
-
-        session.connect_close(clone!(@weak self as this => move |session: &Session| {
-            this.tab_view.close_page(&this.tab_view.page(session));
-
-            if this.tab_view.n_pages() == 0 {
-                    this.obj().close();
-            }
-        }));
+    fn update_directory(&self, directory: Option<PathBuf>) {
+        *self.directory.borrow_mut() = directory;
+        self.obj().notify_directory();
     }
 }
