@@ -1,9 +1,11 @@
 use adw::subclass::prelude::*;
-use glib::{clone, Properties};
+use adw::TabPage;
+use glib::{clone, Properties, SignalHandlerId};
 use gtk::prelude::*;
 use gtk::{gio, glib};
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::path::PathBuf;
+use tracing::info;
 
 use crate::components::PreferencesWindow;
 use crate::config::PROFILE;
@@ -44,6 +46,8 @@ pub struct Window {
 
     #[template_child]
     pub tab_bar: TemplateChild<adw::TabBar>,
+
+    title_handler: RefCell<Option<glib::SignalHandlerId>>,
 }
 
 #[glib::object_subclass]
@@ -133,6 +137,13 @@ impl Window {
                 }
                 false
             }));
+
+        self.tab_view.connect_selected_page_notify(clone!(@weak self as this => move |tab_view| {
+            if let Some(page) = tab_view.selected_page() {
+                this.update_title(&page);
+            }
+
+        }));
     }
 
     fn setup_gactions(&self) {
@@ -174,22 +185,35 @@ impl Window {
             this.tab_view.close_page(&this.tab_view.page(tab));
         }));
 
-        tab.connect_title_notify(clone!(@weak self as this => move |t| {
+        let tab_page = page.clone();
+        tab.connect_title_notify(clone!(@weak self as this, @weak tab_page => move |t| {
             let term_title = t.title();
             let title = term_title.as_ref().map(String::as_str);
-            if let Some(title) = title{
-                page.set_title(title);
+            if let Some(title) = title {
+                tab_page.set_title(title);
             }
-            this.obj().set_title(title);
+            this.update_title(&tab_page);
         }));
 
-        tab.connect_directory_notify(clone!(@weak self as this => move |t| {
-            this.update_directory(t.directory());
+        let tab_page = page.clone();
+        tab.connect_directory_notify(clone!(@weak self as this, @weak tab_page => move |t| {
+            if this.tab_view.selected_page() == Some(tab_page) {
+                this.update_directory(t.directory());
+            }
         }));
     }
 
     fn update_directory(&self, directory: Option<PathBuf>) {
         *self.directory.borrow_mut() = directory;
         self.obj().notify_directory();
+    }
+
+    fn update_title(&self, page: &TabPage) {
+        if self.tab_view.selected_page().as_ref() == Some(page) {
+            info!("set window title {:?}", page.title());
+            self.obj().set_title(Some(&page.title()))
+        } else {
+            info!("page does not equal selected");
+        }
     }
 }

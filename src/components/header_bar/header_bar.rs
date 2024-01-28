@@ -102,7 +102,7 @@ impl HeaderBar {
         self.set_integrated_tab_bar();
 
         self.settings
-            .connect_headerbar_integrated_tabbar_changed(clone!(@weak self as this => move |settings| {
+            .connect_headerbar_integrated_tabbar_changed(clone!(@weak self as this => move |_| {
                 this.set_integrated_tab_bar();
             }));
 
@@ -147,7 +147,6 @@ impl HeaderBar {
         let tab_bar = self.tab_bar.borrow();
 
         tab_bar.unparent();
-        self.title_widget.unparent();
 
         if self.settings.headerbar_integrated_tabbar() && tab_bar.view().map_or(false, |view| view.n_pages() > 1) {
             self.header_bar.set_title_widget(Some(&*tab_bar));
