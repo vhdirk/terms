@@ -178,10 +178,10 @@ impl Window {
                 .activate(move |win: &super::Window, _, _| win.imp().detach_tab())
                 .build(),
             gio::ActionEntry::builder("pin-tab")
-                .activate(move |win: &super::Window, _, _| win.imp().pin_tab())
+                .activate(move |win: &super::Window, _, _| win.imp().pin_tab(true))
                 .build(),
             gio::ActionEntry::builder("unpin-tab")
-                .activate(move |win: &super::Window, _, _| win.imp().unpin_tab())
+                .activate(move |win: &super::Window, _, _| win.imp().pin_tab(false))
                 .build(),
             gio::ActionEntry::builder("rename-tab")
                 .activate(move |win: &super::Window, _, _| win.imp().rename_tab())
@@ -247,7 +247,12 @@ impl Window {
     }
 
     fn zoom_out(&self) {
+        if let Some(tab) = self.tab_view.selected_page().and_then(|page| page.child().downcast::<TerminalTab>().ok()) {
+            // tab.zoom_out();
+        }
+
         // TODO
+
         warn!("Zoom out: not yet implemented");
     }
 
@@ -264,14 +269,12 @@ impl Window {
     fn move_tab_left(&self) {
         if let Some(page) = self.tab_view.selected_page() {
             self.tab_view.reorder_backward(&page);
-            self.tab_view.set_selected_page(&page);
         }
     }
 
     fn move_tab_right(&self) {
         if let Some(page) = self.tab_view.selected_page() {
             self.tab_view.reorder_forward(&page);
-            self.tab_view.set_selected_page(&page);
         }
     }
 
@@ -280,14 +283,10 @@ impl Window {
         warn!("detach tab: not yet implemented");
     }
 
-    fn pin_tab(&self) {
-        // TODO
-        warn!("pin-tab: not yet implemented");
-    }
-
-    fn unpin_tab(&self) {
-        // TODO
-        warn!("unpin-tab: not yet implemented");
+    fn pin_tab(&self, pinned: bool) {
+        if let Some(page) = self.tab_view.selected_page() {
+            self.tab_view.set_page_pinned(&page, pinned)
+        }
     }
 
     fn rename_tab(&self) {
