@@ -12,6 +12,7 @@ mod terminal_preferences_page;
 mod terminal_tab;
 mod theme_thumbnail;
 mod window;
+mod zoom_controls;
 
 pub use header_bar::*;
 pub use preferences_window::*;
@@ -27,3 +28,4 @@ pub use terminal_preferences_page::*;
 pub use terminal_tab::*;
 pub use theme_thumbnail::*;
 pub use window::*;
+pub use zoom_controls::*;

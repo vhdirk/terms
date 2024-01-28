@@ -10,7 +10,7 @@
     <a href="#gallery">Gallery</a> •
     <a href="./CHANGELOG.md">Changelog</a> -->
     <br/>
-    <!-- <a href="https://gitlab.gnome.org/raggesilver/blackbox/-/wikis/home">Wiki</a> • -->
+    <!-- <a href="https://github.com/vhdirk/terms/-/wikis/home">Wiki</a> • -->
     <a href="./LICENSE">License</a> •
     <!-- <a href="./CONTRIBUTING.md">Contributing</a> -->
   </p>
@@ -45,7 +45,7 @@ Terms is still very much in development. The following features are present but 
 - [ ] Tiling
 - [ ] Profiles
 - [ ] Store and load session like Tilix and Prompt do
-- [ ] iTerm2-like support for tmux
+- [ ] tmux Control Mode, based on <https://github.com/gnome-terminator/terminator/pull/408> and <https://github.com/iamjackg/terminator/tree/tmux-v2>
 
 
 <!-- ## Building the project
@@ -65,13 +65,6 @@ Once the project is build, run the command below. Replace Replace `io.github.vhd
 flatpak-builder --run flatpak_app build-aux/io.github.vhdirk.Terms.Devel.json <project_name>
 ``` -->
 
-<!-- ## Community
-
-Join the GNOME and gtk-rs community!
-- [Matrix chat](https://matrix.to/#/#rust:gnome.org): chat with other developers using gtk-rs
-- [Discourse forum](https://discourse.gnome.org/tag/rust): topics tagged with `rust` on the GNOME forum.
-- [GNOME circle](https://circle.gnome.org/): take inspiration from applications and libraries already extending the GNOME ecosystem. -->
-
 ## Credits
 
 Lots of ideas and code is ~~stolen~~ borrowed from these projects:
@@ -81,6 +74,7 @@ Lots of ideas and code is ~~stolen~~ borrowed from these projects:
 - [Fractal]
 - [Zoha]
 - [Prompt]
+- [Terminator]
 
 Attribution is added in code.
 
@@ -89,3 +83,4 @@ Attribution is added in code.
 [Fractal]: https://gitlab.gnome.org/World/fractal
 [Zoha]: https://github.com/hkoosha/zoha4
 [Prompt]: https://gitlab.gnome.org/chergert/prompt
+[Terminator]: https://github.com/gnome-terminator/terminator

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
+
+  <template class="TermsZoomControls" parent="AdwBin">
+    <property name="name">terms_zoom_controls</property>
+
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">horizontal</property>
+        <property name="spacing">12</property>
+        <property name="margin-start">18</property>
+        <property name="margin-end">18</property>
+
+        <child>
+          <object class="GtkButton" id="zoom_out_button">
+            <property name="icon-name">zoom-out-symbolic</property>
+            <property name="action-name">win.zoom-out</property>
+            <property name="tooltip-text" translatable="yes">Zoom out</property>
+            <style>
+              <class name="circular" />
+              <class name="flat" />
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Zoom out</property>
+            </accessibility>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="zoom_label">
+            <property name="action-name">win.zoom-default</property>
+            <property name="tooltip-text" translatable="yes">Reset zoom</property>
+            <property name="hexpand">true</property>
+            <property name="label">100%</property>
+            <style>
+              <class name="pill" />
+              <class name="flat" />
+            </style>
+            <!--
+              TODO: show current zoom level
+//   g_binding_group_bind (self->active_tab_bindings, "zoom-label", self->zoom_label, "label", 0);
+-->
+<!--   gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover), zoom_box, "zoom"); -->
+
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="zoom_in_button">
+            <property name="icon-name">zoom-in-symbolic</property>
+            <property name="action-name">win.zoom-in</property>
+            <property name="tooltip-text" translatable="yes">Zoom in</property>
+            <style>
+              <class name="circular" />
+              <class name="flat" />
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Zoom in</property>
+            </accessibility>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
+

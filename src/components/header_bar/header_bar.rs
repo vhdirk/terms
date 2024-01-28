@@ -7,6 +7,7 @@ use gtk::prelude::*;
 use tracing::info;
 
 use crate::components::StyleSwitcher;
+use crate::components::ZoomControls;
 use crate::settings::Settings;
 
 #[derive(Debug, Default, gtk::CompositeTemplate, Properties)]
@@ -54,6 +55,7 @@ impl ObjectSubclass for HeaderBar {
 
     fn class_init(klass: &mut Self::Class) {
         StyleSwitcher::ensure_type();
+        ZoomControls::ensure_type();
         klass.bind_template();
         klass.bind_template_callbacks();
         klass.set_css_name("headerbar");

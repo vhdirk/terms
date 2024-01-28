@@ -4,6 +4,57 @@
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
 
+  <menu id="tab_menu">
+    <section>
+      <item>
+        <attribute name="id">move-tab-left</attribute>
+        <attribute name="label" translatable="yes">Move _Left</attribute>
+        <attribute name="action">win.move-tab-left</attribute>
+      </item>
+      <item>
+        <attribute name="id">move-tab-right</attribute>
+        <attribute name="label" translatable="yes">Move _Right</attribute>
+        <attribute name="action">win.move-tab-right</attribute>
+      </item>
+      <item>
+        <attribute name="id">detach-tab</attribute>
+        <attribute name="label" translatable="yes">Move to New _Window</attribute>
+        <attribute name="action">win.detach-tab</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Pin Tab</attribute>
+        <attribute name="action">win.pin-tab</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Un_pin Tab</attribute>
+        <attribute name="action">win.unpin-tab</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Rename Tab</attribute>
+        <attribute name="action">win.rename-tab</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="id">close-other-tabs</attribute>
+        <attribute name="label" translatable="yes">Close _Other Tabs</attribute>
+        <attribute name="action">win.close-other-tabs</attribute>
+      </item>
+      <item>
+        <attribute name="id">close-tab</attribute>
+        <attribute name="label" translatable="yes">_Close Tab</attribute>
+        <attribute name="action">win.close-tab</attribute>
+      </item>
+    </section>
+  </menu>
+
+
   <template class="TermsWindow" parent="AdwApplicationWindow">
     <property name="default-width">700</property>
     <property name="default-height">450</property>
@@ -21,6 +72,7 @@
                     <property name="autohide">true</property>
                     <property name="visible">true</property>
                     <property name="view">tab_view</property>
+
                     <style>
                       <class name="inline" />
                     </style>
@@ -31,6 +83,7 @@
             </child>
             <child>
               <object class="AdwTabView" id="tab_view">
+                <property name="menu-model">tab_menu</property>
 
               </object>
             </child>

@@ -11,11 +11,11 @@
         <attribute name="custom">style-switcher</attribute>
       </item>
     </section>
-    <!-- <section>
+    <section>
       <item>
-        <attribute name="custom">zoom</attribute>
+        <attribute name="custom">zoom-controls</attribute>
       </item>
-    </section> -->
+    </section>
     <section>
       <item>
         <attribute name="id">new-tab</attribute>
@@ -93,6 +93,9 @@
                         <property name="menu-model">main-menu</property>
                         <child type="style-switcher">
                           <object class="TermsStyleSwitcher" id="style_switcher"></object>
+                        </child>
+                        <child type="zoom-controls">
+                          <object class="TermsZoomControls" id="zoom_controls"></object>
                         </child>
                       </object>
                     </property>

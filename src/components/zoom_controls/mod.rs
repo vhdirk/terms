@@ -1,4 +1,23 @@
+mod zoom_controls;
+use std::path::PathBuf;
 
+use glib::closure_local;
+use gtk::prelude::*;
+use zoom_controls as imp;
+
+use crate::util::EnvMap;
+
+glib::wrapper! {
+        pub struct ZoomControls(ObjectSubclass<imp::ZoomControls>)
+                @extends gtk::Widget, adw::Bin,
+                @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
+}
+
+impl ZoomControls {
+    pub fn new() -> Self {
+        glib::Object::builder().build()
+    }
+}
 
 //  /* Add zoom controls */
 //   zoom_box = g_object_new (GTK_TYPE_BOX,

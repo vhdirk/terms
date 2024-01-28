@@ -5,7 +5,7 @@ use gtk::prelude::*;
 use gtk::{gio, glib};
 use std::cell::{Cell, RefCell};
 use std::path::PathBuf;
-use tracing::info;
+use tracing::*;
 
 use crate::components::PreferencesWindow;
 use crate::config::PROFILE;
@@ -46,8 +46,6 @@ pub struct Window {
 
     #[template_child]
     pub tab_bar: TemplateChild<adw::TabBar>,
-
-    title_handler: RefCell<Option<glib::SignalHandlerId>>,
 }
 
 #[glib::object_subclass]
@@ -59,6 +57,10 @@ impl ObjectSubclass for Window {
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
         klass.bind_template_callbacks();
+
+        // klass.install_action("tab.close-others", None, move |win: &super::Window, _, _| {
+        //     win.imp().close_other_tabs();
+        // });
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -147,23 +149,50 @@ impl Window {
     }
 
     fn setup_gactions(&self) {
-        let preferences_action = gio::ActionEntry::builder("edit-preferences")
-            .activate(clone!(@weak self as this => move |_win: &super::Window, _, _| {
-                this.open_preferences();
-            }))
-            .build();
-
-        let new_tab_action = gio::ActionEntry::builder("new-tab")
-            .activate(clone!(@weak self as this => move |_win: &super::Window, _, _| {
-                this.new_tab();
-            }))
-            .build();
-
-        let toggle_fullscreen_action = gio::ActionEntry::builder("toggle-fullscreen")
-            .activate(move |win: &super::Window, _, _| win.set_fullscreened(!win.is_fullscreened()))
-            .build();
-
-        self.obj().add_action_entries([preferences_action, new_tab_action, toggle_fullscreen_action]);
+        self.obj().add_action_entries([
+            gio::ActionEntry::builder("edit-preferences")
+                .activate(move |win: &super::Window, _, _| win.imp().open_preferences())
+                .build(),
+            gio::ActionEntry::builder("new-tab")
+                .activate(move |win: &super::Window, _, _| win.imp().new_tab())
+                .build(),
+            gio::ActionEntry::builder("toggle-fullscreen")
+                .activate(move |win: &super::Window, _, _| win.set_fullscreened(!win.is_fullscreened()))
+                .build(),
+            gio::ActionEntry::builder("zoom-out")
+                .activate(move |win: &super::Window, _, _| win.imp().zoom_out())
+                .build(),
+            gio::ActionEntry::builder("zoom-default")
+                .activate(move |win: &super::Window, _, _| win.imp().zoom_default())
+                .build(),
+            gio::ActionEntry::builder("zoom-in")
+                .activate(move |win: &super::Window, _, _| win.imp().zoom_in())
+                .build(),
+            gio::ActionEntry::builder("move-tab-left")
+                .activate(move |win: &super::Window, _, _| win.imp().move_tab_left())
+                .build(),
+            gio::ActionEntry::builder("move-tab-right")
+                .activate(move |win: &super::Window, _, _| win.imp().move_tab_right())
+                .build(),
+            gio::ActionEntry::builder("detach-tab")
+                .activate(move |win: &super::Window, _, _| win.imp().detach_tab())
+                .build(),
+            gio::ActionEntry::builder("pin-tab")
+                .activate(move |win: &super::Window, _, _| win.imp().pin_tab())
+                .build(),
+            gio::ActionEntry::builder("unpin-tab")
+                .activate(move |win: &super::Window, _, _| win.imp().unpin_tab())
+                .build(),
+            gio::ActionEntry::builder("rename-tab")
+                .activate(move |win: &super::Window, _, _| win.imp().rename_tab())
+                .build(),
+            gio::ActionEntry::builder("close-tab")
+                .activate(move |win: &super::Window, _, _| win.imp().close_tab())
+                .build(),
+            gio::ActionEntry::builder("close-other-tabs")
+                .activate(move |win: &super::Window, _, _| win.imp().close_other_tabs())
+                .build(),
+        ]);
     }
 
     pub fn open_preferences(&self) {
@@ -215,5 +244,64 @@ impl Window {
         } else {
             info!("page does not equal selected");
         }
+    }
+
+    fn zoom_out(&self) {
+        // TODO
+        warn!("Zoom out: not yet implemented");
+    }
+
+    fn zoom_default(&self) {
+        // TODO
+        warn!("Zoom default: not yet implemented");
+    }
+
+    fn zoom_in(&self) {
+        // TODO
+        warn!("Zoom in: not yet implemented");
+    }
+
+    fn move_tab_left(&self) {
+        if let Some(page) = self.tab_view.selected_page() {
+            self.tab_view.reorder_backward(&page);
+            self.tab_view.set_selected_page(&page);
+        }
+    }
+
+    fn move_tab_right(&self) {
+        if let Some(page) = self.tab_view.selected_page() {
+            self.tab_view.reorder_forward(&page);
+            self.tab_view.set_selected_page(&page);
+        }
+    }
+
+    fn detach_tab(&self) {
+        // TODO
+        warn!("detach tab: not yet implemented");
+    }
+
+    fn pin_tab(&self) {
+        // TODO
+        warn!("pin-tab: not yet implemented");
+    }
+
+    fn unpin_tab(&self) {
+        // TODO
+        warn!("unpin-tab: not yet implemented");
+    }
+
+    fn rename_tab(&self) {
+        // TODO
+        warn!("rename-tab: not yet implemented");
+    }
+
+    fn close_tab(&self) {
+        // TODO
+        warn!("Close tab: not yet implemented");
+    }
+
+    fn close_other_tabs(&self) {
+        // TODO
+        warn!("Close other tabs: not yet implemented");
     }
 }
