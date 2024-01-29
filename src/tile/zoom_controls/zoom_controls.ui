@@ -3,8 +3,8 @@
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
 
-  <template class="TermsZoomControls" parent="AdwBin">
-    <property name="name">terms_zoom_controls</property>
+  <template class="TileZoomControls" parent="AdwBin">
+    <property name="name">tile_zoom_controls</property>
 
     <child>
       <object class="GtkBox">
@@ -32,17 +32,10 @@
             <property name="action-name">win.zoom-default</property>
             <property name="tooltip-text" translatable="yes">Reset zoom</property>
             <property name="hexpand">true</property>
-            <property name="label">100%</property>
             <style>
               <class name="pill" />
               <class name="flat" />
             </style>
-            <!--
-              TODO: show current zoom level
-//   g_binding_group_bind (self->active_tab_bindings, "zoom-label", self->zoom_label, "label", 0);
--->
-<!--   gtk_popover_menu_add_child (GTK_POPOVER_MENU (popover), zoom_box, "zoom"); -->
-
           </object>
         </child>
         <child>

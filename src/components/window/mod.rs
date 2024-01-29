@@ -2,6 +2,7 @@ mod window;
 use std::path::PathBuf;
 
 use glib::subclass::prelude::*;
+use tracing::*;
 use window as imp;
 
 use crate::util::EnvMap;
@@ -15,12 +16,21 @@ glib::wrapper! {
 }
 
 impl Window {
-    pub fn new<P: glib::IsA<gtk::Application>>(application: &P, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) -> Self {
-        glib::Object::builder()
-            .property("application", application)
-            .property("command", command)
-            .property("directory", directory)
-            .property("env", env)
-            .build()
+    pub fn new<P: glib::IsA<gtk::Application>>(application: &P) -> Self {
+        glib::Object::builder().property("application", application).build()
+    }
+
+    pub fn new_tab(&self, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) {
+        self.imp().new_tab(command, directory, env);
+    }
+
+    pub fn transfer_tab(&self, view: &adw::TabView, page: &adw::TabPage, position: i32) {
+        let our_view = &*self.imp().tab_view;
+        debug!("Transferring tab page {:?} from {:?} to {:?}", page, view, our_view);
+        view.transfer_page(page, our_view, position);
+    }
+
+    pub fn tab_view(&self) -> Option<adw::TabView> {
+        self.imp().tab_view.try_get()
     }
 }

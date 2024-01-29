@@ -69,10 +69,10 @@
               <object class="TermsHeaderBar" id="header_bar">
                 <property name="tab_bar">
                   <object class="AdwTabBar" id="tab_bar">
+                    <property name="name">terms_tab_bar</property>
                     <property name="autohide">true</property>
                     <property name="visible">true</property>
                     <property name="view">tab_view</property>
-
                     <style>
                       <class name="inline" />
                     </style>
@@ -83,8 +83,13 @@
             </child>
             <child>
               <object class="AdwTabView" id="tab_view">
+                <signal name="notify::selected-page" handler="on_selected_page_changed" swapped="true" after="true"/>
+                <signal name="page-attached" handler="on_page_attached" swapped="true"/>
+                <signal name="page-detached" handler="on_page_detached" swapped="true"/>
+                <signal name="create-window" handler="on_create_window" swapped="true"/>
+                <signal name="close-page" handler="on_page_closed" swapped="true"/>
+                <signal name="setup-menu" handler="on_setup_menu" swapped="true"/>
                 <property name="menu-model">tab_menu</property>
-
               </object>
             </child>
           </object>

@@ -13,6 +13,7 @@ mod pcre2;
 mod services;
 mod settings;
 mod theme_provider;
+mod tile;
 mod util;
 
 fn init_gettext() {

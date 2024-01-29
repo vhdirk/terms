@@ -7,8 +7,8 @@ use gtk::prelude::*;
 use tracing::info;
 
 use crate::components::StyleSwitcher;
-use crate::components::ZoomControls;
 use crate::settings::Settings;
+use crate::tile::ZoomControls;
 
 #[derive(Debug, Default, gtk::CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/header_bar.ui")]
@@ -148,15 +148,16 @@ impl HeaderBar {
     fn set_integrated_tab_bar(&self) {
         let tab_bar = self.tab_bar.borrow();
 
-        tab_bar.unparent();
-
-        if self.settings.headerbar_integrated_tabbar() && tab_bar.view().map_or(false, |view| view.n_pages() > 1) {
-            self.header_bar.set_title_widget(Some(&*tab_bar));
+        if self.settings.headerbar_integrated_tabbar() {
+            if self.header_bar.title_widget() != Some(tab_bar.clone().into()) {
+                tab_bar.unparent();
+                self.header_bar.set_title_widget(Some(&*tab_bar));
+            }
             tab_bar.set_halign(gtk::Align::Fill);
             tab_bar.set_hexpand(true);
             tab_bar.set_autohide(false);
             tab_bar.set_can_focus(false);
-            tab_bar.set_css_classes(&["inline"]);
+            tab_bar.set_css_classes(&["inline", "integrated"]);
         } else {
             self.header_bar.set_title_widget(Some(&*self.title_widget));
             self.header_box.append(&*tab_bar);

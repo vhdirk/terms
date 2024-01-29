@@ -17,6 +17,11 @@ window:not(.about) headerbar,
   background-color: @window_bg_color;
 }
 
+#terms_tab_bar.integrated {
+  margin-top: -6px;
+  margin-bottom: -6px;
+}
+
 /* #terms_main_window.context-root .custom-headerbar {
   background-color: @root_context_color;
 }
@@ -28,7 +33,8 @@ window:not(.about) headerbar,
 /* .custom-headerbar windowhandle>box {
   padding-top: 0;
   padding-bottom: 0;
-}
+} */
+/*
 
 .custom-headerbar windowcontrols:not(.empty).start {
   margin-right: 6px;

@@ -14,7 +14,7 @@ use crate::util::EnvMap;
 
 use super::*;
 
-#[derive(Debug, Default, gtk::CompositeTemplate, Properties)]
+#[derive(Debug, gtk::CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/window.ui")]
 #[properties(wrapper_type=super::Window)]
 pub struct Window {
@@ -46,6 +46,29 @@ pub struct Window {
 
     #[template_child]
     pub tab_bar: TemplateChild<adw::TabBar>,
+
+    selected_page_signals: glib::SignalGroup,
+    active_tab_signals: glib::SignalGroup,
+    active_tab_bindings: glib::BindingGroup,
+}
+
+impl Default for Window {
+    fn default() -> Self {
+        Self {
+            settings: Default::default(),
+            directory: Default::default(),
+            command: Default::default(),
+            env: Default::default(),
+            header_bar: Default::default(),
+            overlay: Default::default(),
+            container: Default::default(),
+            tab_view: Default::default(),
+            tab_bar: Default::default(),
+            selected_page_signals: glib::SignalGroup::new::<adw::TabPage>(),
+            active_tab_signals: glib::SignalGroup::new::<TerminalTab>(),
+            active_tab_bindings: glib::BindingGroup::new(),
+        }
+    }
 }
 
 #[glib::object_subclass]
@@ -78,6 +101,7 @@ impl ObjectImpl for Window {
             obj.add_css_class("devel");
         }
 
+        self.setup_signals();
         self.setup_widgets();
         self.setup_gactions();
         self.connect_signals();
@@ -92,6 +116,30 @@ impl AdwApplicationWindowImpl for Window {}
 
 #[gtk::template_callbacks]
 impl Window {
+    fn setup_signals(&self) {
+        // self.selected_page_signals
+
+        self.selected_page_signals.connect_bind_local(move |sg, obj| {
+            info!("selected page: bind");
+        });
+
+        self.selected_page_signals.connect_notify_local(Some("pinned"), move |obj, param| {
+            info!("selected page: pinned");
+        });
+
+        self.active_tab_signals.connect_bind_local(move |sg, obj| {
+            info!("active tab: bind");
+        });
+
+        // self.active_tab_signals.connect_local(Some("bell"), move |sg, obj| {
+        //     info!("active tab: bind");
+        // });
+
+        self.active_tab_signals.connect_notify_local(Some("zoom"), move |sg, obj| {
+            info!("active tab: zoom");
+        });
+    }
+
     fn setup_widgets(&self) {
         self.header_bar.set_container(Some(&*self.container));
         self.header_bar.set_overlay(Some(&*self.overlay));
@@ -99,8 +147,6 @@ impl Window {
         if self.settings.remember_window_size() {
             self.restore_window_size();
         }
-
-        self.new_tab();
     }
 
     fn restore_window_size(&self) {
@@ -154,7 +200,14 @@ impl Window {
                 .activate(move |win: &super::Window, _, _| win.imp().open_preferences())
                 .build(),
             gio::ActionEntry::builder("new-tab")
-                .activate(move |win: &super::Window, _, _| win.imp().new_tab())
+                .activate(move |win: &super::Window, _, _| {
+                    let this = win.imp();
+                    let command = this.command.borrow().clone();
+                    let directory = this.directory.borrow().clone();
+                    let env = this.env.borrow().clone();
+
+                    this.new_tab(command, directory, env);
+                })
                 .build(),
             gio::ActionEntry::builder("toggle-fullscreen")
                 .activate(move |win: &super::Window, _, _| win.set_fullscreened(!win.is_fullscreened()))
@@ -200,11 +253,7 @@ impl Window {
         prefs_window.set_visible(true);
     }
 
-    pub fn new_tab(&self) {
-        let command = self.command.borrow().clone();
-        let directory = self.directory.borrow().clone();
-        let env = self.env.borrow().clone();
-
+    pub fn new_tab(&self, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) {
         let tab = TerminalTab::new(directory, command, env);
         let page = self.tab_view.append(&tab);
 
@@ -279,8 +328,16 @@ impl Window {
     }
 
     fn detach_tab(&self) {
-        // TODO
-        warn!("detach tab: not yet implemented");
+        if let Some(page) = self.tab_view.selected_page() {
+            info!("Detaching tab page {:?}", page);
+            if let Some(app) = self.obj().application() {
+                let window = super::Window::new(&app);
+                if let Some(new_tab_view) = window.tab_view() {
+                    self.tab_view.transfer_page(&page, &new_tab_view, 0);
+                }
+                window.present();
+            }
+        }
     }
 
     fn pin_tab(&self, pinned: bool) {
@@ -295,12 +352,48 @@ impl Window {
     }
 
     fn close_tab(&self) {
-        // TODO
-        warn!("Close tab: not yet implemented");
+        if let Some(page) = self.tab_view.selected_page() {
+            self.tab_view.close_page(&page);
+        }
     }
 
     fn close_other_tabs(&self) {
-        // TODO
-        warn!("Close other tabs: not yet implemented");
+        if let Some(page) = self.tab_view.selected_page() {
+            self.tab_view.close_other_pages(&page);
+        }
     }
+
+    #[template_callback]
+    fn on_selected_page_changed(&self) {
+        let page = self.tab_view.selected_page();
+        debug!("on page changed: {:?}", page);
+        self.selected_page_signals.set_target(page.as_ref());
+        if let Some(page) = page.as_ref() {
+            let tab = page.child().downcast::<TerminalTab>().ok();
+            self.active_tab_signals.set_target(tab.as_ref());
+            if let Some(tab) = tab.as_ref() {
+                tab.grab_focus();
+            }
+            self.active_tab_bindings.set_source(tab.as_ref());
+        }
+    }
+
+    #[template_callback]
+    fn on_page_attached(&self) {}
+    #[template_callback]
+    fn on_page_detached(&self) {}
+    #[template_callback]
+    fn on_create_window(&self) -> Option<adw::TabView> {
+        self.obj().application().and_then(|app| {
+            let window = super::Window::new(&app);
+            window.present();
+            window.tab_view()
+        })
+    }
+    #[template_callback]
+    fn on_page_closed(&self) -> bool {
+        false
+    }
+    #[template_callback]
+    fn on_setup_menu(&self) {}
 }

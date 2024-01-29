@@ -93,6 +93,9 @@ pub struct Terminal {
 
     #[property(get, set, construct, nullable)]
     title: RefCell<Option<String>>,
+
+    #[property(get, set, construct, nullable)]
+    icon: RefCell<Option<String>>,
 }
 
 impl Default for Terminal {
@@ -113,6 +116,8 @@ impl Default for Terminal {
             command: Default::default(),
             env: Default::default(),
             title: Default::default(),
+            icon: Default::default(),
+
             update_source: Default::default(),
         }
     }
@@ -297,7 +302,9 @@ impl Terminal {
                 if let (Some(match_str), _tag) = this.term.check_match_at(x, y) {
                     if event.modifier_state().contains(gdk::ModifierType::CONTROL_MASK) {
 
+
                         // TODO: get active window
+                        // TODO: launch through xdg portal on flatpak
                         glib::spawn_future_local(gtk::UriLauncher::new(&match_str).launch_future(None::<&gtk::Window>));
                     }
                 }
@@ -575,6 +582,11 @@ impl Terminal {
 
         *self.title.borrow_mut() = title;
         self.obj().notify_title();
+
+        // TODO: icon title. vte icon title is deprecated
+        // let icon = self.term.icon_title().map(|t| t.to_string());
+        // *self.icon.borrow_mut() = icon;
+        // self.obj().notify_icon();
     }
 
     fn enqueue_update(&self) {

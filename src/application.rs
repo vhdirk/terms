@@ -171,7 +171,9 @@ mod imp {
             let app = self.obj();
 
             info!("Window init args: {:?} {:?} {:?}", command, directory, env);
-            let window = Window::new(&*app, command, directory, env);
+
+            let window = Window::new(&*app);
+            window.new_tab(command, directory, env);
 
             info!("Add window");
             app.add_window(&window);

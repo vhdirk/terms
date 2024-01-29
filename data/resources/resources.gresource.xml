@@ -18,7 +18,6 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal_tab.ui">../../src/components/terminal_tab/terminal_tab.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="search_toolbar.ui">../../src/components/search_toolbar/search_toolbar.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="style_switcher.ui">../../src/components/style_switcher/style_switcher.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="zoom_controls.ui">../../src/components/zoom_controls/zoom_controls.ui</file>
   </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/svg">
     <file compressed="true" preprocess="xml-stripblanks" alias="theme-thumbnail.svg">svg/theme-thumbnail.svg</file>
@@ -30,5 +29,8 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="app-icon.svg" >../icons/io.github.vhdirk.Terms.svg</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-devel.svg">../icons/io.github.vhdirk.Terms.Devel.svg</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-symbolic.svg">../icons/io.github.vhdirk.Terms-symbolic.svg</file>
+  </gresource>
+  <gresource prefix="/io/github/vhdirk/Tile/gtk">
+    <file compressed="true" preprocess="xml-stripblanks" alias="zoom_controls.ui">../../src/tile/zoom_controls/zoom_controls.ui</file>
   </gresource>
 </gresources>

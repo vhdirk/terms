@@ -31,6 +31,9 @@ pub struct TerminalPanel {
 
     #[property(get, set, construct, nullable)]
     title: RefCell<Option<String>>,
+
+    #[property(get, set, construct, nullable)]
+    icon: RefCell<Option<String>>,
 }
 
 #[glib::object_subclass]
@@ -99,5 +102,3 @@ impl TerminalPanel {
 // // //       </object>
 // // //     </child>
 // // //   </template>
-
-// //         },
