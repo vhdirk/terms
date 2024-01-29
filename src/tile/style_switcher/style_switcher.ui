@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This icon is work derived from BlackBox
+  https://gitlab.gnome.org/raggesilver/blackbox/-/blob/3264dba83b0d9a6aad28694fa8b1cc139b69d523/src/widgets/StyleSwitcher.vala
+
+  Copyright 2022 Paulo Queiroz
+  BlackBox is licensed GNU GPLv3
+ -->
 <interface>
   <requires lib="gtk" version="4.0" />
   <template class="TileStyleSwitcher" parent="GtkWidget">

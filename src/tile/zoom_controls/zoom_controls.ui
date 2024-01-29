@@ -1,4 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
+<!--
+  This file is work derived from Prompt
+  https://gitlab.gnome.org/chergert/prompt/-/blob/c279d3dbe78a126d4de732b3383aa3e8be3bafdb/src/prompt-window.c
+
+  Copyright 2023 Christian Hergert<chergert@redhat.com>
+  Prompt is licensed GNU GPLv3
+-->
 <interface>
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />

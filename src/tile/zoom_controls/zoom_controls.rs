@@ -1,14 +1,15 @@
-use adw::prelude::BinExt;
+/// This file is work derived from Prompt
+/// https://gitlab.gnome.org/chergert/prompt/-/blob/c279d3dbe78a126d4de732b3383aa3e8be3bafdb/src/prompt-window.c
+///
+/// Copyright 2023 Christian Hergert <chergert@redhat.com>
+/// Prompt is licensed GNU GPLv3
 use adw::subclass::prelude::*;
-use glib::{prelude::*, subclass::Signal};
-use glib::{ObjectExt, Properties};
-use gtk::glib;
+use glib::subclass::Signal;
+use glib::{self, ObjectExt, Properties};
 use gtk::prelude::*;
 use gtk::CompositeTemplate;
 use once_cell::sync::Lazy;
-use std::cell::{Cell, RefCell};
-use std::path::PathBuf;
-use tracing::info;
+use std::cell::Cell;
 
 #[derive(Debug, Default, CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Tile/gtk/zoom_controls.ui")]
