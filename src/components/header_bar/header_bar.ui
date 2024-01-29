@@ -118,10 +118,11 @@
                       <object class="GtkPopoverMenu">
                         <property name="menu-model">main-menu</property>
                         <child type="style-switcher">
-                          <object class="TermsStyleSwitcher" id="style_switcher"></object>
+                          <object class="TileStyleSwitcher" id="style_switcher"></object>
                         </child>
                         <child type="zoom-controls">
                           <object class="TileZoomControls" id="zoom_controls">
+                            <property name="value" bind-source="TermsHeaderBar" bind-property="zoom" bind-flags="sync-create" />
                           </object>
                         </child>
                       </object>

@@ -3,11 +3,11 @@ use std::cell::{Cell, RefCell};
 use adw::subclass::prelude::*;
 use glib::clone;
 use glib::{self, Properties, StaticTypeExt};
-use gtk::prelude::*;
+use gtk::{prelude::*, template_callbacks};
 use tracing::info;
 
-use crate::components::StyleSwitcher;
-use crate::settings::Settings;
+use crate::settings::{Settings, StylePreference};
+use crate::tile::StyleSwitcher;
 use crate::tile::ZoomControls;
 
 #[derive(Debug, Default, gtk::CompositeTemplate, Properties)]
@@ -34,11 +34,17 @@ pub struct HeaderBar {
     #[template_child]
     pub menu_button: TemplateChild<gtk::MenuButton>,
 
+    #[template_child]
+    pub style_switcher: TemplateChild<StyleSwitcher>,
+
     #[property(get, set, nullable)]
     pub title: RefCell<Option<String>>,
 
     #[property(get, set)]
     pub fullscreened: Cell<bool>,
+
+    #[property(get, set, construct, default = 100)]
+    pub zoom: Cell<u32>,
 
     #[property(get, set, nullable)]
     pub overlay: RefCell<Option<gtk::Overlay>>,
@@ -88,6 +94,8 @@ impl HeaderBar {
             .invert_boolean()
             .sync_create()
             .build();
+
+        self.settings.bind_style_preference(&*self.style_switcher, "preference").build();
 
         self.settings.bind_show_headerbar(&*self.revealer, "reveal-child").get_only().build();
 

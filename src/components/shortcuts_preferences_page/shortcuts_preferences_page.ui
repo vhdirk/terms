@@ -255,19 +255,19 @@
         <child>
           <object class="TermsShortcutRow" id="zoom_in">
             <property name="title" translatable="yes">Zoom In</property>
-            <property name="action">win.zoom-in</property>
+            <property name="action">zoom.in</property>
           </object>
         </child>
         <child>
           <object class="TermsShortcutRow" id="zoom_out">
             <property name="title" translatable="yes">Zoom Out</property>
-            <property name="action">win.zoom-out</property>
+            <property name="action">zoom.out</property>
           </object>
         </child>
         <child>
           <object class="TermsShortcutRow" id="zoom_default">
             <property name="title" translatable="yes">Reset Zoom</property>
-            <property name="action">win.zoom-default</property>
+            <property name="action">zoom.reset</property>
           </object>
         </child>
       </object>

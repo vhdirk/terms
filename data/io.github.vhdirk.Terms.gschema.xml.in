@@ -295,17 +295,17 @@
       <default>['&lt;Shift&gt;&lt;Control&gt;question']</default>
       <summary>WinShowHelpOverlay</summary>
     </key>
-    <key name="win-zoom-in" type="as">
+    <key name="zoom-in" type="as">
       <default>['&lt;Control&gt;plus']</default>
       <summary>Zoom In</summary>
       <description>The shortcut to zoom in</description>
     </key>
-    <key name="win-zoom-out" type="as">
+    <key name="zoom-out" type="as">
       <default>['&lt;Control&gt;minus']</default>
       <summary>Zoom Out</summary>
       <description>The shortcut to zoom out</description>
     </key>
-    <key name="win-zoom-default" type="as">
+    <key name="zoom-reset" type="as">
       <default>['&lt;ctrl&gt;0', '&lt;Shift&gt;&lt;Control&gt;parenright']</default>
       <summary>Reset Zoom</summary>
       <description>The shortcut to reset zoom</description>

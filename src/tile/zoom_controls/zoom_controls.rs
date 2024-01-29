@@ -66,18 +66,18 @@ impl ZoomControls {
         self.zoom_label.set_label(&format!("{}%", value));
     }
 
-    // #[template_callback]
-    // fn on_zoom_out_clicked(&self) {
-    //     self.obj().emit_by_name::<()>("zoom-out", &[]);
-    // }
+    #[template_callback]
+    fn on_zoom_out_clicked(&self) {
+        self.obj().emit_by_name::<()>("zoom-out", &[]);
+    }
 
-    // #[template_callback]
-    // fn on_zoom_label_clicked(&self) {
-    //     self.obj().emit_by_name::<()>("zoom-reset", &[]);
-    // }
+    #[template_callback]
+    fn on_zoom_label_clicked(&self) {
+        self.obj().emit_by_name::<()>("zoom-reset", &[]);
+    }
 
-    // #[template_callback]
-    // fn on_zoom_in_clicked(&self) {
-    //     self.obj().emit_by_name::<()>("zoom-in", &[]);
-    // }
+    #[template_callback]
+    fn on_zoom_in_clicked(&self) {
+        self.obj().emit_by_name::<()>("zoom-in", &[]);
+    }
 }

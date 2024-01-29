@@ -70,19 +70,19 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Zoom in</property>
-                <property name="action-name">win.zoom-in</property>
+                <property name="action-name">zoom.in</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Zoom out</property>
-                <property name="action-name">win.zoom-out</property>
+                <property name="action-name">zoom.out</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Reset zoom</property>
-                <property name="action-name">win.zoom-default</property>
+                <property name="action-name">zoom.reset</property>
               </object>
             </child>
           </object>

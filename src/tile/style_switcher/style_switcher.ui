@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0" />
-  <template class="TermsStyleSwitcher" parent="GtkWidget">
-    <property name="name">terms_style_switcher</property>
+  <template class="TileStyleSwitcher" parent="GtkWidget">
+    <property name="name">tile_style_switcher</property>
 
     <child>
       <object class="GtkBox" id="box">
@@ -82,8 +82,7 @@
             </child>
             <child type="overlay">
               <object class="GtkImage">
-                <property name="visible" bind-source="dark_selector" bind-property="active"
-                  bind-flags="sync-create" />
+                <property name="visible" bind-source="dark_selector" bind-property="active" bind-flags="sync-create" />
                 <property name="icon-name">checkmark-small-symbolic</property>
                 <property name="pixel-size">13</property>
                 <property name="halign">end</property>

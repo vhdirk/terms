@@ -81,9 +81,15 @@ impl ObjectSubclass for Window {
         klass.bind_template();
         klass.bind_template_callbacks();
 
-        // klass.install_action("tab.close-others", None, move |win: &super::Window, _, _| {
-        //     win.imp().close_other_tabs();
-        // });
+        klass.install_action("zoom.out", None, move |win: &super::Window, _, _| {
+            win.imp().zoom_out();
+        });
+        klass.install_action("zoom.reset", None, move |win: &super::Window, _, _| {
+            win.imp().zoom_reset();
+        });
+        klass.install_action("zoom.in", None, move |win: &super::Window, _, _| {
+            win.imp().zoom_in();
+        });
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -212,15 +218,6 @@ impl Window {
             gio::ActionEntry::builder("toggle-fullscreen")
                 .activate(move |win: &super::Window, _, _| win.set_fullscreened(!win.is_fullscreened()))
                 .build(),
-            gio::ActionEntry::builder("zoom-out")
-                .activate(move |win: &super::Window, _, _| win.imp().zoom_out())
-                .build(),
-            gio::ActionEntry::builder("zoom-default")
-                .activate(move |win: &super::Window, _, _| win.imp().zoom_default())
-                .build(),
-            gio::ActionEntry::builder("zoom-in")
-                .activate(move |win: &super::Window, _, _| win.imp().zoom_in())
-                .build(),
             gio::ActionEntry::builder("move-tab-left")
                 .activate(move |win: &super::Window, _, _| win.imp().move_tab_left())
                 .build(),
@@ -305,7 +302,7 @@ impl Window {
         warn!("Zoom out: not yet implemented");
     }
 
-    fn zoom_default(&self) {
+    fn zoom_reset(&self) {
         // TODO
         warn!("Zoom default: not yet implemented");
     }
