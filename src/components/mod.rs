@@ -1,4 +1,3 @@
-mod header_bar;
 mod preferences_window;
 mod process_manager;
 mod search_toolbar;
@@ -12,7 +11,6 @@ mod terminal_tab;
 mod theme_thumbnail;
 mod window;
 
-pub use header_bar::*;
 pub use preferences_window::*;
 pub use process_manager::*;
 pub use search_toolbar::*;

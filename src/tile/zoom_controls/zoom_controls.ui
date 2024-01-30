@@ -9,10 +9,8 @@
 <interface>
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
-
   <template class="TileZoomControls" parent="AdwBin">
     <property name="name">tile_zoom_controls</property>
-
     <child>
       <object class="GtkBox">
         <property name="orientation">horizontal</property>

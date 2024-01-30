@@ -10,6 +10,7 @@ use tracing::*;
 use crate::components::PreferencesWindow;
 use crate::config::PROFILE;
 use crate::settings::Settings;
+use crate::tile::{StyleSwitcher, ZoomControls};
 use crate::util::EnvMap;
 
 use super::*;
@@ -33,19 +34,34 @@ pub struct Window {
     env: RefCell<Option<EnvMap>>,
 
     #[template_child]
-    pub header_bar: TemplateChild<HeaderBar>,
+    pub title_widget: TemplateChild<adw::WindowTitle>,
 
     #[template_child]
-    pub overlay: TemplateChild<gtk::Overlay>,
+    pub header_bar: TemplateChild<adw::HeaderBar>,
 
     #[template_child]
-    pub container: TemplateChild<gtk::Box>,
+    pub header_box: TemplateChild<gtk::Box>,
+
+    #[template_child]
+    pub menu_button: TemplateChild<gtk::MenuButton>,
+
+    #[template_child]
+    pub style_switcher: TemplateChild<StyleSwitcher>,
+
+    #[property(get, set, construct, default = 100)]
+    pub zoom: Cell<u32>,
+
+    #[template_child]
+    pub toasts: TemplateChild<adw::ToastOverlay>,
 
     #[template_child]
     pub tab_view: TemplateChild<adw::TabView>,
 
     #[template_child]
     pub tab_bar: TemplateChild<adw::TabBar>,
+
+    #[template_child]
+    pub toolbar_view: TemplateChild<adw::ToolbarView>,
 
     selected_page_signals: glib::SignalGroup,
     active_tab_signals: glib::SignalGroup,
@@ -60,10 +76,16 @@ impl Default for Window {
             command: Default::default(),
             env: Default::default(),
             header_bar: Default::default(),
-            overlay: Default::default(),
-            container: Default::default(),
+            toasts: Default::default(),
             tab_view: Default::default(),
             tab_bar: Default::default(),
+            header_box: Default::default(),
+            title_widget: Default::default(),
+            menu_button: Default::default(),
+            style_switcher: Default::default(),
+            zoom: Default::default(),
+            toolbar_view: Default::default(),
+
             selected_page_signals: glib::SignalGroup::new::<adw::TabPage>(),
             active_tab_signals: glib::SignalGroup::new::<TerminalTab>(),
             active_tab_bindings: glib::BindingGroup::new(),
@@ -78,6 +100,8 @@ impl ObjectSubclass for Window {
     type ParentType = adw::ApplicationWindow;
 
     fn class_init(klass: &mut Self::Class) {
+        StyleSwitcher::ensure_type();
+        ZoomControls::ensure_type();
         klass.bind_template();
         klass.bind_template_callbacks();
 
@@ -133,6 +157,16 @@ impl Window {
             info!("selected page: pinned");
         });
 
+        self.selected_page_signals.connect_notify_local(
+            Some("title"),
+            clone!(@weak self as this =>move |obj, param| {
+                info!("selected page: title");
+                if let Some(page) = obj.downcast_ref::<TabPage>() {
+                    this.obj().set_title(Some(&page.title()))
+                }
+            }),
+        );
+
         self.active_tab_signals.connect_bind_local(move |sg, obj| {
             info!("active tab: bind");
         });
@@ -141,15 +175,63 @@ impl Window {
         //     info!("active tab: bind");
         // });
 
-        self.active_tab_signals.connect_notify_local(Some("zoom"), move |sg, obj| {
+        self.active_tab_signals.connect_notify_local(Some("zoom"), move |obj, param| {
             info!("active tab: zoom");
         });
+
+        self.active_tab_signals.connect_notify_local(
+            Some("directory"),
+            clone!(@weak self as this => move |obj, param| {
+                info!("active tab: directory");
+                if let Some(tab) = obj.downcast_ref::<TerminalTab>() {
+                    this.directory.set(tab.directory());
+                    this.obj().notify_directory();
+                }
+            }),
+        );
+
+        self.settings.bind_show_menu_button(&*self.menu_button, "visible").get_only().build();
+
+        self.obj()
+            .bind_property("fullscreened", &*self.header_bar, "show-end-title-buttons")
+            .invert_boolean()
+            .sync_create()
+            .build();
+
+        self.settings.bind_style_preference(&*self.style_switcher, "preference").build();
+
+        self.settings
+            .bind_show_headerbar(&*self.toolbar_view, "extend-content-to-top-edge")
+            .get_only()
+            .invert_boolean()
+            .build();
+        self.settings.bind_show_headerbar(&*self.toolbar_view, "reveal-top-bars").get_only().build();
+
+        self.obj().connect_root_notify(clone!(@weak self as this => move |obj| {
+            if let Some(window) = obj.root().and_then(|root| root.clone().downcast::<gtk::Window>().ok()) {
+                window.bind_property("title", obj, "title").sync_create().build();
+            }
+        }));
+
+        self.set_integrated_tab_bar();
+
+        self.settings
+            .connect_headerbar_integrated_tabbar_changed(clone!(@weak self as this => move |_| {
+                this.set_integrated_tab_bar();
+            }));
+
+        self.tab_bar.connect_view_notify(clone!(@weak self as this => move |tabbar| {
+            this.set_integrated_tab_bar();
+            if let Some(tab_view) = tabbar.view() {
+                info!("tab view: {:?}", tab_view);
+                tab_view.connect_n_pages_notify( move |_| {
+                    this.set_integrated_tab_bar();
+                });
+            }
+        }));
     }
 
     fn setup_widgets(&self) {
-        self.header_bar.set_container(Some(&*self.container));
-        self.header_bar.set_overlay(Some(&*self.overlay));
-
         if self.settings.remember_window_size() {
             self.restore_window_size();
         }
@@ -180,9 +262,9 @@ impl Window {
             this.settings.set_was_maximized(w.is_maximized());
         }));
 
-        self.obj().connect_fullscreened_notify(clone!(@weak self as this => move |w| {
-            this.header_bar.set_fullscreened(w.is_fullscreened());
-        }));
+        // self.obj().connect_fullscreened_notify(clone!(@weak self as this => move |w| {
+        //     this.header_bar.set_fullscreened(w.is_fullscreened());
+        // }));
 
         self.tab_view
             .connect_close_page(clone!(@weak self as this => @default-return false, move |tv, _| {
@@ -194,9 +276,8 @@ impl Window {
 
         self.tab_view.connect_selected_page_notify(clone!(@weak self as this => move |tab_view| {
             if let Some(page) = tab_view.selected_page() {
-                this.update_title(&page);
+                this.obj().set_title(Some(&page.title()))
             }
-
         }));
     }
 
@@ -267,29 +348,7 @@ impl Window {
             if let Some(title) = title {
                 tab_page.set_title(title);
             }
-            this.update_title(&tab_page);
         }));
-
-        let tab_page = page.clone();
-        tab.connect_directory_notify(clone!(@weak self as this, @weak tab_page => move |t| {
-            if this.tab_view.selected_page() == Some(tab_page) {
-                this.update_directory(t.directory());
-            }
-        }));
-    }
-
-    fn update_directory(&self, directory: Option<PathBuf>) {
-        *self.directory.borrow_mut() = directory;
-        self.obj().notify_directory();
-    }
-
-    fn update_title(&self, page: &TabPage) {
-        if self.tab_view.selected_page().as_ref() == Some(page) {
-            info!("set window title {:?}", page.title());
-            self.obj().set_title(Some(&page.title()))
-        } else {
-            info!("page does not equal selected");
-        }
     }
 
     fn zoom_out(&self) {
@@ -379,6 +438,7 @@ impl Window {
     fn on_page_attached(&self) {}
     #[template_callback]
     fn on_page_detached(&self) {}
+
     #[template_callback]
     fn on_create_window(&self) -> Option<adw::TabView> {
         self.obj().application().and_then(|app| {
@@ -393,4 +453,33 @@ impl Window {
     }
     #[template_callback]
     fn on_setup_menu(&self) {}
+
+    #[template_callback]
+    fn on_tab_overview_open(&self) {}
+
+    #[template_callback]
+    fn on_create_tab(&self) {}
+
+    fn set_integrated_tab_bar(&self) {
+        if self.settings.headerbar_integrated_tabbar() {
+            if self.header_bar.title_widget() != Some(self.tab_bar.clone().into()) {
+                self.tab_bar.unparent();
+                self.header_bar.set_title_widget(Some(&*self.tab_bar));
+            }
+            self.tab_bar.set_halign(gtk::Align::Fill);
+            self.tab_bar.set_hexpand(true);
+            self.tab_bar.set_autohide(false);
+            self.tab_bar.set_can_focus(false);
+            self.tab_bar.set_css_classes(&["inline", "integrated"]);
+        } else {
+            self.header_bar.set_title_widget(Some(&*self.title_widget));
+            self.header_box.append(&*self.tab_bar);
+
+            self.tab_bar.set_halign(gtk::Align::Fill);
+            self.tab_bar.set_hexpand(true);
+            self.tab_bar.set_autohide(true);
+            self.tab_bar.set_can_focus(false);
+            self.tab_bar.set_css_classes(&[]);
+        }
+    }
 }
