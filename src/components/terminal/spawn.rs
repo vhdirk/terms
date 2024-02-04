@@ -17,7 +17,7 @@ use ashpd::flatpak;
 use async_std::{io::ReadExt, stream::StreamExt};
 use async_trait::async_trait;
 use gio::GioFutureResult;
-use glib::{clone, ObjectExt};
+use glib::{clone, prelude::*};
 use libc::FD_CLOEXEC;
 use std::future::Future;
 use terms_util::{libc_util, toolbox};

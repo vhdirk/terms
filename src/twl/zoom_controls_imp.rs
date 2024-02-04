@@ -5,7 +5,7 @@
 /// Prompt is licensed GNU GPLv3
 use adw::subclass::prelude::*;
 use glib::subclass::Signal;
-use glib::{self, ObjectExt, Properties};
+use glib::{self, Properties};
 use gtk::prelude::*;
 use gtk::CompositeTemplate;
 use once_cell::sync::Lazy;

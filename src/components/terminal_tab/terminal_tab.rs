@@ -1,7 +1,7 @@
-use adw::prelude::BinExt;
+use adw::prelude::*;
 use adw::subclass::prelude::*;
+use glib::Properties;
 use glib::{clone, subclass::Signal};
-use glib::{ObjectExt, Properties};
 use gtk::glib;
 use gtk::CompositeTemplate;
 use once_cell::sync::Lazy;

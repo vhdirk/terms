@@ -1,6 +1,6 @@
 mod preferences_window;
 
-use glib::IsA;
+use glib::prelude::*;
 use preferences_window as imp;
 
 glib::wrapper! {

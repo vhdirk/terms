@@ -1,5 +1,5 @@
 mod shortcut_dialog;
-use glib::{closure_local, subclass::prelude::*, IsA, ObjectExt};
+use glib::{closure_local, prelude::*, subclass::prelude::*};
 use shortcut_dialog as imp;
 
 glib::wrapper! {

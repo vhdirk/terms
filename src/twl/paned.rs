@@ -1,7 +1,6 @@
-mod paned;
-use paned as imp;
+use super::paned_imp as imp;
 
-use glib::{closure_local, ObjectExt};
+// A variant of gtk::Paned that supports an arbitrary number of widgets
 
 glib::wrapper! {
         pub struct Paned(ObjectSubclass<imp::Paned>)

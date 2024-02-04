@@ -1,11 +1,8 @@
-mod zoom_controls;
 use std::path::PathBuf;
 
+use super::zoom_controls_imp as imp;
 use glib::closure_local;
 use gtk::prelude::*;
-use zoom_controls as imp;
-
-use crate::util::EnvMap;
 
 glib::wrapper! {
         pub struct ZoomControls(ObjectSubclass<imp::ZoomControls>)

@@ -1,9 +1,8 @@
 use crate::components::Terminal;
 use crate::util::EnvMap;
 use adw::subclass::prelude::*;
-use glib::ObjectExt;
 use glib::Properties;
-use gtk::glib;
+use glib::{self, prelude::*};
 use gtk::CompositeTemplate;
 use tracing::*;
 

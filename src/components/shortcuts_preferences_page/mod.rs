@@ -1,5 +1,5 @@
 mod shortcuts_preferences_page;
-use glib::IsA;
+use glib::prelude::*;
 use shortcuts_preferences_page as imp;
 
 glib::wrapper! {

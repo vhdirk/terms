@@ -1,6 +1,6 @@
 use std::{collections::HashMap, ops::Deref, path::PathBuf};
 
-use glib::{subclass::types::ObjectSubclassIsExt, ObjectExt};
+use glib::{prelude::*, subclass::types::ObjectSubclassIsExt};
 use once_cell::sync::Lazy;
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
 use tracing::*;

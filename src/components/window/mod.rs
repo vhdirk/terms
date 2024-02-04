@@ -1,7 +1,7 @@
 mod window;
 use std::path::PathBuf;
 
-use glib::subclass::prelude::*;
+use glib::{prelude::*, subclass::prelude::*};
 use tracing::*;
 use window as imp;
 
@@ -14,7 +14,7 @@ glib::wrapper! {
 }
 
 impl Window {
-    pub fn new<P: glib::IsA<gtk::Application>>(application: &P) -> Self {
+    pub fn new<P: IsA<gtk::Application>>(application: &P) -> Self {
         glib::Object::builder().property("application", application).build()
     }
 

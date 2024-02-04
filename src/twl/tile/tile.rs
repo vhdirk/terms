@@ -45,7 +45,7 @@ pub struct Tile {
 
 #[glib::object_subclass]
 impl ObjectSubclass for Tile {
-    const NAME: &'static str = "TileTile";
+    const NAME: &'static str = "TwlTile";
     type Type = super::Tile;
     type ParentType = gtk::Widget;
 }

@@ -1,7 +1,7 @@
 mod terminal_panel;
 use std::path::PathBuf;
 
-use glib::{closure_local, ObjectExt};
+use glib::{closure_local, prelude::*};
 use terminal_panel as imp;
 
 use crate::util::EnvMap;

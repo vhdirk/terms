@@ -1,5 +1,5 @@
 mod terminal_preferences_page;
-use glib::IsA;
+use glib::prelude::*;
 use terminal_preferences_page as imp;
 
 glib::wrapper! {

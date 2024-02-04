@@ -16,14 +16,13 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ///
 use elementtree::Element;
-use glib::subclass::prelude::*;
-use glib::{Cast, IsA};
+use glib::{prelude::*, subclass::prelude::*};
 use gtk::graphene;
+use gtk::prelude::*;
 use once_cell::sync::Lazy;
 use rand::Rng;
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
 use tracing::*;
-use vte::{FileExt, SnapshotExt};
 
 use gdk::subclass::prelude::*;
 use glib::subclass::prelude::*;

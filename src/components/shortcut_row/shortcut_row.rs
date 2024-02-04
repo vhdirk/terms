@@ -2,7 +2,6 @@ use crate::i18n::{gettext, gettext_f};
 use crate::settings::ShortcutSettings;
 use adw::prelude::PreferencesRowExt;
 use adw::subclass::prelude::*;
-use glib::ObjectExt;
 use glib::Properties;
 use gtk::glib;
 use gtk::prelude::*;

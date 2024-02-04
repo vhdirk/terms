@@ -32,23 +32,35 @@ impl ObjectSubclass for ShortcutsPreferencesPage {
         klass.bind_template();
         klass.bind_template_callbacks();
 
-        klass.install_action(ACTION_ADD_SHORTCUT, Some("(ss)"), |page: &super::ShortcutsPreferencesPage, _, payload| {
-            if let Some((title, action_name)) = payload.and_then(|v| v.get::<(String, String)>()) {
-                page.imp().add_shortcut(&title, &action_name);
-            }
-        });
+        klass.install_action(
+            ACTION_ADD_SHORTCUT,
+            Some(&<(String, String)>::static_variant_type()),
+            |page: &super::ShortcutsPreferencesPage, _, payload| {
+                if let Some((title, action_name)) = payload.and_then(|v| v.get::<(String, String)>()) {
+                    page.imp().add_shortcut(&title, &action_name);
+                }
+            },
+        );
 
-        klass.install_action(ACTION_REMOVE_SHORTCUT, Some("s"), |page: &super::ShortcutsPreferencesPage, _, payload| {
-            if let Some(shortcut) = payload.and_then(|v| v.get::<String>()) {
-                page.imp().remove_shortcut(&shortcut);
-            }
-        });
+        klass.install_action(
+            ACTION_REMOVE_SHORTCUT,
+            Some(&String::static_variant_type()),
+            |page: &super::ShortcutsPreferencesPage, _, payload| {
+                if let Some(shortcut) = payload.and_then(|v| v.get::<String>()) {
+                    page.imp().remove_shortcut(&shortcut);
+                }
+            },
+        );
 
-        klass.install_action(ACTION_RESET_SHORTCUTS, Some("s"), |page: &super::ShortcutsPreferencesPage, _, payload| {
-            if let Some(action_name) = payload.and_then(|v| v.get::<String>()) {
-                page.imp().reset_shortcuts(&action_name);
-            }
-        });
+        klass.install_action(
+            ACTION_RESET_SHORTCUTS,
+            Some(&String::static_variant_type()),
+            |page: &super::ShortcutsPreferencesPage, _, payload| {
+                if let Some(action_name) = payload.and_then(|v| v.get::<String>()) {
+                    page.imp().reset_shortcuts(&action_name);
+                }
+            },
+        );
 
         klass.install_action(ACTION_RESET_ALL_SHORTCUTS, None, |page: &super::ShortcutsPreferencesPage, _, payload| {
             page.imp().reset_all_shortcuts();

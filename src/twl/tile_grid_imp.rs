@@ -20,7 +20,7 @@ pub struct TileGrid {
 
 #[glib::object_subclass]
 impl ObjectSubclass for TileGrid {
-    const NAME: &'static str = "TileTileGrid";
+    const NAME: &'static str = "TwlTileGrid";
     type Type = super::TileGrid;
     type ParentType = gtk::Widget;
 }
@@ -41,7 +41,7 @@ impl TileGrid {
         self.bin.set_parent(&*self.obj());
     }
 
-    pub fn add(&self, child: &impl glib::IsA<gtk::Widget>, orientation: gtk::Orientation) -> Tile {
+    pub fn add(&self, child: &impl IsA<gtk::Widget>, orientation: gtk::Orientation) -> Tile {
         let tile = Tile::new(child);
 
         if self.tiles.borrow().is_empty() {

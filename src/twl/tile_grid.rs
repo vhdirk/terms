@@ -1,7 +1,6 @@
-mod tile_grid;
-use tile_grid as imp;
+use super::tile_grid_imp as imp;
 
-use glib::{closure_local, ObjectExt};
+use glib::{closure_local, prelude::*};
 use gtk::subclass::prelude::*;
 
 use super::Tile;
@@ -17,7 +16,7 @@ impl TileGrid {
         glib::Object::builder().build()
     }
 
-    pub fn add(&self, child: &impl glib::IsA<gtk::Widget>, orientation: gtk::Orientation) -> Tile {
+    pub fn add(&self, child: &impl IsA<gtk::Widget>, orientation: gtk::Orientation) -> Tile {
         self.imp().add(child, orientation)
     }
 

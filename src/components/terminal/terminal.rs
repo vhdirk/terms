@@ -6,7 +6,6 @@ use adw::subclass::prelude::*;
 use gio::prelude::*;
 use glib::translate::FromGlib;
 use glib::translate::IntoGlib;
-use glib::ObjectExt;
 use glib::Properties;
 use gtk::glib;
 use gtk::graphene;
@@ -14,9 +13,10 @@ use gtk::CompositeTemplate;
 use gtk::Settings as SystemSettings;
 use tracing::*;
 use vte::prelude::*;
+use vte::TerminalExtManual;
 use vte::{CursorBlinkMode, CursorShape};
 
-use glib::{clone, subclass::Signal, JoinHandle, StaticType, Value};
+use glib::{clone, subclass::Signal, JoinHandle, Value};
 use once_cell::sync::Lazy;
 
 use crate::components::search_toolbar::SearchToolbar;
@@ -42,10 +42,9 @@ static TERMS_ENV: Lazy<HashMap<String, String>> = Lazy::new(|| {
         ("TERM_PROGRAM".to_string(), APP_NAME.to_string()),
         (
             "VTE_VERSION".to_string(),
-            format!(
-                "{}",
-                vte::ffi::VTE_MAJOR_VERSION * 10000 + vte::ffi::VTE_MINOR_VERSION * 100 + vte::ffi::VTE_MICRO_VERSION
-            ),
+            format!("{}", unsafe {
+                vte::ffi::vte_get_major_version() * 10000 + vte::ffi::vte_get_minor_version() * 100 + vte::ffi::vte_get_micro_version()
+            }),
         ),
     ]);
 

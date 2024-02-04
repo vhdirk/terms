@@ -3,7 +3,7 @@ mod spawn;
 mod terminal;
 use std::{collections::HashMap, path::PathBuf};
 
-use glib::{closure_local, ObjectExt};
+use glib::{closure_local, prelude::*};
 use terminal as imp;
 
 use crate::util::EnvMap;

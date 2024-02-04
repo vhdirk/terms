@@ -1,7 +1,7 @@
 use crate::{config::APP_ID, error::TermsError};
 use gettextrs::gettext;
 use gio::prelude::{SettingsExt, SettingsExtManual};
-use glib::{BoolError, IsA, PropertyGet};
+use glib::prelude::*;
 use gsettings_macro::gen_settings;
 use gtk::Settings as SystemSettings;
 use std::{
