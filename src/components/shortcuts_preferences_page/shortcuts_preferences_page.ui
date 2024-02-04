@@ -11,13 +11,13 @@
         <child>
           <object class="TermsShortcutRow" id="copy_clipboard">
             <property name="title" translatable="yes">Copy to Clipboard</property>
-            <property name="action">win.copy</property>
+            <property name="action">clipboard.copy</property>
           </object>
         </child>
         <child>
           <object class="TermsShortcutRow" id="paste_clipboard">
             <property name="title" translatable="yes">Paste from Clipboard</property>
-            <property name="action">win.paste</property>
+            <property name="action">clipboard.paste</property>
           </object>
         </child>
       </object>
@@ -27,13 +27,13 @@
         <child>
           <object class="TermsShortcutRow" id="select_all">
             <property name="title" translatable="yes">Select All</property>
-            <property name="action">win.select-all</property>
+            <property name="action">selection.select-all</property>
           </object>
         </child>
         <child>
           <object class="TermsShortcutRow" id="select_none">
             <property name="title" translatable="yes">Clear Selection</property>
-            <property name="action">win.select-none</property>
+            <property name="action">selection.select-none</property>
 
           </object>
         </child>

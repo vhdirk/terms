@@ -8,8 +8,8 @@
  -->
 <interface>
   <requires lib="gtk" version="4.0" />
-  <template class="TileStyleSwitcher" parent="GtkWidget">
-    <property name="name">tile_style_switcher</property>
+  <template class="TwlStyleSwitcher" parent="GtkWidget">
+    <property name="name">twl_style_switcher</property>
 
     <child>
       <object class="GtkBox" id="box">

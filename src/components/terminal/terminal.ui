@@ -3,22 +3,33 @@
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.3" />
 
-  <menu id="terminal-menu">
-    <!-- <section>
+  <menu id="terminal_menu">
+    <section id="clipboard_section">
       <attribute name="display-hint">horizontal-buttons</attribute>
       <item>
         <attribute name="verb-icon" type="s">'edit-copy-symbolic'</attribute>
-        <attribute name="label" translatable="yes">Copy</attribute>
-        <attribute name="action">win.copy</attribute>
+        <attribute name="label" translatable="yes">_Copy</attribute>
+        <attribute name="description" translatable="yes">Copy selection from terminal to clipboard</attribute>
+        <attribute name="action">clipboard.copy</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
       </item>
       <item>
         <attribute name="verb-icon" type="s">'edit-paste-symbolic'</attribute>
-        <attribute name="label" translatable="yes">Paste</attribute>
-        <attribute name="action">win.paste</attribute>
+        <attribute name="label" translatable="yes">_Paste</attribute>
+        <attribute name="description" translatable="yes">Paste from clipboard into the terminal</attribute>
+        <attribute name="action">clipboard.paste</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
       </item>
-    </section> -->
+    </section>
+    <!-- TODO: add copy HTML action -->
 
-    <section id="link-section">
+    <section id="link_section">
+      <attribute name="display-hint">horizontal-buttons</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Copy Link</attribute>
+        <attribute name="action">clipboard.copy-link</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
       <item>
         <attribute name="label" translatable="yes">Open Link</attribute>
         <attribute name="action">win.open-link</attribute>
@@ -26,10 +37,10 @@
       </item>
     </section>
 
-    <section>
+    <section id="new_section">
       <item>
         <attribute name="label" translatable="yes">New Tab</attribute>
-        <attribute name="action">win.new_tab</attribute>
+        <attribute name="action">win.new-tab</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">New Window</attribute>
@@ -37,37 +48,26 @@
       </item>
     </section>
 
-    <!-- <section>
+    <!-- <section id="zoom_section">
       <attribute name="display-hint">inline-buttons</attribute>
       <attribute name="label" translatable="yes">Zoom</attribute>
       <item>
         <attribute name="custom">zoom-out</attribute>
+        <attribute name="action">zoom.out</attribute>
       </item>
       <item>
         <attribute name="verb-icon" type="s">'zoom-original-symbolic'</attribute>
         <attribute name="label" translatable="yes">Reset Zoom</attribute>
-        <attribute name="action">win.zoom-default</attribute>
+        <attribute name="action">zoom.reset</attribute>
       </item>
       <item>
         <attribute name="custom">zoom-in</attribute>
+        <attribute name="action">zoom.in</attribute>
       </item>
     </section> -->
+    <!-- <section id="split_section">
 
-    <section id="copy-section">
-      <item>
-        <attribute name="label" translatable="yes">Copy</attribute>
-        <attribute name="action">win.copy</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Copy Link</attribute>
-        <attribute name="action">win.copy-link</attribute>
-        <attribute name="hidden-when">action-disabled</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Paste</attribute>
-        <attribute name="action">win.paste</attribute>
-      </item>
-    </section>
+    </section> -->
 
     <section>
       <item>
@@ -141,7 +141,7 @@
 
     <child>
       <object class="GtkPopoverMenu" id="popover_menu">
-        <property name="menu-model">terminal-menu</property>
+        <property name="menu-model">terminal_menu</property>
         <!-- <child type="zoom-out">
       <object class="GtkButton">
         <property name="icon-name">zoom-out-symbolic</property>

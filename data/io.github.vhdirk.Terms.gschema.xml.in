@@ -254,19 +254,23 @@
       <summary>Preferences</summary>
       <description>The shortcut to show application preferences</description>
     </key>
-    <key name="win-copy" type="as">
+    <key name="clipboard-copy" type="as">
       <default>['&lt;Shift&gt;&lt;Control&gt;c']</default>
       <summary>Copy to Clipboard</summary>
       <description>The shortcut to copy to clipboard</description>
     </key>
-    <key name="win-paste" type="as">
+    <key name="clipboard-copy-link" type="as">
+      <default>[]</default>
+      <summary>Keyboard shortcut to copy selected text in terminal as HTML</summary>
+    </key>
+    <key name="clipboard-copy-as-html" type="as">
+      <default>[]</default>
+      <summary>Keyboard shortcut to copy selected text in terminal as HTML</summary>
+    </key>
+    <key name="clipboard-paste" type="as">
       <default>['&lt;Shift&gt;&lt;Control&gt;v']</default>
       <summary>Paste from Clipboard</summary>
       <description>The shortcut to paste from the clipboard</description>
-    </key>
-    <key name="win-copy-as-html" type="as">
-      <default>[]</default>
-      <summary>Keyboard shortcut to copy selected text in terminal as HTML</summary>
     </key>
     <key name="win-paste-primary" type="as">
       <default>['&lt;Shift&gt;Insert']</default>
@@ -413,12 +417,12 @@
       <summary>Search History</summary>
       <description>Shortcut to begin searching the terminal history</description>
     </key>
-    <key name="win-select-all" type="as">
+    <key name="selection-select-all" type="as">
       <default>['&lt;ctrl&gt;&lt;shift&gt;a']</default>
       <summary>Select All</summary>
       <description>Shortcut to select all the entire terminal scrollback</description>
     </key>
-    <key name="win-select-none" type="as">
+    <key name="selection-select-none" type="as">
       <default>[]</default>
       <summary>Select None</summary>
       <description>Shortcut to clear the terminal selection</description>
@@ -613,18 +617,6 @@
 
 
 
-    <key name="terminal-copy" type="s">
-      <default>'&lt;Ctrl&gt;&lt;Shift&gt;c'</default>
-      <summary>Keyboard shortcut to copy selected text in terminal</summary>
-    </key>
-    <key name="terminal-copy-as-html" type="s">
-      <default>'disabled'</default>
-      <summary>Keyboard shortcut to copy selected text in terminal as HTML</summary>
-    </key>
-    <key name="terminal-paste" type="s">
-      <default>'&lt;Ctrl&gt;&lt;Shift&gt;v'</default>
-      <summary>Keyboard shortcut to paste text in terminal from clipboard</summary>
-    </key>
     <key name="terminal-paste-primary" type="s">
       <default>'&lt;Shift&gt;Insert'</default>
       <summary>Keyboard shortcut to paste text in terminal from primary selection</summary>

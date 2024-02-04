@@ -10,5 +10,8 @@ pub use tile::*;
 mod tile_header;
 pub use tile_header::*;
 
-mod tile_view;
-pub use tile_view::*;
+mod paned;
+pub use paned::*;
+
+mod tile_grid;
+pub use tile_grid::*;

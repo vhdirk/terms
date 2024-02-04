@@ -6,7 +6,6 @@
   </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/gtk">
     <file compressed="true" preprocess="xml-stripblanks" alias="help-overlay.ui">ui/help_overlay.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="header_bar.ui">../../src/components/header_bar/header_bar.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="window.ui">../../src/components/window/window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="preferences_window.ui">../../src/components/preferences_window/preferences_window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal_preferences_page.ui">../../src/components/terminal_preferences_page/terminal_preferences_page.ui</file>
@@ -24,7 +23,7 @@
 
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/actions">
 
-    <!-- TODO: move this to Tile -->
+    <!-- TODO: move this to Twl -->
     <file compressed="true" preprocess="xml-stripblanks" alias="checkmark-small-symbolic.svg">../icons/actions/checkmark-small-symbolic.svg</file>
   </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/apps">
@@ -32,8 +31,9 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-devel.svg">../icons/io.github.vhdirk.Terms.Devel.svg</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-symbolic.svg">../icons/io.github.vhdirk.Terms-symbolic.svg</file>
   </gresource>
-  <gresource prefix="/io/github/vhdirk/Tile/gtk">
-    <file compressed="true" preprocess="xml-stripblanks" alias="zoom_controls.ui">../../src/tile/zoom_controls/zoom_controls.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="style_switcher.ui">../../src/tile/style_switcher/style_switcher.ui</file>
+
+  <gresource prefix="/io/github/vhdirk/Twl/gtk">
+    <file compressed="true" preprocess="xml-stripblanks" alias="zoom_controls.ui">../../src/twl/zoom_controls/zoom_controls.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="style_switcher.ui">../../src/twl/style_switcher/style_switcher.ui</file>
   </gresource>
 </gresources>

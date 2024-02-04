@@ -67,7 +67,8 @@ flatpak-builder --run flatpak_app build-aux/io.github.vhdirk.Terms.Devel.json <p
 
 ## Credits
 
-Lots of ideas and code is ~~stolen~~ borrowed from these projects:
+The following projects gave me _lots_ of ideas.
+Many files are derived work (ported to rust) or even plainly copied from these.
 
 - [BlackBox]
 - [Tilix]
@@ -76,7 +77,9 @@ Lots of ideas and code is ~~stolen~~ borrowed from these projects:
 - [Prompt]
 - [Terminator]
 
-Attribution is added in code.
+I strive to properly attribute and give credit to the original authors. If you feel like
+I have missed some things, that some things look very familiar but have no attribution,
+please let me know! This project would not exist without you!
 
 [BlackBox]: https://gitlab.gnome.org/raggesilver/blackbox
 [Tilix]: https://github.com/gnunn1/tilix

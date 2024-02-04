@@ -31,6 +31,14 @@
     </section>
     <section>
       <item>
+        <attribute name="id">tab-overview</attribute>
+        <attribute name="label" translatable="yes">View Open Tabs</attribute>
+        <attribute name="action">win.tab-overview</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_Preferences</attribute>
         <attribute name="action">win.edit-preferences</attribute>
       </item>
@@ -107,11 +115,12 @@
       <object class="AdwTabOverview" id="tab_overview">
         <property name="enable-new-tab">true</property>
         <signal name="notify::open" handler="on_tab_overview_open" swapped="true" after="true"/>
-        <signal name="create-tab" handler="on_create_tab" swapped="true"/>
+        <signal name="create-tab" handler="on_overview_create_tab" swapped="true"/>
         <property name="view">tab_view</property>
         <property name="child">
 
           <object class="AdwToolbarView" id="toolbar_view">
+            <property name="top-bar-style">raised</property>
             <child type="top">
 
               <object class="GtkBox" id="header_box">
@@ -119,38 +128,13 @@
                 <property name="spacing">0</property>
                 <property name="valign">center</property>
                 <child>
-
                   <object class="AdwHeaderBar" id="header_bar">
                     <property name="hexpand">true</property>
-
                     <child type="start">
-                      <object class="GtkBox" id="new_tab_box">
-                        <property name="css-name">splitbutton</property>
-                        <style>
-                          <class name="image-button"/>
-                        </style>
-                        <child>
-                          <object class="GtkButton" id="new_terminal_button">
-                            <property name="icon-name">tab-new-symbolic</property>
-                            <property name="tooltip-text" translatable="yes">New Tab</property>
-                            <property name="action-name">win.new-tab</property>
-                            <property name="focus-on-click">false</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator" id="new_terminal_separator">
-                            <property name="orientation">vertical</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkMenuButton" id="new_terminal_menu_button">
-                            <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">pan-down-symbolic</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
+                      <object class="AdwSplitButton" id="new_split_button">
+                        <property name="icon-name">tab-new-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">New Tab</property>
+                        <property name="action-name">win.new-tab</property>
                       </object>
                     </child>
 
@@ -159,37 +143,28 @@
                         <property name="visible">true</property>
                         <property name="title" bind-source="TermsWindow" bind-property="title" bind-flags="sync-create">Terms</property>
                       </object>
-                      <object class="AdwTabBar" id="tab_bar">
-                        <property name="name">terms_tab_bar</property>
-                        <property name="autohide">true</property>
-                        <property name="visible">true</property>
-                        <property name="view">tab_view</property>
-                        <style>
-                          <class name="inline" />
-                        </style>
-                      </object>
                     </property>
 
                     <child type="end">
                       <object class="GtkMenuButton" id="menu_button">
                         <property name="tooltip-text" translatable="yes">Menu</property>
                         <property name="icon-name">open-menu-symbolic</property>
-
                         <property name="popover">
                           <object class="GtkPopoverMenu">
                             <property name="menu-model">main_menu</property>
                             <child type="style-switcher">
-                              <object class="TileStyleSwitcher" id="style_switcher"></object>
+                              <object class="TwlStyleSwitcher" id="style_switcher"></object>
                             </child>
                             <child type="zoom-controls">
-                              <object class="TileZoomControls" id="zoom_controls">
-                                <property name="value" bind-source="TermsWindow" bind-property="zoom" bind-flags="sync-create" />
+                              <object class="TwlZoomControls" id="zoom_controls">
+                                <property name="value" bind-source="TermsWindow" bind-property="zoom_level" bind-flags="sync-create" />
                               </object>
                             </child>
                           </object>
                         </property>
                       </object>
                     </child>
+
                     <child type="end">
                       <object class="GtkToggleButton" id="tab_overview_button">
                         <property name="icon-name">view-grid-symbolic</property>
@@ -199,6 +174,17 @@
                       </object>
                     </child>
                   </object>
+                </child>
+                <child>
+                <object class="AdwTabBar" id="tab_bar">
+                  <property name="name">terms_tab_bar</property>
+                  <property name="autohide">true</property>
+                  <property name="visible">true</property>
+                  <property name="view">tab_view</property>
+                  <style>
+                    <class name="inline" />
+                  </style>
+                </object>
                 </child>
               </object>
 

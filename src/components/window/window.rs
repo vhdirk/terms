@@ -7,13 +7,11 @@ use std::cell::{Cell, RefCell};
 use std::path::PathBuf;
 use tracing::*;
 
-use crate::components::PreferencesWindow;
+use crate::components::{PreferencesWindow, TerminalTab};
 use crate::config::PROFILE;
 use crate::settings::Settings;
-use crate::tile::{StyleSwitcher, ZoomControls};
+use crate::twl::{StyleSwitcher, ZoomControls};
 use crate::util::EnvMap;
-
-use super::*;
 
 #[derive(Debug, gtk::CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/window.ui")]
@@ -33,6 +31,9 @@ pub struct Window {
     #[property(set, get, construct, nullable)]
     env: RefCell<Option<EnvMap>>,
 
+    #[property(get, set, construct, default = 100)]
+    pub zoom_level: Cell<u32>,
+
     #[template_child]
     pub title_widget: TemplateChild<adw::WindowTitle>,
 
@@ -48,14 +49,14 @@ pub struct Window {
     #[template_child]
     pub style_switcher: TemplateChild<StyleSwitcher>,
 
-    #[property(get, set, construct, default = 100)]
-    pub zoom: Cell<u32>,
-
     #[template_child]
     pub toasts: TemplateChild<adw::ToastOverlay>,
 
     #[template_child]
     pub tab_view: TemplateChild<adw::TabView>,
+
+    #[template_child]
+    pub tab_overview: TemplateChild<adw::TabOverview>,
 
     #[template_child]
     pub tab_bar: TemplateChild<adw::TabBar>,
@@ -83,8 +84,9 @@ impl Default for Window {
             title_widget: Default::default(),
             menu_button: Default::default(),
             style_switcher: Default::default(),
-            zoom: Default::default(),
+            zoom_level: Default::default(),
             toolbar_view: Default::default(),
+            tab_overview: Default::default(),
 
             selected_page_signals: glib::SignalGroup::new::<adw::TabPage>(),
             active_tab_signals: glib::SignalGroup::new::<TerminalTab>(),
@@ -207,12 +209,6 @@ impl Window {
             .build();
         self.settings.bind_show_headerbar(&*self.toolbar_view, "reveal-top-bars").get_only().build();
 
-        self.obj().connect_root_notify(clone!(@weak self as this => move |obj| {
-            if let Some(window) = obj.root().and_then(|root| root.clone().downcast::<gtk::Window>().ok()) {
-                window.bind_property("title", obj, "title").sync_create().build();
-            }
-        }));
-
         self.set_integrated_tab_bar();
 
         self.settings
@@ -305,6 +301,9 @@ impl Window {
             gio::ActionEntry::builder("move-tab-right")
                 .activate(move |win: &super::Window, _, _| win.imp().move_tab_right())
                 .build(),
+            gio::ActionEntry::builder("tab-overview")
+                .activate(move |win: &super::Window, _, _| win.imp().open_tab_overview())
+                .build(),
             gio::ActionEntry::builder("detach-tab")
                 .activate(move |win: &super::Window, _, _| win.imp().detach_tab())
                 .build(),
@@ -331,7 +330,7 @@ impl Window {
         prefs_window.set_visible(true);
     }
 
-    pub fn new_tab(&self, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) {
+    pub fn new_tab(&self, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) -> adw::TabPage {
         let tab = TerminalTab::new(directory, command, env);
         let page = self.tab_view.append(&tab);
 
@@ -349,6 +348,7 @@ impl Window {
                 tab_page.set_title(title);
             }
         }));
+        tab_page
     }
 
     fn zoom_out(&self) {
@@ -419,6 +419,10 @@ impl Window {
         }
     }
 
+    fn open_tab_overview(&self) {
+        self.tab_overview.set_open(true)
+    }
+
     #[template_callback]
     fn on_selected_page_changed(&self) {
         let page = self.tab_view.selected_page();
@@ -449,6 +453,7 @@ impl Window {
     }
     #[template_callback]
     fn on_page_closed(&self) -> bool {
+        // TODO
         false
     }
     #[template_callback]
@@ -458,12 +463,17 @@ impl Window {
     fn on_tab_overview_open(&self) {}
 
     #[template_callback]
-    fn on_create_tab(&self) {}
+    fn on_overview_create_tab(&self) -> adw::TabPage {
+        // TODO: figure out if I need to check the custom command from the settings here, or all the way down?
+        // Either way, it should not be the selected tab's command, that makes no sense.
+        // Not even sure why that even is a property on Window at all
+        self.new_tab(None, self.directory.borrow().clone(), self.env.borrow().clone())
+    }
 
     fn set_integrated_tab_bar(&self) {
+        self.tab_bar.unparent();
         if self.settings.headerbar_integrated_tabbar() {
             if self.header_bar.title_widget() != Some(self.tab_bar.clone().into()) {
-                self.tab_bar.unparent();
                 self.header_bar.set_title_widget(Some(&*self.tab_bar));
             }
             self.tab_bar.set_halign(gtk::Align::Fill);

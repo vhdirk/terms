@@ -11,7 +11,7 @@ use std::cell::RefCell;
 use tracing::*;
 
 #[derive(Debug, Default, CompositeTemplate, Properties)]
-#[template(resource = "/io/github/vhdirk/Tile/gtk/style_switcher.ui")]
+#[template(resource = "/io/github/vhdirk/Twl/gtk/style_switcher.ui")]
 #[properties(wrapper_type=super::StyleSwitcher)]
 pub struct StyleSwitcher {
     #[template_child]
@@ -27,7 +27,7 @@ pub struct StyleSwitcher {
 
 #[glib::object_subclass]
 impl ObjectSubclass for StyleSwitcher {
-    const NAME: &'static str = "TileStyleSwitcher";
+    const NAME: &'static str = "TwlStyleSwitcher";
     type Type = super::StyleSwitcher;
     type ParentType = gtk::Widget;
 

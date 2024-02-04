@@ -74,6 +74,9 @@ pub struct Terminal {
     term: TemplateChild<vte::Terminal>,
 
     #[template_child]
+    terminal_menu: TemplateChild<gio::MenuModel>,
+
+    #[template_child]
     search_toolbar: TemplateChild<SearchToolbar>,
 
     #[template_child]
@@ -96,18 +99,22 @@ pub struct Terminal {
 
     #[property(get, set, construct, nullable)]
     icon: RefCell<Option<String>>,
+
+    #[property(get)]
+    uuid: String,
+
+    // The last matched string under the cursor
+    last_match: RefCell<Option<String>>,
 }
 
 impl Default for Terminal {
     fn default() -> Self {
         Self {
-            spawner: get_spawner(),
-            process_manager: ProcessManager::new(),
-
             settings: Default::default(),
+            term: Default::default(),
+            terminal_menu: Default::default(),
             spawn_handle: Default::default(),
             padding_provider: Default::default(),
-            term: Default::default(),
             search_toolbar: Default::default(),
             popover_menu: Default::default(),
             scrolled: Default::default(),
@@ -117,6 +124,11 @@ impl Default for Terminal {
             env: Default::default(),
             title: Default::default(),
             icon: Default::default(),
+
+            uuid: glib::uuid_string_random().to_string(),
+            spawner: get_spawner(),
+            process_manager: ProcessManager::new(),
+            last_match: Default::default(),
 
             update_source: Default::default(),
         }
@@ -132,6 +144,28 @@ impl ObjectSubclass for Terminal {
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
         klass.bind_template_callbacks();
+
+        klass.install_action("clipboard.copy", None, |obj: &super::Terminal, _, _| {
+            obj.imp().on_clipboard_copy();
+        });
+        klass.install_action("clipboard.copy-html", None, |obj: &super::Terminal, _, _| {
+            obj.imp().on_clipboard_copy_html();
+        });
+        klass.install_action("clipboard.paste", None, |obj: &super::Terminal, _, _| {
+            obj.imp().on_clipboard_paste();
+        });
+        klass.install_action("clipboard.copy-link", None, |obj: &super::Terminal, _, _| {
+            obj.imp().on_clipboard_copy_link();
+        });
+        klass.install_action("win.open-link", None, |obj: &super::Terminal, _, _| {
+            // TODO
+            obj.imp().on_clipboard_copy_link();
+        });
+        // klass.install_action("clipboard.paste", None, |obj: &super::Terminal, _, payload| {
+        //     if let Some(contents) = payload.and_then(|v| v.get::<String>()) {
+        //         obj.imp().on_clipboard_paste(&contents);
+        //     }
+        // });
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -497,18 +531,39 @@ impl Terminal {
 
     fn show_menu(&self, x: f64, y: f64) {
         let (match_str, tag) = self.term.check_match_at(x, y);
-
+        let match_str = match_str.map(|t| t.to_string());
         // TODO: customize menu based on match_str
-        dbg!("match {:?}, {:?}", match_str, tag);
+
+        info!("match: {:?} {:?}", match_str, tag);
 
         if let Some(point) = self.term.compute_point(self.obj().as_ref(), &graphene::Point::new(x as f32, y as f32)) {
             let r = gdk::Rectangle::new(point.x() as i32, point.y() as i32, 0, 0);
+
+            // TODO: what is `tag`?
+            self.setup_context_menu(match_str, tag);
 
             self.popover_menu.set_has_arrow(true);
             self.popover_menu.set_halign(gtk::Align::Center);
             self.popover_menu.set_pointing_to(Some(&r));
             self.popover_menu.set_visible(true);
         }
+    }
+
+    fn setup_context_menu(&self, match_str: Option<String>, _tag: i32) {
+        let has_match = match_str.is_some();
+        *self.last_match.borrow_mut() = match_str;
+
+        self.obj().action_set_enabled("clipboard.copy-link", has_match);
+        self.obj().action_set_enabled("win.open-link", has_match);
+
+        let clipboard = self.term.clipboard();
+        let can_paste = clipboard.formats().contains_type(String::static_type());
+        let has_selection = self.term.has_selection();
+
+        self.obj().action_set_enabled("clipboard.copy", has_selection);
+        self.obj().action_set_enabled("clipboard.copy-html", has_selection);
+
+        self.obj().action_set_enabled("clipboard.paste", can_paste);
     }
 
     fn feed_child_file(&self, file: &gio::File) {
@@ -587,6 +642,32 @@ impl Terminal {
         // let icon = self.term.icon_title().map(|t| t.to_string());
         // *self.icon.borrow_mut() = icon;
         // self.obj().notify_icon();
+    }
+
+    fn on_clipboard_copy(&self) {
+        let clipboard = self.term.clipboard();
+
+        if let Some(text) = self.term.text_selected(vte::Format::Text) {
+            clipboard.set_text(text.as_str());
+            // TODO: show toast
+        }
+    }
+
+    fn on_clipboard_copy_html(&self) {
+        let clipboard = self.term.clipboard();
+
+        if let Some(text) = self.term.text_selected(vte::Format::Html) {
+            clipboard.set_text(text.as_str());
+            // TODO: show toast
+        }
+    }
+
+    fn on_clipboard_copy_link(&self) {
+        // TODO: get url from match
+    }
+
+    fn on_clipboard_paste(&self) {
+        self.term.paste_clipboard();
     }
 
     fn enqueue_update(&self) {

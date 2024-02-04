@@ -7,8 +7,6 @@ use window as imp;
 
 use crate::util::EnvMap;
 
-use super::{HeaderBar, TerminalTab};
-
 glib::wrapper! {
         pub struct Window(ObjectSubclass<imp::Window>)
                 @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::Window, adw::ApplicationWindow, //, panel::Workspace,

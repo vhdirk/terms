@@ -12,7 +12,7 @@ use once_cell::sync::Lazy;
 use std::cell::Cell;
 
 #[derive(Debug, Default, CompositeTemplate, Properties)]
-#[template(resource = "/io/github/vhdirk/Tile/gtk/zoom_controls.ui")]
+#[template(resource = "/io/github/vhdirk/Twl/gtk/zoom_controls.ui")]
 #[properties(wrapper_type=super::ZoomControls)]
 pub struct ZoomControls {
     /// The current zoom value, in percent
@@ -25,7 +25,7 @@ pub struct ZoomControls {
 
 #[glib::object_subclass]
 impl ObjectSubclass for ZoomControls {
-    const NAME: &'static str = "TileZoomControls";
+    const NAME: &'static str = "TwlZoomControls";
     type Type = super::ZoomControls;
     type ParentType = adw::Bin;
 
