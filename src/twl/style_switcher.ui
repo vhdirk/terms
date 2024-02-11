@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  This icon is work derived from BlackBox
+  This file is work derived from BlackBox
   https://gitlab.gnome.org/raggesilver/blackbox/-/blob/3264dba83b0d9a6aad28694fa8b1cc139b69d523/src/widgets/StyleSwitcher.vala
 
   Copyright 2022 Paulo Queiroz
@@ -12,7 +12,8 @@
     <property name="name">twl_style_switcher</property>
 
     <child>
-      <object class="GtkBox" id="box">
+      <object class="GtkBox" id="layout_box">
+        <property name="name">twl_style_switcher_box</property>
         <property name="orientation">horizontal</property>
         <property name="homogeneous">True</property>
         <property name="spacing">18</property>

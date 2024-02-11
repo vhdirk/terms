@@ -14,7 +14,7 @@ glib::wrapper! {
 }
 
 impl Window {
-    pub fn new<P: IsA<gtk::Application>>(application: &P) -> Self {
+    pub fn new(application: &impl IsA<gtk::Application>) -> Self {
         glib::Object::builder().property("application", application).build()
     }
 

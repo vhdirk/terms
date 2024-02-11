@@ -1,7 +1,7 @@
 mod terminal_tab;
 use std::path::PathBuf;
 
-use glib::closure_local;
+use glib::{closure_local, subclass::prelude::*};
 use gtk::prelude::*;
 use terminal_tab as imp;
 
@@ -30,5 +30,9 @@ impl TerminalTab {
                 f(&obj);
             }),
         )
+    }
+
+    pub fn split(&self, orientation: Option<gtk::Orientation>) {
+        self.imp().split(orientation);
     }
 }

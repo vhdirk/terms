@@ -13,7 +13,6 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="shortcut_row.ui">../../src/components/shortcut_row/shortcut_row.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="shortcut_dialog.ui">../../src/components/shortcut_dialog/shortcut_dialog.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal.ui">../../src/components/terminal/terminal.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="terminal_panel.ui">../../src/components/terminal_panel/terminal_panel.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal_tab.ui">../../src/components/terminal_tab/terminal_tab.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="search_toolbar.ui">../../src/components/search_toolbar/search_toolbar.ui</file>
   </gresource>

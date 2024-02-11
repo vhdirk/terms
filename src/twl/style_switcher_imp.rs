@@ -21,6 +21,9 @@ pub struct StyleSwitcher {
     #[template_child]
     pub dark_selector: TemplateChild<gtk::CheckButton>,
 
+    #[template_child]
+    pub layout_box: TemplateChild<gtk::Box>,
+
     #[property(get, set=Self::set_style_preference ,construct, default="system")]
     pub preference: RefCell<String>,
 }
@@ -43,8 +46,9 @@ impl ObjectSubclass for StyleSwitcher {
 }
 #[glib::derived_properties]
 impl ObjectImpl for StyleSwitcher {
-    fn constructed(&self) {
-        self.parent_constructed();
+    fn dispose(&self) {
+        // for some reason we need to do this manually or gtk complains that self still has children
+        self.layout_box.unparent();
     }
 }
 

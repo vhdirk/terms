@@ -138,6 +138,11 @@ impl ObjectImpl for Window {
         self.setup_gactions();
         self.connect_signals();
     }
+
+    fn dispose(&self) {
+        self.tab_bar.unparent();
+        self.title_widget.unparent();
+    }
 }
 
 impl WidgetImpl for Window {}
@@ -322,6 +327,12 @@ impl Window {
             gio::ActionEntry::builder("close-other-tabs")
                 .activate(move |win: &super::Window, _, _| win.imp().close_other_tabs())
                 .build(),
+            gio::ActionEntry::builder("split-horizontal")
+                .activate(move |win: &super::Window, _, _| win.imp().split(Some(gtk::Orientation::Horizontal)))
+                .build(),
+            gio::ActionEntry::builder("split-vertical")
+                .activate(move |win: &super::Window, _, _| win.imp().split(Some(gtk::Orientation::Vertical)))
+                .build(),
         ]);
     }
 
@@ -421,6 +432,12 @@ impl Window {
 
     fn open_tab_overview(&self) {
         self.tab_overview.set_open(true)
+    }
+
+    fn split(&self, orientation: Option<gtk::Orientation>) {
+        if let Some(tab) = self.tab_view.selected_page().map(|p| p.child()).and_downcast::<TerminalTab>() {
+            tab.split(orientation);
+        }
     }
 
     #[template_callback]

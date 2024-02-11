@@ -6,13 +6,15 @@ use gtk::glib;
 use gtk::CompositeTemplate;
 use once_cell::sync::Lazy;
 use std::cell::RefCell;
+use std::marker::PhantomData;
 use std::path::PathBuf;
 use tracing::info;
 
-use crate::components::terminal_panel::TerminalPanel;
+use crate::components::Terminal;
+use crate::twl::{Panel, PanelGrid};
 use crate::util::EnvMap;
 
-#[derive(Debug, Default, CompositeTemplate, Properties)]
+#[derive(Debug, CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_tab.ui")]
 #[properties(wrapper_type = super::TerminalTab)]
 pub struct TerminalTab {
@@ -32,6 +34,34 @@ pub struct TerminalTab {
 
     #[property(get, set, construct, nullable)]
     icon: RefCell<Option<String>>,
+
+    #[template_child]
+    panel_grid: TemplateChild<PanelGrid>,
+
+    #[property(get=Self::get_selected, set=Self::set_selected, construct, nullable)]
+    selected: PhantomData<Option<Terminal>>,
+
+    selected_panel_signals: glib::SignalGroup,
+    active_term_signals: glib::SignalGroup,
+    active_term_bindings: glib::BindingGroup,
+}
+
+impl Default for TerminalTab {
+    fn default() -> Self {
+        Self {
+            directory: Default::default(),
+            command: Default::default(),
+            env: Default::default(),
+            title: Default::default(),
+            icon: Default::default(),
+            panel_grid: Default::default(),
+            selected: Default::default(),
+
+            selected_panel_signals: glib::SignalGroup::new::<Panel>(),
+            active_term_signals: glib::SignalGroup::new::<Terminal>(),
+            active_term_bindings: glib::BindingGroup::new(),
+        }
+    }
 }
 
 #[glib::object_subclass]
@@ -41,6 +71,7 @@ impl ObjectSubclass for TerminalTab {
     type ParentType = adw::Bin;
 
     fn class_init(klass: &mut Self::Class) {
+        PanelGrid::ensure_type();
         klass.bind_template();
         klass.bind_template_callbacks();
     }
@@ -70,21 +101,21 @@ impl BinImpl for TerminalTab {}
 #[gtk::template_callbacks]
 impl TerminalTab {
     fn setup_widgets(&self) {
-        let panel = TerminalPanel::new(self.directory.borrow().clone(), self.command.borrow().clone(), self.env.borrow().clone());
-        self.obj().set_child(Some(&panel));
+        let term = Terminal::new(self.directory.borrow().clone(), self.command.borrow().clone(), self.env.borrow().clone());
+        self.panel_grid.set_child(&term);
 
         // TODO
-        panel.connect_exit(clone!(@weak self as this => move |panel| {
+        term.connect_exit(clone!(@weak self as this => move |term, code| {
             this.obj().emit_by_name::<()>("close", &[]);
         }));
 
         // TODO: Only do this for active panel
-        panel.connect_directory_notify(clone!(@weak self as this => move |p| {
+        term.connect_directory_notify(clone!(@weak self as this => move |p| {
             this.update_directory(p.directory());
         }));
 
         // TODO: Only do this for active panel
-        panel.connect_title_notify(clone!(@weak self as this => move |p| {
+        term.connect_title_notify(clone!(@weak self as this => move |p| {
             this.update_title(p.title());
         }));
     }
@@ -101,5 +132,20 @@ impl TerminalTab {
     fn update_directory(&self, terminal_directory: Option<PathBuf>) {
         *self.directory.borrow_mut() = terminal_directory;
         self.obj().notify_directory();
+    }
+
+    fn get_selected(&self) -> Option<Terminal> {
+        self.panel_grid.selected_panel().and_then(|p| p.child()).and_downcast()
+    }
+
+    fn set_selected(&self, terminal: Option<Terminal>) {
+        // todo!();
+        // self.panel_grid.set_select
+    }
+
+    pub fn split(&self, orientation: Option<gtk::Orientation>) {
+        let term = Terminal::new(self.directory.borrow().clone(), self.command.borrow().clone(), self.env.borrow().clone());
+
+        self.panel_grid.split(&term, orientation);
     }
 }

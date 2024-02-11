@@ -105,6 +105,33 @@
     </section>
   </menu>
 
+  <menu id="new_menu">
+    <section>
+        <item>
+          <attribute name="id">new-window</attribute>
+          <attribute name="label" translatable="yes">New Window</attribute>
+          <attribute name="action">app.new-window</attribute>
+        </item>
+        <item>
+          <attribute name="id">new-tab</attribute>
+          <attribute name="label" translatable="yes">New _Tab</attribute>
+          <attribute name="action">win.new-tab</attribute>
+          <attribute name="hidden-when">action-disabled</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="id">split-horizontal</attribute>
+          <attribute name="label" translatable="yes">Split Horizontal</attribute>
+          <attribute name="action">win.split-horizontal</attribute>
+        </item>
+        <item>
+          <attribute name="id">split-vertical</attribute>
+          <attribute name="label" translatable="yes">Split Vertical</attribute>
+          <attribute name="action">win.split-vertical</attribute>
+        </item>
+    </section>
+  </menu>
 
   <template class="TermsWindow" parent="AdwApplicationWindow">
     <property name="default-width">700</property>
@@ -124,6 +151,7 @@
             <child type="top">
 
               <object class="GtkBox" id="header_box">
+                <property name="name">terms_header_box</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">0</property>
                 <property name="valign">center</property>
@@ -135,6 +163,7 @@
                         <property name="icon-name">tab-new-symbolic</property>
                         <property name="tooltip-text" translatable="yes">New Tab</property>
                         <property name="action-name">win.new-tab</property>
+                        <property name="menu-model">new_menu</property>
                       </object>
                     </child>
 

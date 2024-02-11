@@ -5,7 +5,9 @@
   <requires lib="libadwaita" version="1.4" />
 
   <template class="TermsTerminalTab" parent="AdwBin">
-
+  <child>
+    <object class="TwlPanelGrid" id="panel_grid"></object>
+  </child>
 
   </template>
 

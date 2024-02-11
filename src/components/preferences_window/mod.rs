@@ -10,7 +10,7 @@ glib::wrapper! {
 }
 
 impl PreferencesWindow {
-    pub fn new<W: IsA<gtk::Window>>(parent_window: Option<&W>) -> Self {
+    pub fn new(parent_window: Option<&impl IsA<gtk::Window>>) -> Self {
         glib::Object::builder().property("transient-for", parent_window).build()
     }
 }

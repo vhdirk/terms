@@ -9,7 +9,7 @@ glib::wrapper! {
 }
 
 impl ShortcutsPreferencesPage {
-    pub fn new<W: IsA<adw::PreferencesWindow>>(window: Option<&W>) -> Self {
+    pub fn new(window: Option<&impl IsA<adw::PreferencesWindow>>) -> Self {
         glib::Object::builder().property("window", window).build()
     }
 }

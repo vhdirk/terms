@@ -52,14 +52,14 @@ impl ObjectImpl for ThemeThumbnail {
     fn constructed(&self) {
         self.parent_constructed();
 
-        let img = gtk::Picture::builder()
+        let picture = gtk::Picture::builder()
             .width_request(110)
             .height_request(70)
             .css_classes(["card"])
             .cursor(&gdk::Cursor::from_name("pointer", None).unwrap())
             .build();
-        img.set_parent(&self.obj().clone());
-        self.ctx.borrow_mut().picture = Some(img);
+        picture.set_parent(&self.obj().clone());
+        self.ctx.borrow_mut().picture = Some(picture);
 
         // Icon will show when this.selected is true
         let check_icon = gtk::Image::builder()

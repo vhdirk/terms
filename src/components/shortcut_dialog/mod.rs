@@ -9,7 +9,7 @@ glib::wrapper! {
 }
 
 impl ShortcutDialog {
-    pub fn new<W: IsA<gtk::Window>>(parent_window: Option<&W>, title: &str) -> Self {
+    pub fn new(parent_window: Option<&impl IsA<gtk::Window>>, title: &str) -> Self {
         glib::Object::builder()
             .property("transient-for", parent_window)
             .property("shortcut", title)

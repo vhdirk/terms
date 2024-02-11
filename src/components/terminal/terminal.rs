@@ -200,7 +200,7 @@ impl BoxImpl for Terminal {}
 #[gtk::template_callbacks]
 impl Terminal {
     fn setup_widgets(&self) {
-        self.process_manager.set_terminal(&*self.term);
+        // self.process_manager.set_terminal(&*self.term);
 
         ThemeProvider::default().connect_notify_local(
             Some("current-theme"),
