@@ -1,6 +1,7 @@
+use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::prelude::*;
-use tracing::*;
+use gettextrs::gettext;
+use glib::clone;
 
 use crate::settings::Settings;
 
@@ -33,6 +34,15 @@ pub struct PreferencesWindow {
 
     #[template_child]
     pub floating_controls_delay_adjustment: TemplateChild<gtk::Adjustment>,
+
+    #[template_child]
+    pub expand_tabs_switch: TemplateChild<adw::SwitchRow>,
+
+    #[template_child]
+    pub show_panel_headers_switch: TemplateChild<adw::SwitchRow>,
+
+    #[template_child]
+    pub wide_panel_resize_handle_switch: TemplateChild<adw::SwitchRow>,
 
     #[template_child]
     pub terminal_preferences_page: TemplateChild<TerminalPreferencesPage>,
@@ -101,11 +111,35 @@ impl PreferencesWindow {
         self.settings
             .bind_delay_before_showing_floating_controls(&*self.floating_controls_delay_adjustment, "value")
             .build();
+
+        self.settings.bind_expand_tabs(&*self.expand_tabs_switch, "active").build();
+        self.settings.bind_show_panel_headers(&*self.show_panel_headers_switch, "active").build();
+        self.settings
+            .bind_use_wide_panel_resize_handle(&*self.wide_panel_resize_handle_switch, "active")
+            .build();
     }
 
     #[template_callback]
     fn on_reset_request(&self) {
-        // TODO: confirmation dialog
-        self.settings.reset_all();
+        let dialog = adw::MessageDialog::builder()
+            .transient_for(&*self.obj())
+            .modal(true)
+            .title(&gettext("Reset all?"))
+            .body(&gettext("Are you sure you want to reset all settings to their defaults?"))
+            .build();
+
+        dialog.add_responses(&[("cancel", &gettext("_Cancel")), ("reset", &gettext("_Reset all preferences"))]);
+        dialog.set_response_appearance("reset", adw::ResponseAppearance::Destructive);
+        dialog.present();
+
+        dialog.connect_response(
+            None,
+            clone!(@weak self as this => move |_d, resp| {
+                match resp {
+                    "reset" => this.settings.reset_all(),
+                    _ => ()
+                }
+            }),
+        );
     }
 }

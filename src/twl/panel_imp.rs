@@ -26,10 +26,10 @@ pub struct Panel {
     #[property(get, set, construct_only, nullable)]
     tooltip: RefCell<Option<String>>,
 
-    #[property(get, set=Self::set_child, construct_only, nullable)]
+    #[property(get, set=Self::set_child, construct, nullable)]
     child: RefCell<Option<gtk::Widget>>,
 
-    #[property(get, set=Self::set_title_widget, construct_only, nullable)]
+    #[property(get, set=Self::set_title_widget, construct, nullable)]
     title_widget: RefCell<Option<gtk::Widget>>,
 
     pub closing: Cell<bool>,

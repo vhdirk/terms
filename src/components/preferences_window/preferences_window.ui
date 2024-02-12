@@ -21,22 +21,16 @@
             </child>
           </object>
         </child>
-        <!-- <child>
+        <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Tabs</property>
             <child>
-              <object class="AdwActionRow">
-                <property name="activatable-widget">fill_tabs_switch</property>
-                <property name="title" translatable="yes">Expand Tabs</property>
-                <child>
-                  <object class="GtkSwitch" id="fill_tabs_switch">
-                    <property name="valign">center</property>
-                  </object>
-                </child>
+              <object class="AdwSwitchRow" id="expand_tabs_switch">
+                 <property name="title" translatable="yes">Expand Tabs</property>
               </object>
             </child>
           </object>
-        </child> -->
+        </child>
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Header Bar</property>
@@ -100,6 +94,21 @@
                     <property name="adjustment">floating_controls_delay_adjustment</property>
                   </object>
                 </child>
+              </object>
+            </child>
+          </object>
+        </child>
+           <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Panels</property>
+            <child>
+              <object class="AdwSwitchRow" id="show_panel_headers_switch">
+                <property name="title" translatable="yes">Show Panel headers</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="wide_panel_resize_handle_switch">
+                <property name="title" translatable="yes">Use wide resize handle</property>
               </object>
             </child>
           </object>

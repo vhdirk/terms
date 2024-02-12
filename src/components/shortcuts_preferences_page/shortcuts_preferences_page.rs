@@ -1,8 +1,8 @@
 use std::cell::RefCell;
 
-use adw::subclass::prelude::*;
+use adw::{prelude::*, subclass::prelude::*};
+use gettextrs::gettext;
 use glib::{self, clone, Properties};
-use gtk::prelude::*;
 use tracing::*;
 
 use crate::{
@@ -116,9 +116,29 @@ impl ShortcutsPreferencesPage {
 
     fn reset_all_shortcuts(&self) {
         info!("Request to reset all shortcuts");
-        let shortcut_settings = self.settings.shortcuts();
 
-        // TODO: confirmation needed?
-        shortcut_settings.reset_all();
+        let dialog = adw::MessageDialog::builder()
+            .modal(true)
+            .title(&gettext("Reset shortcuts?"))
+            .body(&gettext("Are you sure you want to reset all shortcuts to their defaults?"))
+            .build();
+
+        dialog.set_transient_for(self.window.borrow().as_ref());
+        dialog.add_responses(&[("cancel", &gettext("_Cancel")), ("reset", &gettext("_Reset all shortcuts"))]);
+        dialog.set_response_appearance("reset", adw::ResponseAppearance::Destructive);
+        dialog.present();
+
+        dialog.connect_response(
+            None,
+            clone!(@weak self as this => move |_d, resp| {
+                match resp {
+                    "reset" => {
+                        let shortcut_settings = this.settings.shortcuts();
+                        shortcut_settings.reset_all();
+                    }
+                    _ => ()
+                }
+            }),
+        );
     }
 }

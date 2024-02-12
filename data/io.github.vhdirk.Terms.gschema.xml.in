@@ -94,7 +94,17 @@
       <default>400</default>
       <summary>Delay time before showing floating controls</summary>
     </key>
-    <key name="fill-tabs" type="b">
+
+    <key name="show-panel-headers" type="b">
+      <default>true</default>
+      <summary>Show panel headers</summary>
+    </key>
+    <key name="use-wide-panel-resize-handle" type="b">
+      <default>false</default>
+      <summary>Use wide panel resize handle</summary>
+    </key>
+
+    <key name="expand-tabs" type="b">
       <default>true</default>
       <summary>Whether or not tabs should expand to fill tab bar</summary>
     </key>
