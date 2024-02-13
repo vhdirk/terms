@@ -22,9 +22,9 @@ mod panel_grid;
 mod panel_grid_imp;
 pub use panel_grid::*;
 
-pub fn signal_accumulator_true_handled(_hint: &SignalInvocationHint, return_accu: &mut glib::Value, handler_return: &glib::Value) -> bool {
-    let signal_handled = handler_return.get::<bool>().unwrap_or(false);
+pub fn signal_accumulator_propagation(_hint: &SignalInvocationHint, return_accu: &mut glib::Value, handler_return: &glib::Value) -> bool {
+    let signal_propagate = glib::Propagation::from(handler_return.get::<bool>().unwrap_or(true));
 
     *return_accu = handler_return.clone();
-    !signal_handled
+    signal_propagate.into()
 }

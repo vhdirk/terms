@@ -1,16 +1,12 @@
-use crate::i18n::{gettext, gettext_f};
-use crate::settings::ShortcutSettings;
-use adw::prelude::PreferencesRowExt;
+use adw::prelude::*;
 use adw::subclass::prelude::*;
-use glib::Properties;
-use gtk::glib;
-use gtk::prelude::*;
+use gettextrs::gettext;
+use glib::{self, clone, Properties};
 use gtk::CompositeTemplate;
+use std::cell::OnceCell;
 use tracing::*;
 
-use std::cell::{OnceCell, RefCell};
-
-use glib::clone;
+use crate::settings::ShortcutSettings;
 
 #[derive(Default, Properties, CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/shortcut_row.ui")]
@@ -110,10 +106,7 @@ impl ShortcutRow {
 
         let section = gio::Menu::new();
         for accel in accelerators.iter() {
-            let item = gio::MenuItem::new(
-                Some(&gettext_f("Remove {shortcut}", &[("shortcut", &self.settings.accel_as_label(&accel))])),
-                None,
-            );
+            let item = gio::MenuItem::new(Some(&gettext!("Remove {}", self.settings.accel_as_label(&accel))), None);
             item.set_action_and_target_value(Some(super::ACTION_REMOVE_SHORTCUT), Some(&accel.to_variant()));
             section.append_item(&item);
 

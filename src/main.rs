@@ -8,7 +8,6 @@ mod application;
 mod components;
 mod config;
 mod error;
-mod i18n;
 mod pcre2;
 mod services;
 mod settings;

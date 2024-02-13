@@ -267,15 +267,16 @@ impl Window {
         //     this.header_bar.set_fullscreened(w.is_fullscreened());
         // }));
 
-        self.tab_view
-            .connect_close_page(clone!(@weak self as this => @default-return false, move |tv, _| {
-                if tv.n_pages() <= 1 {
-                    this.obj().close();
-                }
-                false
-            }));
+        self.tab_view.connect_n_pages_notify(clone!(@weak self as this => move |tv | {
+            let n_pages = tv.n_pages();
+            info!("tab_view.n_pages: {:?}", n_pages);
+            if n_pages == 0 {
+                this.obj().close();
+            }
+        }));
 
         self.tab_view.connect_selected_page_notify(clone!(@weak self as this => move |tab_view| {
+            info!("tab_view.selected_page_notify");
             if let Some(page) = tab_view.selected_page() {
                 this.obj().set_title(Some(&page.title()))
             }

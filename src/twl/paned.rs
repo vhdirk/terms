@@ -5,7 +5,7 @@ use super::paned_imp as imp;
 glib::wrapper! {
         pub struct Paned(ObjectSubclass<imp::Paned>)
                 @extends gtk::Widget,
-                @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
+                @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable, gtk::AccessibleRange;
 }
 
 impl Paned {

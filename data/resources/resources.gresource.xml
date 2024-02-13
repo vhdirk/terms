@@ -21,14 +21,16 @@
   </gresource>
 
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/actions">
+    <file compressed="true" preprocess="xml-stripblanks" alias="add-horizontal-symbolic.svg">icons/actions/add-horizontal-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="add-vertical-symbolic.svg">icons/actions/add-vertical-symbolic.svg</file>
 
     <!-- TODO: move this to Twl -->
-    <file compressed="true" preprocess="xml-stripblanks" alias="checkmark-small-symbolic.svg">../icons/actions/checkmark-small-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="checkmark-small-symbolic.svg">icons/actions/checkmark-small-symbolic.svg</file>
   </gresource>
   <gresource prefix="/io/github/vhdirk/Terms/icons/scalable/apps">
-    <file compressed="true" preprocess="xml-stripblanks" alias="app-icon.svg" >../icons/io.github.vhdirk.Terms.svg</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-devel.svg">../icons/io.github.vhdirk.Terms.Devel.svg</file>
-    <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-symbolic.svg">../icons/io.github.vhdirk.Terms-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="app-icon.svg" >icons/io.github.vhdirk.Terms.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-devel.svg">icons/io.github.vhdirk.Terms.Devel.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="app-icon-symbolic.svg">icons/io.github.vhdirk.Terms-symbolic.svg</file>
   </gresource>
 
   <gresource prefix="/io/github/vhdirk/Twl/gtk">

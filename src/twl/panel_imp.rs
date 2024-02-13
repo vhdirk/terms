@@ -14,7 +14,7 @@ use vte::WidgetExt;
 pub struct Panel {
     container: gtk::Box,
 
-    #[property(get, set=Self::set_title, construct_only, nullable)]
+    #[property(get, set=Self::set_title, construct, nullable)]
     title: RefCell<Option<String>>,
 
     #[property(get, set, construct)]
@@ -23,7 +23,7 @@ pub struct Panel {
     #[property(get, set, construct, nullable)]
     icon: RefCell<Option<gio::Icon>>,
 
-    #[property(get, set, construct_only, nullable)]
+    #[property(get, set, construct, nullable)]
     tooltip: RefCell<Option<String>>,
 
     #[property(get, set=Self::set_child, construct, nullable)]
@@ -31,6 +31,9 @@ pub struct Panel {
 
     #[property(get, set=Self::set_title_widget, construct, nullable)]
     title_widget: RefCell<Option<gtk::Widget>>,
+
+    #[property(get, set=Self::set_show_header, construct)]
+    show_header: Cell<bool>,
 
     pub closing: Cell<bool>,
     // #[property(get, set, construct)]
@@ -92,6 +95,9 @@ impl BuildableImpl for Panel {
 impl Panel {
     fn setup(&self) {
         self.container.set_parent(&*self.obj());
+        self.obj().set_focusable(true);
+        self.obj().set_focus_child(Some(&self.container));
+
     }
 
     fn set_child(&self, child: Option<&gtk::Widget>) {
@@ -101,6 +107,8 @@ impl Panel {
             self.container.append(child);
             *self.child.borrow_mut() = Some(child.clone());
         }
+
+        self.container.set_focus_child(child);
     }
 
     fn set_title_widget(&self, child: Option<&gtk::Widget>) {
@@ -125,14 +133,14 @@ impl Panel {
     }
 
     fn set_title(&self, title: Option<&str>) {
-        match title {
-            Some(title) => {
-                self.set_title_widget(Some(gtk::Label::new(Some(title)).upcast_ref()));
-            },
-            None => {
-                self.set_title_widget(None::<&gtk::Widget>);
-            },
-        }
+        // match title {
+        //     Some(title) => {
+        //         self.set_title_widget(Some(gtk::Label::new(Some(title)).upcast_ref()));
+        //     },
+        //     None => {
+        //         self.set_title_widget(None::<&gtk::Widget>);
+        //     },
+        // }
     }
 
     fn remove_child(&self) {
@@ -140,5 +148,10 @@ impl Panel {
             child.unparent();
         }
         *self.child.borrow_mut() = None;
+    }
+
+    fn set_show_header(&self, show_header: bool) {
+        self.show_header.set(show_header);
+        // TODO
     }
 }

@@ -202,6 +202,7 @@ impl Terminal {
     fn setup_widgets(&self) {
         // self.process_manager.set_terminal(&*self.term);
 
+
         ThemeProvider::default().connect_notify_local(
             Some("current-theme"),
             clone!(@weak self as this => move |_, _| {
@@ -667,6 +668,13 @@ impl Terminal {
 
     fn on_clipboard_paste(&self) {
         self.term.paste_clipboard();
+    }
+
+    #[template_callback]
+    fn on_has_focus(&self) {
+        if self.term.has_focus() {
+            debug!("term has focus");
+        }
     }
 
     fn enqueue_update(&self) {

@@ -1,4 +1,6 @@
 # Resources
+subdir('icons')
+
 resources = gnome.compile_resources(
   'resources',
   'resources.gresource.xml',

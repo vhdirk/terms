@@ -18,7 +18,6 @@ use once_cell::sync::Lazy;
 use tracing::*;
 
 use crate::config::PROFILE;
-use crate::i18n::gettext_f;
 use crate::settings::ShortcutSettings;
 
 #[derive(Default, CompositeTemplate, Properties)]
@@ -111,7 +110,7 @@ impl ShortcutDialog {
         let text = self
             .shortcut
             .get()
-            .map(|s| gettext_f("Enter new shortcut for \"{shortcut}\"", &[("shortcut", s)]))
+            .map(|s| gettext!("Enter new shortcut for \"{}\"", s))
             .unwrap_or(gettext("Enter new shortcut"));
 
         self.heading.set_text(&text);

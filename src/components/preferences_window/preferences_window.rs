@@ -1,10 +1,8 @@
-use adw::prelude::*;
-use adw::subclass::prelude::*;
+use adw::{prelude::*, subclass::prelude::*};
 use gettextrs::gettext;
 use glib::clone;
 
 use crate::settings::Settings;
-
 use crate::components::shortcuts_preferences_page::ShortcutsPreferencesPage;
 use crate::components::terminal_preferences_page::TerminalPreferencesPage;
 

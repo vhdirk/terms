@@ -1,4 +1,4 @@
-use glib::prelude::*;
+use glib::{closure_local, prelude::*};
 use gtk::subclass::prelude::*;
 
 use super::{panel_grid_imp as imp, Panel};
@@ -32,5 +32,23 @@ impl PanelGrid {
 
     pub fn close_panel_finish(&self, panel: &Panel) {
         self.imp().close_panel_finish(panel);
+    }
+
+    pub fn panels(&self) -> Vec<Panel> {
+        self.imp().get_all()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.panels().is_empty()
+    }
+
+    pub fn connect_panel_close<F: Fn(&Self, &Panel) -> glib::Propagation + 'static>(&self, f: F) -> glib::SignalHandlerId {
+        self.connect_closure(
+            "close-panel",
+            false,
+            closure_local!(move |obj: Self, panel: &Panel| {
+                f(&obj, panel) == glib::Propagation::Proceed
+            }),
+        )
     }
 }

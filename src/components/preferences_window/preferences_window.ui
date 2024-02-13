@@ -23,16 +23,6 @@
         </child>
         <child>
           <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Tabs</property>
-            <child>
-              <object class="AdwSwitchRow" id="expand_tabs_switch">
-                 <property name="title" translatable="yes">Expand Tabs</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Header Bar</property>
             <child>
               <object class="AdwSwitchRow" id="show_headerbar_switch">
@@ -98,7 +88,17 @@
             </child>
           </object>
         </child>
-           <child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Tabs</property>
+            <child>
+              <object class="AdwSwitchRow" id="expand_tabs_switch">
+                 <property name="title" translatable="yes">Expand Tabs</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Panels</property>
             <child>

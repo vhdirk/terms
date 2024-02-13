@@ -131,3 +131,8 @@ window:not(.about) headerbar,
   color: white;
   background-color: #1e1e1e;
 }
+
+paned separator {
+  background-color: @window_bg_color;
+  border-color: @window_bg_color;
+}

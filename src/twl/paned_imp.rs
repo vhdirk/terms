@@ -5,12 +5,27 @@ use adw::subclass::prelude::*;
 use glib::Properties;
 use tracing::*;
 
+#[derive(Debug, Clone)]
+enum ChildPosition {
+    Start,
+    End
+}
+
+impl ToString for ChildPosition {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Start => "start".to_string(),
+            Self::End => "end".to_string()
+        }
+    }
+}
+
 #[derive(Debug, Properties)]
 #[properties(wrapper_type=super::Paned)]
 pub struct Paned {
     inner: gtk::Paned,
 
-    #[property(get=Self::get_position, set=Self::set_position, construct)]
+    #[property(get=Self::get_position, set=Self::set_position, construct, default=-1)]
     position: PhantomData<i32>,
 
     #[property(get=Self::is_position_set)]
@@ -87,8 +102,10 @@ impl ObjectImpl for Paned {
         self.parent_constructed();
 
         self.inner.set_parent(&*self.obj());
-        self.inner.set_start_child(Some(&adw::Bin::new()));
-        self.inner.set_end_child(Some(&adw::Bin::new()));
+        self.obj().set_focusable(true);
+        self.obj().set_focus_child(Some(&self.inner));
+        self.get_or_init_container(ChildPosition::Start);
+        self.get_or_init_container(ChildPosition::End);
     }
 
     fn dispose(&self) {
@@ -199,47 +216,73 @@ impl Paned {
         self.inner.set_orientation(orientation)
     }
 
+    fn get_or_init_container(&self, position: ChildPosition) -> adw::Bin {
+        let child = match position {
+            ChildPosition::Start => self.inner.start_child(),
+            ChildPosition::End => self.inner.end_child()
+        };
+        child.and_downcast::<adw::Bin>().unwrap_or_else(|| {
+            let bin = adw::Bin::new();
+            // bin.set_hexpand(true);
+            // bin.set_vexpand(true);
+
+            let resize = true;
+            let shrink = false;
+
+            match position {
+                ChildPosition::Start => {
+                    self.inner.set_start_child(Some(&bin));
+                    // self.set_resize_start_child(resize);
+                    // self.set_shrink_start_child(shrink);
+                },
+                ChildPosition::End => {
+                    self.inner.set_end_child(Some(&bin));
+                    // self.set_resize_end_child(resize);
+                    // self.set_shrink_end_child(shrink);
+                },
+            }
+
+            bin
+        })
+    }
+
     fn get_start_child(&self) -> Option<gtk::Widget> {
-        self.inner.start_child().and_then(|b| b.downcast::<adw::Bin>().ok()).and_then(|b| b.child())
+        self.get_or_init_container(ChildPosition::Start).child()
     }
 
     fn set_start_child(&self, child: Option<&gtk::Widget>) {
-        info!("Paned::set_start_child {:?}", child);
-        let bin = self.inner.start_child().and_downcast::<adw::Bin>().unwrap_or_else(|| {
-            let bin = adw::Bin::new();
-            self.inner.set_start_child(Some(&bin));
-            bin
-        });
-        if let Some(c) = child {
-            if c.parent().is_some() {
-                c.unparent();
-            }
-        }
+        debug!("Paned::set_start_child {:?}", child);
+        let bin = self.get_or_init_container(ChildPosition::Start);
+        // if let Some(c) = child {
+        //     if c.parent().is_some() {
+        //         c.unparent();
+        //     }
+        // }
         bin.set_child(child);
     }
 
     fn get_end_child(&self) -> Option<gtk::Widget> {
-        self.inner.end_child().and_then(|b| b.downcast::<adw::Bin>().ok()).and_then(|b| b.child())
+        self.get_or_init_container(ChildPosition::End).child()
     }
 
     fn set_end_child(&self, child: Option<&gtk::Widget>) {
-        info!("Paned::set_end_child {:?}", child);
+        debug!("Paned::set_end_child {:?}", child);
 
-        let bin = self.inner.end_child().and_downcast::<adw::Bin>().unwrap_or_else(|| {
-            let bin = adw::Bin::new();
-            self.inner.set_end_child(Some(&bin));
-            bin
-        });
-        if let Some(c) = child {
-            if c.parent().is_some() {
-                c.unparent();
-            }
-        }
+        debug!("Paned: end child {:?}", self.inner.end_child());
+        let bin = self.get_or_init_container(ChildPosition::End);
+        // if let Some(c) = child {
+        //     if c.parent().is_some() {
+        //         c.unparent();
+        //     }
+        // }
         bin.set_child(child);
     }
 
     pub fn replace(&self, child: Option<gtk::Widget>, new_child: Option<gtk::Widget>) {
-        info!("Panel::replace {:?} with {:?}", child, new_child);
+        debug!("Panel::replace {:?} with {:?}", child, new_child);
+        debug!("Panel::start_child {:?}", self.get_start_child());
+        debug!("Panel::end_child {:?}", self.get_end_child());
+
         if self.get_start_child() == child {
             if let Some(child) = child {
                 child.unparent();
@@ -256,6 +299,8 @@ impl Paned {
     }
 
     pub fn sibling(&self, child: Option<gtk::Widget>) -> Option<gtk::Widget> {
+        debug!("Panel::get_sibling {:?}", child);
+
         if self.get_start_child() == child {
             self.get_end_child()
         } else if self.get_end_child() == child {
