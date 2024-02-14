@@ -14,9 +14,7 @@ pub use panel::*;
 mod tile_header;
 pub use tile_header::*;
 
-mod paned;
-mod paned_imp;
-pub use paned::*;
+mod split_paned;
 
 mod panel_grid;
 mod panel_grid_imp;

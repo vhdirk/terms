@@ -108,21 +108,23 @@ impl TerminalTab {
         let term = Terminal::new(self.directory.borrow().clone(), self.command.borrow().clone(), self.env.borrow().clone());
         term.grab_focus();
 
-        let panel = self.panel_grid.set_child(&term);
+        let panel = self.panel_grid.set_initial_child(&term);
 
         self.connect_terminal_signals(&term, &panel);
 
-        self.panel_grid.connect_panel_close(clone!(@weak self as this => @default-return glib::Propagation::Proceed, move |_grid, panel| {
-            this.on_panel_close_request(panel)
-        }));
+        self.panel_grid
+            .connect_panel_close(clone!(@weak self as this => @default-return glib::Propagation::Proceed, move |_grid, panel| {
+                this.on_panel_close_request(panel)
+            }));
 
         self.panel_grid.connect_n_panels_notify(clone!(@weak self as this => move |_| {
             this.on_num_panels_changed()
         }));
 
-        self.settings.connect_use_wide_panel_resize_handle_changed(clone!(@weak self as this => move |s| {
-            this.panel_grid.set_wide_handle(s.use_wide_panel_resize_handle());
-        }));
+        self.settings
+            .connect_use_wide_panel_resize_handle_changed(clone!(@weak self as this => move |s| {
+                this.panel_grid.set_wide_handle(s.use_wide_panel_resize_handle());
+            }));
         self.panel_grid.set_wide_handle(self.settings.use_wide_panel_resize_handle());
 
         self.panel_grid.connect_selected_panel_notify(clone!(@weak self as this => move |s| {
@@ -149,7 +151,6 @@ impl TerminalTab {
                 }
             }),
         );
-
     }
 
     fn update_title(&self, terminal_title: Option<String>) {
@@ -207,9 +208,7 @@ impl TerminalTab {
     pub fn on_panel_close_request(&self, panel: &Panel) -> glib::Propagation {
         info!("on_panel_close_request: {:?}", panel);
         // TODO: test if process is still running
-        if let Some(terminal) = panel.child().and_downcast_ref::<Terminal>() {
-        }
-            // this.obj().emit_by_name::<()>("close", &[]);
+        if let Some(terminal) = panel.child().and_downcast_ref::<Terminal>() {}
 
         glib::Propagation::Proceed
     }
@@ -219,8 +218,7 @@ impl TerminalTab {
         info!("on_num_panels_changed: {:?}", n_panels);
         if n_panels == 0 {
             info!("emit close signal");
-            // self.obj().emit_by_name::<()>("close", &[]);
+            self.obj().emit_by_name::<()>("close", &[]);
         }
     }
 }
-

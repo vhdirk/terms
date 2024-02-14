@@ -10,7 +10,8 @@ use tracing::*;
 
 use crate::twl::signal_accumulator_propagation;
 
-use super::{Paned, Panel};
+use super::split_paned::SplitPaned;
+use super::Panel;
 
 #[derive(Debug, Default, Properties)]
 #[properties(wrapper_type=super::PanelGrid)]
@@ -48,36 +49,40 @@ impl ObjectImpl for PanelGrid {
 
         self.inner.set_parent(&*self.obj());
         self.connect_signals();
+
+        // paned.connect_cycle_child_focus(f)
     }
 
     fn dispose(&self) {
         self.inner.unparent();
     }
 
-    // Emitted after [PanelGrid.close_panel] has been called for @panel.
-    //
-    // The handler is expected to call [method@PanelGrid.close_panel_finish] to
-    // confirm or reject the closing.
-    //
-    // The default handler will immediately confirm closing
     fn signals() -> &'static [Signal] {
         static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
-            vec![Signal::builder("close-panel")
-                .param_types([Panel::static_type()])
-                .run_last()
-                .action()
-                .accumulator(signal_accumulator_propagation)
-                .return_type::<bool>()
-                .class_handler(|_, args| {
-                    debug!("close-panel class_handler");
-                    let this = args[0].get::<super::PanelGrid>().expect("signal arg");
-                    let panel = args[1].get::<Panel>().expect("signal arg");
+            vec![
+                // Emitted after [PanelGrid.close_panel] has been called for @panel.
+                //
+                // The handler is expected to call [method@PanelGrid.close_panel_finish] to
+                // confirm or reject the closing.
+                //
+                // The default handler will immediately confirm closing
+                Signal::builder("close-panel")
+                    .param_types([Panel::static_type()])
+                    .run_last()
+                    .action()
+                    .accumulator(signal_accumulator_propagation)
+                    .return_type::<bool>()
+                    .class_handler(|_, args| {
+                        debug!("close-panel class_handler");
+                        let this = args[0].get::<super::PanelGrid>().expect("signal arg");
+                        let panel = args[1].get::<Panel>().expect("signal arg");
 
-                    this.close_panel_finish(&panel);
+                        this.close_panel_finish(&panel);
 
-                    Some(Into::<bool>::into(glib::Propagation::Stop).into())
-                })
-                .build()]
+                        Some(Into::<bool>::into(glib::Propagation::Stop).into())
+                    })
+                    .build(),
+            ]
         });
         SIGNALS.as_ref()
     }
@@ -91,7 +96,8 @@ impl PanelGrid {
     fn set_wide_handle(&self, wide_handle: bool) {
         self.wide_handle.set(wide_handle);
 
-        for paned in self.get_all::<Paned>().iter() {
+        for paned in self.get_all::<gtk::Paned>().iter() {
+            // TODO: can we filter for Paned only created by us?
             paned.set_wide_handle(wide_handle);
         }
     }
@@ -127,17 +133,17 @@ impl PanelGrid {
     {
         let mut elems = HashSet::new();
 
-        if let Some(relem) = root.dynamic_cast_ref::<T>() {
-            elems.insert(relem.clone());
+        if let Ok(relem) = root.as_ref().clone().downcast() {
+            elems.insert(relem);
         }
 
         let mut sibling = root.first_child();
         while let Some(widget) = sibling {
-            if let Some(elem) = widget.dynamic_cast_ref::<T>() {
-                elems.insert(elem.clone());
+            if let Ok(elem) = widget.clone().downcast() {
+                elems.insert(elem);
             }
 
-            let child_elems = self.get_all_inner::<T>(&widget);
+            let child_elems = self.get_all_inner(&widget);
             elems.extend(child_elems);
 
             sibling = widget.next_sibling();
@@ -158,11 +164,7 @@ impl PanelGrid {
         panel
     }
 
-    pub fn set_child(&self, child: &impl IsA<gtk::Widget>) -> Panel {
-        if let Some(orig_child) = self.inner.child() {
-            orig_child.unparent();
-        }
-
+    pub fn set_initial_child(&self, child: &impl IsA<gtk::Widget>) -> Panel {
         let panel = self.create_panel(child);
         self.inner.set_child(Some(&panel));
 
@@ -173,11 +175,7 @@ impl PanelGrid {
     }
 
     pub fn split(&self, child: &impl IsA<gtk::Widget>, orientation: Option<gtk::Orientation>) -> Panel {
-        let root_panel = self
-            .selected_panel
-            .borrow()
-            .clone()
-            .or_else(|| self.get_all::<Panel>().first().cloned());
+        let root_panel = self.selected_panel.borrow().clone().or_else(|| self.get_all::<Panel>().first().cloned());
         debug!("root panel {:?}", root_panel);
 
         if let Some(root_panel) = root_panel {
@@ -185,29 +183,27 @@ impl PanelGrid {
             self.split_panel(&root_panel, &panel, orientation);
             panel
         } else {
-            self.set_child(child)
+            self.set_initial_child(child)
         }
     }
 
     fn split_panel(&self, panel: &Panel, new_panel: &Panel, orientation: Option<gtk::Orientation>) {
-        let new_paned = Paned::new(orientation.unwrap_or_else(|| self.preferred_orientation(panel)));
+        let new_paned = gtk::Paned::new(orientation.unwrap_or_else(|| self.preferred_orientation(panel)));
         new_paned.set_wide_handle(self.wide_handle.get());
 
-        match panel.parent().and_downcast::<adw::Bin>() {
+        match panel.parent().and_downcast::<gtk::Paned>() {
             // if the widget does not belong to a paned, it has to be the root
             None => {
                 debug!("setting root child {:?}", new_paned);
-                panel.unparent();
                 self.inner.set_child(Some(&new_paned));
             },
-            Some(parent_bin) => {
-                panel.unparent();
-                parent_bin.set_child(Some(&new_paned));
+            Some(parent_paned) => {
+                parent_paned.replace(Some(panel), Some(&new_paned));
             },
         }
 
-        new_paned.set_start_child(Some(panel.clone()));
-        new_paned.set_end_child(Some(new_panel.clone()));
+        new_paned.set_start_child(Some(panel));
+        new_paned.set_end_child(Some(new_panel));
         self.update_headers_visibility();
         self.obj().notify_n_panels();
     }
@@ -221,7 +217,7 @@ impl PanelGrid {
     }
 
     fn find_parent<T: IsA<gtk::Widget>>(&self, widget: &impl IsA<gtk::Widget>) -> Option<T> {
-        let mut widget = Some(Into::<gtk::Widget>::into(widget.clone()));
+        let mut widget = Some(widget.as_ref().clone());
 
         while let Some(current) = widget {
             if current.is::<T>() {
@@ -268,8 +264,7 @@ impl PanelGrid {
             return;
         }
         debug!("Closing panel: {:?}", panel);
-
-        match self.find_parent::<Paned>(panel) {
+        match panel.parent().and_downcast::<gtk::Paned>() {
             // if the widget does not belong to a paned, it has to be the root
             None => {
                 debug!("No parent paned found");
@@ -279,42 +274,20 @@ impl PanelGrid {
                 let sibling = paned.sibling(Some(panel));
                 debug!("got sibling {:?}", sibling);
 
-                // if let Some(sibling) = sibling.as_ref() {
-                //         sibling.unparent();
-                // }
+                paned.set_start_child(None::<&gtk::Widget>);
+                paned.set_end_child(None::<&gtk::Widget>);
 
-                // self.inner.set_child(sibling.as_ref());
-
-                // debug!("swapping paned {:?} with sibling {:?}", paned, sibling);
-
-                // if let Some(parent_bin) = paned.parent().and_downcast_ref::<adw::Bin>() {
-                //     debug!("parent_bin {:?} , child {:?}", parent_bin, parent_bin.child());
-
-                //     if let Some(sibling) = sibling.as_ref() {
-                //         sibling.unparent();
-                //     }
-
-                //     parent_bin.set_child(sibling.as_ref());
-
-                //     debug!("root bin {:?}, parent_bin {:?}, child {:?}", self.inner, parent_bin, parent_bin.child());
-
-                // }
-
-                // match paned.parent().and_then(|p| self.find_parent::<Paned>(&p)) {
-                //     Some(parent_paned) => {
-
-                //         parent_paned.replace(Some(&paned), sibling.as_ref());
-                //     },
-                //     None => {
-                //         debug!("Setting sibling {:?} as root child", sibling);
-
-                //         paned.unparent();
-                //         self.inner.set_child(sibling.as_ref());
-                //     },
-                // }
+                match paned.parent().and_downcast::<gtk::Paned>() {
+                    Some(parent_paned) => {
+                        parent_paned.replace(Some(&paned), sibling.as_ref());
+                    },
+                    None => {
+                        debug!("Setting sibling {:?} as root child", sibling);
+                        self.inner.set_child(sibling.as_ref());
+                    },
+                }
             },
         }
-
 
         // TODO: disconnect signals
         self.update_headers_visibility();
@@ -328,6 +301,4 @@ impl PanelGrid {
     pub fn get_n_panels(&self) -> u32 {
         self.get_all::<Panel>().len() as u32
     }
-
-
 }

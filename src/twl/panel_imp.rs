@@ -97,7 +97,6 @@ impl Panel {
         self.container.set_parent(&*self.obj());
         self.obj().set_focusable(true);
         self.obj().set_focus_child(Some(&self.container));
-
     }
 
     fn set_child(&self, child: Option<&gtk::Widget>) {

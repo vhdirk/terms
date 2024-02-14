@@ -14,8 +14,8 @@ impl PanelGrid {
         glib::Object::builder().build()
     }
 
-    pub fn set_child(&self, child: &impl IsA<gtk::Widget>) -> Panel {
-        self.imp().set_child(child)
+    pub fn set_initial_child(&self, child: &impl IsA<gtk::Widget>) -> Panel {
+        self.imp().set_initial_child(child)
     }
 
     pub fn split(&self, child: &impl IsA<gtk::Widget>, orientation: Option<gtk::Orientation>) -> Panel {
@@ -46,9 +46,7 @@ impl PanelGrid {
         self.connect_closure(
             "close-panel",
             false,
-            closure_local!(move |obj: Self, panel: &Panel| {
-                f(&obj, panel) == glib::Propagation::Proceed
-            }),
+            closure_local!(move |obj: Self, panel: &Panel| { f(&obj, panel) == glib::Propagation::Proceed }),
         )
     }
 }

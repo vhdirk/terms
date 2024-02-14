@@ -2,9 +2,9 @@ use adw::{prelude::*, subclass::prelude::*};
 use gettextrs::gettext;
 use glib::clone;
 
-use crate::settings::Settings;
 use crate::components::shortcuts_preferences_page::ShortcutsPreferencesPage;
 use crate::components::terminal_preferences_page::TerminalPreferencesPage;
+use crate::settings::Settings;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/preferences_window.ui")]
