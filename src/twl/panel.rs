@@ -21,8 +21,12 @@ impl Panel {
         self.imp().closing.get()
     }
 
-    pub fn connect_close<F: Fn(&Self) + 'static>(&self, f: F) -> glib::SignalHandlerId {
-        self.connect_closure("close", false, closure_local!(move |obj: Self| { f(&obj) }))
+    pub fn connect_close_request<F: Fn(&Self) -> glib::Propagation + 'static>(&self, f: F) -> glib::SignalHandlerId {
+        self.connect_closure(
+            "close-request",
+            false,
+            closure_local!(move |obj: Self| { f(&obj) == glib::Propagation::Proceed }),
+        )
     }
 }
 

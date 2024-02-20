@@ -1,14 +1,10 @@
-use std::{cmp::Ordering, marker::PhantomData};
+use std::marker::PhantomData;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::{self, Properties};
-use gtk::graphene;
 
-use approx::abs_diff_eq;
-use num_traits as num;
-
-use super::utils::{twl_widget_compute_expand, Orthogonal, TwlWidgetExt};
+use super::utils::twl_widget_compute_expand;
 
 #[derive(Debug, Default, Properties)]
 #[properties(wrapper_type=super::PackBox)]
@@ -21,21 +17,6 @@ pub struct PackBox {
     #[property(get=Self::get_orientation, set=Self::set_orientation, construct, explicit_notify, builder(gtk::Orientation::Horizontal))]
     orientation: PhantomData<gtk::Orientation>,
 }
-
-// impl Default for PackBox {
-//     fn default() -> Self {
-//         let orientation = gtk::Orientation::Horizontal;
-//         let spacing = 6;
-//         Self {
-//             container: gtk::Box::new(orientation, spacing),
-//             start: gtk::Box::new(orientation, spacing),
-//             center: gtk::Box::new(orientation, spacing),
-//             end: gtk::Box::new(orientation, spacing),
-
-//             orientation: Default::default(),
-//         }
-//     }
-// }
 
 #[glib::object_subclass]
 impl ObjectSubclass for PackBox {
@@ -56,6 +37,8 @@ impl ObjectImpl for PackBox {
         self.parent_constructed();
 
         self.container.set_parent(self.obj().as_ref());
+        self.obj().set_focus_child(Some(&self.container));
+
         self.container.set_hexpand(true);
         self.container.set_vexpand(true);
 

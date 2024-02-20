@@ -19,8 +19,8 @@ use super::Panel;
 pub struct PanelGrid {
     pub inner: adw::Bin,
 
-    #[property(get, nullable)]
-    pub selected_panel: RefCell<Option<Panel>>,
+    #[property(get, set=Self::set_selected, construct, nullable, explicit_notify)]
+    pub selected: RefCell<Option<Panel>>,
 
     #[property(get, set=Self::set_wide_handle, construct)]
     wide_handle: Cell<bool>,
@@ -154,16 +154,17 @@ impl PanelGrid {
     fn create_panel(&self, child: &impl IsA<gtk::Widget>) -> Panel {
         let panel = Panel::new(child);
 
-        self.selected_panel.borrow_mut().replace(panel.clone());
-        child.connect_has_focus_notify(clone!(@weak self as this, @weak panel as panel => move |c| {
-            if c.has_focus() {
-                this.on_panel_focus(&panel);
-            }
+        panel.connect_close_request(clone!(@weak self as this => @default-return glib::Propagation::Stop, move |p| {
+            this.close_panel(p);
+            glib::Propagation::Stop
         }));
 
-        panel.connect_close(clone!(@weak self as this => move |p| {
-            this.close_panel(p);
+        let event_focus_controller = gtk::EventControllerFocus::new();
+
+        event_focus_controller.connect_enter(clone!(@weak self as this, @weak panel as panel => move |_| {
+            this.set_selected(Some(&panel));
         }));
+        panel.add_controller(event_focus_controller);
 
         panel
     }
@@ -179,13 +180,13 @@ impl PanelGrid {
     }
 
     pub fn split(&self, child: &impl IsA<gtk::Widget>, orientation: Option<gtk::Orientation>) -> Panel {
-        let active_panel = self.selected_panel.borrow().clone().or_else(|| self.get_all::<Panel>().first().cloned());
-        debug!("active panel {:?}", active_panel);
+        let selected_panel = self.selected.borrow().clone().or_else(|| self.get_all::<Panel>().first().cloned());
+        debug!("active panel {:?}", selected_panel);
 
-        if let Some(active_panel) = active_panel {
+        if let Some(selected_panel) = selected_panel {
             debug!("split: split active panel");
             let panel = self.create_panel(child);
-            self.split_panel(&active_panel, &panel, orientation);
+            self.split_panel(&selected_panel, &panel, orientation);
             panel
         } else {
             debug!("split: set initial child");
@@ -236,12 +237,6 @@ impl PanelGrid {
             widget = current.parent();
         }
         None
-    }
-
-    pub fn on_panel_focus(&self, panel: &Panel) {
-        debug!("On panel focus {:?}", panel);
-        self.selected_panel.set(Some(panel.clone()));
-        self.obj().notify_selected_panel();
     }
 
     pub fn close_other_panels(&self, panel: &Panel) {
@@ -307,5 +302,22 @@ impl PanelGrid {
 
     pub fn get_n_panels(&self) -> u32 {
         self.get_all::<Panel>().len() as u32
+    }
+
+    pub fn set_selected(&self, panel: Option<&Panel>) {
+        if self.selected.borrow().as_ref() == panel {
+            return;
+        }
+        *self.selected.borrow_mut() = panel.cloned();
+
+        for p in self.get_all::<Panel>() {
+
+            // p.set_selected(false);
+        }
+
+        if let Some(panel) = panel {
+            // panel.set_selected(true);
+        }
+        self.obj().notify_selected();
     }
 }

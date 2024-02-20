@@ -9,10 +9,10 @@
 <interface>
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
-  <template class="TwlZoomControls" parent="AdwBin">
+  <template class="TwlZoomControls" parent="GtkWidget">
     <property name="name">zoom_controls</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="container">
         <property name="orientation">horizontal</property>
         <property name="spacing">12</property>
         <property name="margin-start">18</property>

@@ -132,7 +132,7 @@ impl TerminalTab {
         }));
         self.panel_grid.set_show_panel_headers(self.settings.show_panel_headers());
 
-        self.panel_grid.connect_selected_panel_notify(clone!(@weak self as this => move |s| {
+        self.panel_grid.connect_selected_notify(clone!(@weak self as this => move |s| {
             this.on_selected_panel_change();
         }));
 
@@ -168,7 +168,7 @@ impl TerminalTab {
     }
 
     fn get_selected(&self) -> Option<Terminal> {
-        self.panel_grid.selected_panel().and_then(|p| p.content()).and_downcast()
+        self.panel_grid.selected().and_then(|p| p.content()).and_downcast()
     }
 
     fn set_selected(&self, terminal: Option<Terminal>) {
@@ -177,7 +177,7 @@ impl TerminalTab {
     }
 
     fn on_selected_panel_change(&self) {
-        let panel = self.panel_grid.selected_panel();
+        let panel = self.panel_grid.selected();
         debug!("on panel changed: {:?}", panel);
         self.selected_panel_signals.set_target(panel.as_ref());
         if let Some(panel) = panel.as_ref() {

@@ -21,15 +21,19 @@ pub struct ZoomControls {
 
     #[template_child]
     zoom_label: TemplateChild<gtk::Button>,
+
+    #[template_child]
+    container: TemplateChild<gtk::Box>,
 }
 
 #[glib::object_subclass]
 impl ObjectSubclass for ZoomControls {
     const NAME: &'static str = "TwlZoomControls";
     type Type = super::ZoomControls;
-    type ParentType = adw::Bin;
+    type ParentType = gtk::Widget;
 
     fn class_init(klass: &mut Self::Class) {
+        klass.set_layout_manager_type::<gtk::BinLayout>();
         klass.bind_template();
         klass.bind_template_callbacks();
         klass.set_css_name("zoom_controls");
@@ -57,10 +61,13 @@ impl ObjectImpl for ZoomControls {
         });
         SIGNALS.as_ref()
     }
+
+    fn dispose(&self) {
+        self.container.unparent();
+    }
 }
 
 impl WidgetImpl for ZoomControls {}
-impl BinImpl for ZoomControls {}
 
 #[gtk::template_callbacks]
 impl ZoomControls {

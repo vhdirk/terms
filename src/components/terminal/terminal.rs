@@ -201,7 +201,6 @@ impl BoxImpl for Terminal {}
 impl Terminal {
     fn setup_widgets(&self) {
         // self.process_manager.set_terminal(&*self.term);
-
         ThemeProvider::default().connect_notify_local(
             Some("current-theme"),
             clone!(@weak self as this => move |_, _| {

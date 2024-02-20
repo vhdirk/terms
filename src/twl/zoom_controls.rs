@@ -6,7 +6,7 @@ use gtk::prelude::*;
 
 glib::wrapper! {
         pub struct ZoomControls(ObjectSubclass<imp::ZoomControls>)
-                @extends gtk::Widget, adw::Bin,
+                @extends gtk::Widget,
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
 }
 

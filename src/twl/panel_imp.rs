@@ -2,7 +2,7 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::subclass::basic::ClassStruct;
 use glib::subclass::Signal;
-use glib::Properties;
+use glib::{clone, Properties};
 use gtk::{graphene, gsk};
 use num_traits as num;
 use once_cell::sync::Lazy;
@@ -10,6 +10,8 @@ use std::cell::{Cell, OnceCell, RefCell};
 use std::cmp;
 use std::marker::PhantomData;
 use tracing::{info, warn};
+
+use crate::twl::utils::signal_accumulator_propagation;
 
 use super::PanelHeader;
 
@@ -32,8 +34,9 @@ pub struct Panel {
     show_header: PhantomData<bool>,
 
     pub closing: Cell<bool>,
-    // #[property(get, set, construct)]
-    // selected: Cell<bool>,
+
+    #[property(get, set, construct)]
+    selected: Cell<bool>,
 
     // #[property(get, set, construct)]
     // live_thumbnail: Cell<bool>,
@@ -79,6 +82,7 @@ impl Default for Panel {
             header_revealer: gtk::Revealer::new(),
 
             header: Default::default(),
+            selected: Default::default(),
         }
     }
 }
@@ -112,7 +116,13 @@ impl ObjectImpl for Panel {
     }
 
     fn signals() -> &'static [Signal] {
-        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| vec![Signal::builder("close").build()]);
+        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
+            vec![Signal::builder("close-request")
+                .action()
+                .accumulator(signal_accumulator_propagation)
+                .return_type::<bool>()
+                .build()]
+        });
         SIGNALS.as_ref()
     }
 }
@@ -232,6 +242,7 @@ impl Panel {
     }
 
     fn setup_content(&self) {
+        // self.obj().set_focus_child(self.content.borrow().as_ref());
         if let Some(content) = self.content.borrow().as_ref() {
             content.insert_before(&*self.obj(), Some(&self.header_revealer));
         }
