@@ -1,7 +1,7 @@
 use glib::{closure_local, prelude::*};
 use gtk::subclass::prelude::*;
 
-use super::{panel_grid_imp as imp, Panel};
+use super::{panel_grid_imp as imp, utils::TwlWidgetExt, Panel};
 
 glib::wrapper! {
         pub struct PanelGrid(ObjectSubclass<imp::PanelGrid>)
@@ -50,3 +50,5 @@ impl PanelGrid {
         )
     }
 }
+
+impl TwlWidgetExt for PanelGrid {}

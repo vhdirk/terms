@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="libadwaita">
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
+  <template class="TwlPanelHeader" parent="GtkWidget">
+    <property name="name">panel_header</property>
+    <style>
+      <class name="toolbar"/>
+    </style>
+    <!-- <property name="focusable">true</property> -->
+    <!-- <accessibility>
+      <relation name="labelled-by">title</relation>
+    </accessibility> -->
+    <!-- <child>
+      <object class="GtkEventControllerMotion">
+        <signal name="enter" handler="enter_cb" swapped="true"/>
+        <signal name="motion" handler="motion_cb" swapped="true"/>
+        <signal name="leave" handler="leave_cb" swapped="true"/>
+      </object>
+    </child> -->
+    <child>
+      <object class="TwlPackBox" id="container">
+        <child type="start">
+          <!-- <object class="GtkStack" id="icon_stack">
+            <property name="margin-start">4</property>
+            <property name="margin-end">2</property>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">icon</property>
+                <property name="child"> -->
+          <object class="GtkImage" id="icon">
+            <style>
+              <class name="panel-icon"/>
+            </style>
+          </object>
+          <!-- </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">spinner</property>
+                <property name="child">
+                  <object class="GtkSpinner" id="spinner"/>
+                </property>
+              </object>
+            </child>
+          </object> -->
+
+        </child>
+
+
+
+        <child>
+          <object class="AdwBin" id="title_container">
+            <property name="margin-start">4</property>
+            <property name="margin-end">4</property>
+            <style>
+              <class name="panel-title"/>
+            </style>
+          </object>
+
+        </child>
+
+
+        <child type="end">
+          <object class="GtkButton" id="indicator_btn">
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
+            <!-- <binding name="tooltip-markup">
+                <lookup name="indicator-tooltip" type="PanelHeader">
+                  <lookup name="page">AdwTab</lookup>
+                </lookup>
+              </binding> -->
+            <!-- <signal name="clicked" handler="on_indicator_clicked" swapped="true"/> -->
+            <style>
+              <class name="flat"/>
+              <class name="panel-indicator"/>
+              <class name="image-button"/>
+            </style>
+            <property name="child">
+              <object class="GtkImage" id="indicator_icon">
+                <!-- <binding name="gicon">
+                    <lookup name="indicator-icon" type="PanelHeader">
+                      <lookup name="page">AdwTab</lookup>
+                    </lookup>
+                  </binding> -->
+              </object>
+            </property>
+          </object>
+        </child>
+        <child type="end">
+          <object class="GtkButton" id="close_btn">
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Close Panel</property>
+            <property name="icon-name">window-close-symbolic</property>
+            <signal name="clicked" handler="on_close_clicked" swapped="true"/>
+            <style>
+              <class name="flat"/>
+              <class name="panel-close-button"/>
+            </style>
+          </object>
+        </child>
+        <!--         <child type="end">
+
+            <object class="AdwGizmo" id="needs_attention_indicator">
+              <property name="css-name">indicator</property>
+              <property name="valign">end</property>
+            </object>
+          </child> -->
+
+    </object>
+      </child>
+  </template>
+</interface>
+

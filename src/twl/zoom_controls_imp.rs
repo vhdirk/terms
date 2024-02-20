@@ -32,6 +32,7 @@ impl ObjectSubclass for ZoomControls {
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
         klass.bind_template_callbacks();
+        klass.set_css_name("zoom_controls");
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {

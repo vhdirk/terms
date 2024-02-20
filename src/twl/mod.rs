@@ -1,6 +1,5 @@
 mod zoom_controls;
 mod zoom_controls_imp;
-use glib::subclass::SignalInvocationHint;
 pub use zoom_controls::*;
 
 mod style_switcher;
@@ -11,8 +10,9 @@ mod panel;
 mod panel_imp;
 pub use panel::*;
 
-mod tile_header;
-pub use tile_header::*;
+mod panel_header;
+mod panel_header_imp;
+pub use panel_header::*;
 
 mod split_paned;
 
@@ -20,9 +20,16 @@ mod panel_grid;
 mod panel_grid_imp;
 pub use panel_grid::*;
 
-pub fn signal_accumulator_propagation(_hint: &SignalInvocationHint, return_accu: &mut glib::Value, handler_return: &glib::Value) -> bool {
-    let signal_propagate = glib::Propagation::from(handler_return.get::<bool>().unwrap_or(true));
+mod bin;
+mod bin_imp;
+pub use bin::*;
 
-    *return_accu = handler_return.clone();
-    signal_propagate.into()
-}
+mod pack_box;
+mod pack_box_imp;
+pub use pack_box::*;
+
+mod fading_label;
+mod fading_label_imp;
+pub use fading_label::*;
+
+pub mod utils;

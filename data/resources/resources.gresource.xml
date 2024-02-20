@@ -34,6 +34,7 @@
   </gresource>
 
   <gresource prefix="/io/github/vhdirk/Twl/gtk">
+    <file compressed="true" preprocess="xml-stripblanks" alias="panel_header.ui">../../src/twl/panel_header.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="zoom_controls.ui">../../src/twl/zoom_controls.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="style_switcher.ui">../../src/twl/style_switcher.ui</file>
   </gresource>

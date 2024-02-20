@@ -127,6 +127,11 @@ impl TerminalTab {
             }));
         self.panel_grid.set_wide_handle(self.settings.use_wide_panel_resize_handle());
 
+        self.settings.connect_show_panel_headers_changed(clone!(@weak self as this => move |s| {
+            this.panel_grid.set_show_panel_headers(s.show_panel_headers());
+        }));
+        self.panel_grid.set_show_panel_headers(self.settings.show_panel_headers());
+
         self.panel_grid.connect_selected_panel_notify(clone!(@weak self as this => move |s| {
             this.on_selected_panel_change();
         }));
@@ -163,7 +168,7 @@ impl TerminalTab {
     }
 
     fn get_selected(&self) -> Option<Terminal> {
-        self.panel_grid.selected_panel().and_then(|p| p.child()).and_downcast()
+        self.panel_grid.selected_panel().and_then(|p| p.content()).and_downcast()
     }
 
     fn set_selected(&self, terminal: Option<Terminal>) {
@@ -176,7 +181,7 @@ impl TerminalTab {
         debug!("on panel changed: {:?}", panel);
         self.selected_panel_signals.set_target(panel.as_ref());
         if let Some(panel) = panel.as_ref() {
-            let term = panel.child().and_downcast::<Terminal>();
+            let term = panel.content().and_downcast::<Terminal>();
             debug!("Set active term {:?}", term);
             self.active_term_signals.set_target(term.as_ref());
             if let Some(term) = term.as_ref() {
@@ -188,7 +193,7 @@ impl TerminalTab {
 
     pub fn split(&self, orientation: Option<gtk::Orientation>) {
         let term = Terminal::new(self.directory.borrow().clone(), self.command.borrow().clone(), self.env.borrow().clone());
-        term.grab_focus();
+        // term.grab_focus();
 
         let panel = self.panel_grid.split(&term, orientation);
         self.connect_terminal_signals(&term, &panel);
@@ -201,14 +206,14 @@ impl TerminalTab {
         }));
 
         terminal.connect_title_notify(clone!(@weak self as this, @weak panel as panel => move |term| {
-            panel.set_title(term.title());
+            panel.header().set_title(term.title());
         }));
     }
 
     pub fn on_panel_close_request(&self, panel: &Panel) -> glib::Propagation {
         info!("on_panel_close_request: {:?}", panel);
         // TODO: test if process is still running
-        if let Some(terminal) = panel.child().and_downcast_ref::<Terminal>() {}
+        if let Some(terminal) = panel.content().and_downcast_ref::<Terminal>() {}
 
         glib::Propagation::Proceed
     }

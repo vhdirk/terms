@@ -8,9 +8,10 @@ use glib::{clone, subclass::Signal, Properties};
 use once_cell::sync::Lazy;
 use tracing::*;
 
-use crate::twl::signal_accumulator_propagation;
+use crate::twl::utils::signal_accumulator_propagation;
 
 use super::split_paned::SplitPaned;
+use super::utils::TwlWidgetExt;
 use super::Panel;
 
 #[derive(Debug, Default, Properties)]
@@ -39,6 +40,7 @@ impl ObjectSubclass for PanelGrid {
 
     fn class_init(klass: &mut Self::Class) {
         klass.set_layout_manager_type::<gtk::BinLayout>();
+        klass.set_css_name("panel_grid");
     }
 }
 
@@ -124,29 +126,26 @@ impl PanelGrid {
     where
         T: IsA<gtk::Widget> + ObjectType,
     {
-        self.get_all_inner(&self.inner).into_iter().collect()
+        self.get_all_inner(&self.inner.upcast_ref()).into_iter().collect()
     }
 
-    fn get_all_inner<T>(&self, root: &impl IsA<gtk::Widget>) -> HashSet<T>
+    fn get_all_inner<T>(&self, root: &gtk::Widget) -> HashSet<T>
     where
         T: IsA<gtk::Widget> + ObjectType,
     {
         let mut elems = HashSet::new();
 
-        if let Ok(relem) = root.as_ref().clone().downcast() {
+        if let Ok(relem) = root.clone().downcast() {
             elems.insert(relem);
         }
 
-        let mut sibling = root.first_child();
-        while let Some(widget) = sibling {
-            if let Ok(elem) = widget.clone().downcast() {
+        for child in root.iter_children() {
+            if let Ok(elem) = child.clone().downcast() {
                 elems.insert(elem);
             }
 
-            let child_elems = self.get_all_inner(&widget);
+            let child_elems = self.get_all_inner(&child);
             elems.extend(child_elems);
-
-            sibling = widget.next_sibling();
         }
 
         elems
@@ -161,6 +160,11 @@ impl PanelGrid {
                 this.on_panel_focus(&panel);
             }
         }));
+
+        panel.connect_close(clone!(@weak self as this => move |p| {
+            this.close_panel(p);
+        }));
+
         panel
     }
 
@@ -175,14 +179,16 @@ impl PanelGrid {
     }
 
     pub fn split(&self, child: &impl IsA<gtk::Widget>, orientation: Option<gtk::Orientation>) -> Panel {
-        let root_panel = self.selected_panel.borrow().clone().or_else(|| self.get_all::<Panel>().first().cloned());
-        debug!("root panel {:?}", root_panel);
+        let active_panel = self.selected_panel.borrow().clone().or_else(|| self.get_all::<Panel>().first().cloned());
+        debug!("active panel {:?}", active_panel);
 
-        if let Some(root_panel) = root_panel {
+        if let Some(active_panel) = active_panel {
+            debug!("split: split active panel");
             let panel = self.create_panel(child);
-            self.split_panel(&root_panel, &panel, orientation);
+            self.split_panel(&active_panel, &panel, orientation);
             panel
         } else {
+            debug!("split: set initial child");
             self.set_initial_child(child)
         }
     }
@@ -190,6 +196,7 @@ impl PanelGrid {
     fn split_panel(&self, panel: &Panel, new_panel: &Panel, orientation: Option<gtk::Orientation>) {
         let new_paned = gtk::Paned::new(orientation.unwrap_or_else(|| self.preferred_orientation(panel)));
         new_paned.set_wide_handle(self.wide_handle.get());
+        debug!("panel {:?} parent {:?}", panel, panel.parent());
 
         match panel.parent().and_downcast::<gtk::Paned>() {
             // if the widget does not belong to a paned, it has to be the root

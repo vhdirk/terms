@@ -10,7 +10,7 @@
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
   <template class="TwlZoomControls" parent="AdwBin">
-    <property name="name">twl_zoom_controls</property>
+    <property name="name">zoom_controls</property>
     <child>
       <object class="GtkBox">
         <property name="orientation">horizontal</property>

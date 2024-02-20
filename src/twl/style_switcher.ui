@@ -7,13 +7,13 @@
   BlackBox is licensed GNU GPLv3
  -->
 <interface>
-  <requires lib="gtk" version="4.0" />
+  <requires lib="gtk" version="4.10" />
+  <requires lib="libadwaita" version="1.4" />
   <template class="TwlStyleSwitcher" parent="GtkWidget">
-    <property name="name">twl_style_switcher</property>
+    <property name="name">style_switcher</property>
 
     <child>
       <object class="GtkBox" id="layout_box">
-        <property name="name">twl_style_switcher_box</property>
         <property name="orientation">horizontal</property>
         <property name="homogeneous">True</property>
         <property name="spacing">18</property>
