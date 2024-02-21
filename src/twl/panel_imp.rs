@@ -9,7 +9,7 @@ use once_cell::sync::Lazy;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::cmp;
 use std::marker::PhantomData;
-use tracing::{info, warn};
+use tracing::*;
 
 use crate::twl::utils::signal_accumulator_propagation;
 
@@ -27,8 +27,8 @@ pub struct Panel {
     #[property(get, set, construct, nullable)]
     tooltip: RefCell<Option<String>>,
 
-    #[property(get, set=Self::set_content, construct, nullable)]
-    content: RefCell<Option<gtk::Widget>>,
+    #[property(get, set, construct_only)]
+    child: OnceCell<gtk::Widget>,
 
     #[property(get=Self::get_show_header, set=Self::set_show_header, construct)]
     show_header: PhantomData<bool>,
@@ -48,8 +48,8 @@ pub struct Panel {
 
     header_revealer: gtk::Revealer,
 
-    #[property(get)]
-    header: OnceCell<PanelHeader>,
+    #[property(get, set, construct_only)]
+    header: OnceCell<gtk::Widget>,
     //   PAGE_PROP_PARENT,
     //   PAGE_PROP_SELECTED,
     //   PAGE_PROP_LOADING,
@@ -71,7 +71,7 @@ impl Default for Panel {
 
             tooltip: Default::default(),
 
-            content: Default::default(),
+            child: Default::default(),
 
             show_header: Default::default(),
 
@@ -96,6 +96,10 @@ impl ObjectSubclass for Panel {
     fn class_init(klass: &mut Self::Class) {
         // klass.set_layout_manager_type::<gtk::BoxLayout>();
         klass.set_css_name("panel");
+
+        klass.install_action("panel.close", None, |obj: &super::Panel, _, _| {
+            obj.imp().close();
+        });
     }
 }
 
@@ -107,8 +111,8 @@ impl ObjectImpl for Panel {
     }
 
     fn dispose(&self) {
-        if let Some(content) = self.content.borrow().as_ref() {
-            content.unparent();
+        if let Some(child) = self.child.get() {
+            child.unparent();
         }
 
         self.header_revealer.set_child(None::<&gtk::Widget>);
@@ -118,6 +122,7 @@ impl ObjectImpl for Panel {
     fn signals() -> &'static [Signal] {
         static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
             vec![Signal::builder("close-request")
+                .run_last()
                 .action()
                 .accumulator(signal_accumulator_propagation)
                 .return_type::<bool>()
@@ -128,8 +133,8 @@ impl ObjectImpl for Panel {
 }
 impl WidgetImpl for Panel {
     fn request_mode(&self) -> gtk::SizeRequestMode {
-        match self.content.borrow().as_ref() {
-            Some(content) => content.request_mode(),
+        match self.child.get() {
+            Some(child) => child.request_mode(),
             None => gtk::SizeRequestMode::ConstantSize,
         }
     }
@@ -137,17 +142,17 @@ impl WidgetImpl for Panel {
     fn measure(&self, orientation: gtk::Orientation, for_size: i32) -> (i32, i32, i32, i32) {
         let (header_min, header_nat, _, _) = self.header_revealer.measure(orientation, for_size);
 
-        let (content_min, content_nat) = match self.content.borrow().as_ref() {
-            Some(content) => {
-                let (content_min, content_nat, _, _) = content.measure(orientation, for_size);
-                (content_min, content_nat)
+        let (child_min, child_nat) = match self.child.get() {
+            Some(child) => {
+                let (child_min, child_nat, _, _) = child.measure(orientation, for_size);
+                (child_min, child_nat)
             },
             None => (0, 0),
         };
 
         let (minimum, natural) = match orientation {
-            gtk::Orientation::Horizontal => (cmp::max(content_min, header_min), cmp::max(content_nat, header_nat)),
-            _ => (content_min + header_min, content_nat + header_nat),
+            gtk::Orientation::Horizontal => (cmp::max(child_min, header_min), cmp::max(child_nat, header_nat)),
+            _ => (child_min + header_min, child_nat + header_nat),
         };
 
         (minimum, natural, -1, -1)
@@ -156,19 +161,18 @@ impl WidgetImpl for Panel {
     fn size_allocate(&self, width: i32, height: i32, _baseline: i32) {
         let (header_min, header_nat, _, _) = self.header_revealer.measure(gtk::Orientation::Vertical, -1);
 
-        let content_min = self
-            .content
-            .borrow()
-            .as_ref()
-            .map(|content| {
-                let (content_min, _, _, _) = content.measure(gtk::Orientation::Vertical, -1);
-                cmp::max(0, content_min)
+        let child_min = self
+            .child
+            .get()
+            .map(|child| {
+                let (child_min, _, _, _) = child.measure(gtk::Orientation::Vertical, -1);
+                cmp::max(0, child_min)
             })
             .unwrap_or(0);
 
-        let header_height = num::clamp(height - content_min, header_min, header_nat);
-        let content_height = height - header_height;
-        let content_offset = header_height;
+        let header_height = num::clamp(height - child_min, header_min, header_nat);
+        let child_height = height - header_height;
+        let child_offset = header_height;
 
         if self.header_height.get() != header_height {
             self.header_height.set(header_height);
@@ -176,12 +180,12 @@ impl WidgetImpl for Panel {
         }
 
         self.header_revealer.allocate(width, header_height, -1, None);
-        if let Some(content) = self.content.borrow().as_ref() {
-            content.allocate(
+        if let Some(child) = self.child.get() {
+            child.allocate(
                 width,
-                content_height,
+                child_height,
                 -1,
-                Some(gsk::Transform::new().translate(&graphene::Point::new(0.0, content_offset as f32))),
+                Some(gsk::Transform::new().translate(&graphene::Point::new(0.0, child_offset as f32))),
             )
         }
     }
@@ -189,13 +193,17 @@ impl WidgetImpl for Panel {
 
 impl BuildableImpl for Panel {
     fn add_child(&self, builder: &gtk::Builder, child: &glib::Object, type_: Option<&str>) {
-        match (child.downcast_ref::<gtk::Widget>(), type_) {
-            // (Some(widget), Some(wtype)) if wtype == "header" => match widget.clone().downcast::<PanelHeader>() {
-            //     Err(err) => warn!("unable to use widget {:?} as header {:?}", widget, err),
-            //     Ok(header) => self.set_header(Some(&header)),
-            // },
-            // (Some(widget), _) if wtype == "content" => self.set_content(Some(widget)),
-            (Some(widget), _) => self.set_content(Some(widget)),
+        match (child.clone().downcast::<gtk::Widget>(), type_) {
+            (Ok(widget), Some("header")) if widget.is::<PanelHeader>() => {
+                if let Err(err) = self.header.set(widget) {
+                    error!("Unable to set header widget {:?}", err);
+                }
+            },
+            (Ok(widget), _) => {
+                if let Err(err) = self.child.set(widget) {
+                    error!("Unable to set child widget {:?}", err);
+                }
+            },
             (_, _) => self.parent_add_child(builder, child, type_),
         }
     }
@@ -203,8 +211,6 @@ impl BuildableImpl for Panel {
 
 impl Panel {
     fn setup(&self) {
-        let header = PanelHeader::new(self.obj().as_ref());
-        self.header.set(header.clone()).expect("Header should not have been set yet");
         self.obj().set_overflow(gtk::Overflow::Hidden);
 
         // self->header_style = ADW_TOOLBAR_FLAT;
@@ -215,43 +221,22 @@ impl Panel {
         self.header_revealer.set_parent(&*self.obj());
 
         self.header_revealer.set_reveal_child(true);
-        self.header_revealer.set_child(Some(&header));
+        self.header_revealer.set_child(self.header.get());
 
-        self.setup_content();
-    }
-
-    fn set_content(&self, content: Option<&gtk::Widget>) {
-        info!("panel: set content {:?}", content);
-
-        // TODO: not yet initialized? weird
-        if self.header_revealer.parent().is_none() {
-            *self.content.borrow_mut() = content.cloned();
-            return;
-        }
-
-        if content == self.content.borrow().as_ref() {
-            return;
-        }
-
-        if let Some(previous) = self.content.borrow().as_ref() {
-            previous.unparent();
-        }
-
-        *self.content.borrow_mut() = content.cloned();
-        self.setup_content();
-    }
-
-    fn setup_content(&self) {
-        // self.obj().set_focus_child(self.content.borrow().as_ref());
-        if let Some(content) = self.content.borrow().as_ref() {
-            content.insert_before(&*self.obj(), Some(&self.header_revealer));
+        if let Some(child) = self.child.get() {
+            child.insert_before(&*self.obj(), Some(&self.header_revealer));
         }
     }
+
     fn set_show_header(&self, show_header: bool) {
         self.header_revealer.set_reveal_child(show_header)
     }
 
     fn get_show_header(&self) -> bool {
         self.header_revealer.is_child_revealed()
+    }
+
+    fn close(&self) {
+        self.obj().emit_by_name::<bool>("close-request", &[]);
     }
 }

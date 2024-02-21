@@ -1,6 +1,6 @@
 use glib::{closure_local, prelude::*, subclass::prelude::*};
 
-use super::{panel_imp as imp, utils::TwlWidgetExt};
+use super::{panel_imp as imp, utils::TwlWidgetExt, PanelHeader};
 
 glib::wrapper! {
         pub struct Panel(ObjectSubclass<imp::Panel>)
@@ -9,8 +9,10 @@ glib::wrapper! {
 }
 
 impl Panel {
-    pub fn new(content: &impl IsA<gtk::Widget>) -> Self {
-        glib::Object::builder().property("content", content).build()
+    pub fn new(child: &impl IsA<gtk::Widget>, header: Option<&impl IsA<gtk::Widget>>) -> Self {
+        let header = header.map(|h| h.as_ref().clone()).unwrap_or_else(|| PanelHeader::new().upcast());
+
+        glib::Object::builder().property("child", child).property("header", header).build()
     }
 
     pub fn set_closing(&self, closing: bool) {

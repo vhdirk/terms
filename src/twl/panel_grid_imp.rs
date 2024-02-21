@@ -152,7 +152,7 @@ impl PanelGrid {
     }
 
     fn create_panel(&self, child: &impl IsA<gtk::Widget>) -> Panel {
-        let panel = Panel::new(child);
+        let panel = Panel::new(child, None::<&gtk::Widget>);
 
         panel.connect_close_request(clone!(@weak self as this => @default-return glib::Propagation::Stop, move |p| {
             this.close_panel(p);

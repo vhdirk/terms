@@ -1,8 +1,6 @@
-use std::path::PathBuf;
+use gtk::prelude::*;
 
 use super::{panel_header_imp as imp, utils::TwlWidgetExt, Panel};
-use glib::closure_local;
-use gtk::prelude::*;
 
 glib::wrapper! {
         pub struct PanelHeader(ObjectSubclass<imp::PanelHeader>)
@@ -11,8 +9,8 @@ glib::wrapper! {
 }
 
 impl PanelHeader {
-    pub fn new(panel: &impl IsA<Panel>) -> Self {
-        glib::Object::builder().property("panel", panel).build()
+    pub fn new() -> Self {
+        glib::Object::builder().build()
     }
 }
 

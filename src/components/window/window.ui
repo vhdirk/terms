@@ -121,14 +121,14 @@
       </section>
       <section>
         <item>
-          <attribute name="id">split-horizontal</attribute>
-          <attribute name="label" translatable="yes">Split Horizontal</attribute>
-          <attribute name="action">win.split-horizontal</attribute>
+          <attribute name="id">add-terminal-right</attribute>
+          <attribute name="label" translatable="yes">Add Terminal Right</attribute>
+          <attribute name="action">win.add-terminal-right</attribute>
         </item>
         <item>
-          <attribute name="id">split-vertical</attribute>
-          <attribute name="label" translatable="yes">Split Vertical</attribute>
-          <attribute name="action">win.split-vertical</attribute>
+          <attribute name="id">add-terminal-down</attribute>
+          <attribute name="label" translatable="yes">Add Terminal Down</attribute>
+          <attribute name="action">win.add-terminal-down</attribute>
         </item>
     </section>
   </menu>

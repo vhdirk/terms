@@ -154,48 +154,36 @@ impl AdwApplicationWindowImpl for Window {}
 #[gtk::template_callbacks]
 impl Window {
     fn setup_signals(&self) {
-        // self.selected_page_signals
-
-        self.selected_page_signals.connect_bind_local(move |sg, obj| {
+        self.selected_page_signals.connect_bind_local(clone!(@weak self as this => move |_sg, obj| {
             info!("selected page: bind");
+            let page = obj.downcast_ref::<adw::TabPage>();
+            let tab_obj = page.map(adw::TabPage::child);
+            let tab = tab_obj.and_downcast_ref::<TerminalTab>();
+            this.active_tab_signals.set_target(tab);
+            this.active_tab_bindings.set_source(tab);
+        }));
+
+        self.active_tab_signals.connect_bind_local(move |sg, obj| {
+            info!("active tab: bind");
         });
 
         self.selected_page_signals.connect_notify_local(Some("pinned"), move |obj, param| {
             info!("selected page: pinned");
         });
 
-        self.selected_page_signals.connect_notify_local(
-            Some("title"),
-            clone!(@weak self as this =>move |obj, param| {
-                info!("selected page: title");
-                if let Some(page) = obj.downcast_ref::<TabPage>() {
-                    this.obj().set_title(Some(&page.title()))
-                }
-            }),
-        );
-
-        self.active_tab_signals.connect_bind_local(move |sg, obj| {
-            info!("active tab: bind");
-        });
+        self.active_tab_bindings.bind("title", self.obj().as_ref(), "title").sync_create().build();
+        self.active_tab_bindings
+            .bind("directory", self.obj().as_ref(), "directory")
+            .sync_create()
+            .build();
 
         // self.active_tab_signals.connect_local(Some("bell"), move |sg, obj| {
         //     info!("active tab: bind");
         // });
 
-        self.active_tab_signals.connect_notify_local(Some("zoom"), move |obj, param| {
+        self.active_tab_bindings.connect_notify_local(Some("zoom"), move |obj, param| {
             info!("active tab: zoom");
         });
-
-        self.active_tab_signals.connect_notify_local(
-            Some("directory"),
-            clone!(@weak self as this => move |obj, param| {
-                info!("active tab: directory");
-                if let Some(tab) = obj.downcast_ref::<TerminalTab>() {
-                    this.directory.set(tab.directory());
-                    this.obj().notify_directory();
-                }
-            }),
-        );
 
         self.settings.bind_show_menu_button(&*self.menu_button, "visible").get_only().build();
 
@@ -277,9 +265,9 @@ impl Window {
 
         self.tab_view.connect_selected_page_notify(clone!(@weak self as this => move |tab_view| {
             info!("tab_view.selected_page_notify");
-            if let Some(page) = tab_view.selected_page() {
-                this.obj().set_title(Some(&page.title()))
-            }
+            // if let Some(page) = tab_view.selected_page() {
+            //     this.obj().set_title(Some(&page.title()))
+            // }
         }));
     }
 
@@ -328,11 +316,14 @@ impl Window {
             gio::ActionEntry::builder("close-other-tabs")
                 .activate(move |win: &super::Window, _, _| win.imp().close_other_tabs())
                 .build(),
-            gio::ActionEntry::builder("split-horizontal")
+            gio::ActionEntry::builder("add-terminal-right")
                 .activate(move |win: &super::Window, _, _| win.imp().split(Some(gtk::Orientation::Horizontal)))
                 .build(),
-            gio::ActionEntry::builder("split-vertical")
+            gio::ActionEntry::builder("add-terminal-down")
                 .activate(move |win: &super::Window, _, _| win.imp().split(Some(gtk::Orientation::Vertical)))
+                .build(),
+            gio::ActionEntry::builder("add-terminal-auto")
+                .activate(move |win: &super::Window, _, _| win.imp().split(None))
                 .build(),
         ]);
     }
@@ -352,15 +343,9 @@ impl Window {
             this.tab_view.close_page(&this.tab_view.page(tab));
         }));
 
-        let tab_page = page.clone();
-        tab.connect_title_notify(clone!(@weak self as this, @weak tab_page => move |t| {
-            let term_title = t.title();
-            let title = term_title.as_ref().map(String::as_str);
-            if let Some(title) = title {
-                tab_page.set_title(title);
-            }
-        }));
-        tab_page
+        tab.bind_property("title", &page, "title").sync_create().build();
+
+        page
     }
 
     fn zoom_out(&self) {
@@ -448,11 +433,10 @@ impl Window {
         self.selected_page_signals.set_target(page.as_ref());
         if let Some(page) = page.as_ref() {
             let tab = page.child().downcast::<TerminalTab>().ok();
-            self.active_tab_signals.set_target(tab.as_ref());
+
             if let Some(tab) = tab.as_ref() {
                 tab.grab_focus();
             }
-            self.active_tab_bindings.set_source(tab.as_ref());
         }
     }
 

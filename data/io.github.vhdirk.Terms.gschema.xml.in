@@ -464,7 +464,18 @@
       <summary>Popup Menu</summary>
       <description>Shortcut to show the popup menu for the terminal</description>
     </key>
-
+    <key name="win-add-terminal-right" type="as">
+      <default>['&lt;Ctrl&gt;&lt;Alt&gt;r']</default>
+      <summary>Keyboard shortcut to add new terminal right</summary>
+    </key>
+    <key name="win-add-terminal-down" type="as">
+      <default>['&lt;Ctrl&gt;&lt;Alt&gt;d']</default>
+      <summary>Keyboard shortcut to add new terminal down</summary>
+    </key>
+    <key name="win-add-terminal-auto" type="as">
+      <default>['&lt;Ctrl&gt;&lt;Alt&gt;a']</default>
+      <summary>Keyboard shortcut to add new terminal automatically</summary>
+    </key>
     <!--
     <key name="tab-close" type="s">
       <default>'&lt;Shift&gt;&lt;Ctrl&gt;Q'</default>

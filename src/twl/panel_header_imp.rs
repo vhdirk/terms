@@ -1,23 +1,13 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::subclass::Signal;
-use glib::{self, clone, Properties, WeakRef};
-use gtk::{template_callbacks, CompositeTemplate};
-use itertools::Itertools;
+use glib::{self, Properties};
+use gtk::CompositeTemplate;
 use once_cell::sync::Lazy;
-use std::cell::{Cell, RefCell};
+use std::cell::RefCell;
 use std::marker::PhantomData;
 
-use super::utils::TwlWidgetExt;
-use super::{Bin, FadingLabel, PackBox, Panel};
-
-// #[derive(Debug, Default)]
-// pub struct Header {}
-
-// #[glib::object_interface]
-// unsafe impl ObjectInterface for Header {
-//     const NAME: &'static str = "TwlHeader";
-// }
+use super::{FadingLabel, PackBox};
 
 #[derive(Debug, CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Twl/gtk/panel_header.ui")]
@@ -34,9 +24,6 @@ pub struct PanelHeader {
 
     #[template_child]
     title_container: TemplateChild<adw::Bin>,
-
-    #[property(construct_only)]
-    panel: WeakRef<Panel>,
 }
 
 impl Default for PanelHeader {
@@ -47,7 +34,6 @@ impl Default for PanelHeader {
 
             container: Default::default(),
             title_container: Default::default(),
-            panel: Default::default(),
         }
     }
 }
@@ -128,13 +114,6 @@ impl PanelHeader {
             None => {
                 self.set_title_widget(None::<&gtk::Widget>);
             },
-        }
-    }
-
-    #[template_callback]
-    fn on_close_clicked(&self) {
-        if let Some(panel) = self.panel.upgrade() {
-            panel.emit_by_name::<()>("close", &[]);
         }
     }
 }

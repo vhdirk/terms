@@ -41,12 +41,12 @@ pub struct TerminalTab {
     #[template_child]
     panel_grid: TemplateChild<PanelGrid>,
 
-    #[property(get=Self::get_selected, set=Self::set_selected, construct, nullable)]
+    #[property(get=Self::get_selected, nullable)]
     selected: PhantomData<Option<Terminal>>,
 
     selected_panel_signals: glib::SignalGroup,
-    active_term_signals: glib::SignalGroup,
-    active_term_bindings: glib::BindingGroup,
+    selected_terminal_signals: glib::SignalGroup,
+    selected_terminal_bindings: glib::BindingGroup,
 }
 
 impl Default for TerminalTab {
@@ -62,8 +62,8 @@ impl Default for TerminalTab {
             selected: Default::default(),
 
             selected_panel_signals: glib::SignalGroup::new::<Panel>(),
-            active_term_signals: glib::SignalGroup::new::<Terminal>(),
-            active_term_bindings: glib::BindingGroup::new(),
+            selected_terminal_signals: glib::SignalGroup::new::<Terminal>(),
+            selected_terminal_bindings: glib::BindingGroup::new(),
         }
     }
 }
@@ -136,26 +136,17 @@ impl TerminalTab {
             this.on_selected_panel_change();
         }));
 
-        self.active_term_signals.connect_notify_local(
-            Some("directory"),
-            clone!(@weak self as this => move |obj, param| {
-                info!("active term: directory");
-                if let Some(term) = obj.downcast_ref::<Terminal>() {
-                    this.directory.set(term.directory());
-                    this.obj().notify_directory();
-                }
-            }),
-        );
+        self.selected_panel_signals.connect_bind_local(clone!(@weak self as this => move |_sg, obj| {
+            info!("selected page: bind");
+            let panel = obj.downcast_ref::<Panel>();
+            let term_obj = panel.map(Panel::child);
+            let term = term_obj.and_downcast_ref::<Terminal>();
+            this.selected_terminal_signals.set_target(term);
+            this.selected_terminal_bindings.set_source(term);
+        }));
 
-        self.active_term_signals.connect_notify_local(
-            Some("title"),
-            clone!(@weak self as this => move |obj, param| {
-                info!("active term: title");
-                if let Some(term) = obj.downcast_ref::<Terminal>() {
-                    this.update_title(term.title());
-                }
-            }),
-        );
+        // self.selected_terminal_bindings.bind("directory", self.obj().as_ref(), "directory").sync_create().build();
+        // self.selected_terminal_bindings.bind("title", self.obj().as_ref(), "title").sync_create().build();
     }
 
     fn update_title(&self, terminal_title: Option<String>) {
@@ -168,7 +159,7 @@ impl TerminalTab {
     }
 
     fn get_selected(&self) -> Option<Terminal> {
-        self.panel_grid.selected().and_then(|p| p.content()).and_downcast()
+        self.panel_grid.selected().map(|p| p.child()).and_downcast()
     }
 
     fn set_selected(&self, terminal: Option<Terminal>) {
@@ -180,14 +171,13 @@ impl TerminalTab {
         let panel = self.panel_grid.selected();
         debug!("on panel changed: {:?}", panel);
         self.selected_panel_signals.set_target(panel.as_ref());
+
         if let Some(panel) = panel.as_ref() {
-            let term = panel.content().and_downcast::<Terminal>();
+            let term = panel.child().downcast::<Terminal>();
             debug!("Set active term {:?}", term);
-            self.active_term_signals.set_target(term.as_ref());
-            if let Some(term) = term.as_ref() {
+            if let Ok(term) = term {
                 term.grab_focus();
             }
-            self.active_term_bindings.set_source(term.as_ref());
         }
     }
 
@@ -205,15 +195,13 @@ impl TerminalTab {
             this.panel_grid.close_panel(&panel);
         }));
 
-        terminal.connect_title_notify(clone!(@weak self as this, @weak panel as panel => move |term| {
-            panel.header().set_title(term.title());
-        }));
+        terminal.bind_property("title", &panel.header(), "title").sync_create().build();
     }
 
     pub fn on_panel_close_request(&self, panel: &Panel) -> glib::Propagation {
         info!("on_panel_close_request: {:?}", panel);
         // TODO: test if process is still running
-        if let Some(terminal) = panel.content().and_downcast_ref::<Terminal>() {}
+        if let Some(terminal) = panel.child().downcast_ref::<Terminal>() {}
 
         glib::Propagation::Proceed
     }
