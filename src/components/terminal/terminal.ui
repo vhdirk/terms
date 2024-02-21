@@ -88,13 +88,17 @@
     </section>
   </menu>
 
-  <template class="TermsTerminal" parent="GtkBox">
-    <property name="orientation">vertical</property>
-    <property name="spacing">0</property>
+  <template class="TermsTerminal" parent="GtkWidget">
     <property name="hexpand">true</property>
     <property name="vexpand">true</property>
     <property name="halign">fill</property>
     <property name="valign">fill</property>
+    <property name="layout-manager">
+      <object class="GtkBoxLayout">
+        <property name="orientation">vertical</property>
+        <property name="spacing">0</property>
+      </object>
+    </property>
 
     <child>
       <object class="AdwBanner" id="banner">
@@ -135,8 +139,7 @@
           <lookup name="terminal">TerminalTerminalTab</lookup>
         </binding> ->
 
-        <property name="terminal" bind-source="TerminalTerminalTab" bind-property="terminal"
-          bind-flags="sync-create" />
+        <property name="terminal" bind-source="TerminalTerminalTab" bind-property="terminal" bind-flags="sync-create" />
       </object> -->
     </child>
 

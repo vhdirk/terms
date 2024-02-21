@@ -9,7 +9,7 @@ use crate::util::EnvMap;
 
 glib::wrapper! {
         pub struct TerminalTab(ObjectSubclass<imp::TerminalTab>)
-                @extends gtk::Widget, adw::Bin,
+                @extends gtk::Widget,
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
 }
 

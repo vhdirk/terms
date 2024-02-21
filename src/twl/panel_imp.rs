@@ -132,6 +132,10 @@ impl ObjectImpl for Panel {
     }
 }
 impl WidgetImpl for Panel {
+    fn grab_focus(&self) -> bool {
+        self.child.get().map(WidgetExt::grab_focus).unwrap_or(false)
+    }
+
     fn request_mode(&self) -> gtk::SizeRequestMode {
         match self.child.get() {
             Some(child) => child.request_mode(),

@@ -11,7 +11,7 @@ use tracing::*;
 use crate::twl::utils::signal_accumulator_propagation;
 
 use super::split_paned::SplitPaned;
-use super::utils::TwlWidgetExt;
+use super::utils::{twl_widget_grab_focus, TwlWidgetExt};
 use super::Panel;
 
 #[derive(Debug, Default, Properties)]
@@ -90,7 +90,15 @@ impl ObjectImpl for PanelGrid {
     }
 }
 
-impl WidgetImpl for PanelGrid {}
+impl WidgetImpl for PanelGrid {
+    fn grab_focus(&self) -> bool {
+        if let Some(selected) = self.selected.borrow().as_ref() {
+            selected.grab_focus()
+        } else {
+            twl_widget_grab_focus(self.obj().as_ref())
+        }
+    }
+}
 
 impl PanelGrid {
     fn connect_signals(&self) {}
@@ -265,6 +273,8 @@ impl PanelGrid {
             warn!("Will not finish closing a panel that was not in closing state");
             return;
         }
+        let was_selected = self.selected.borrow().as_ref().map(|sel| sel == panel).unwrap_or(false);
+
         debug!("Closing panel: {:?}", panel);
         match panel.parent().and_downcast::<gtk::Paned>() {
             // if the widget does not belong to a paned, it has to be the root
@@ -287,6 +297,10 @@ impl PanelGrid {
                         debug!("Setting sibling {:?} as root child", sibling);
                         self.inner.set_child(sibling.as_ref());
                     },
+                }
+
+                if was_selected {
+                    self.set_selected(sibling.and_downcast_ref::<Panel>());
                 }
             },
         }

@@ -72,10 +72,9 @@ impl Default for TerminalTab {
 impl ObjectSubclass for TerminalTab {
     const NAME: &'static str = "TermsTerminalTab";
     type Type = super::TerminalTab;
-    type ParentType = adw::Bin;
+    type ParentType = gtk::Widget;
 
     fn class_init(klass: &mut Self::Class) {
-        PanelGrid::ensure_type();
         klass.bind_template();
         klass.bind_template_callbacks();
     }
@@ -97,9 +96,17 @@ impl ObjectImpl for TerminalTab {
         static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| vec![Signal::builder("close").build()]);
         SIGNALS.as_ref()
     }
+
+    fn dispose(&self) {
+        self.panel_grid.unparent();
+    }
 }
 
-impl WidgetImpl for TerminalTab {}
+impl WidgetImpl for TerminalTab {
+    fn grab_focus(&self) -> bool {
+        self.panel_grid.grab_focus()
+    }
+}
 impl BinImpl for TerminalTab {}
 
 #[gtk::template_callbacks]
@@ -121,18 +128,10 @@ impl TerminalTab {
             this.on_num_panels_changed()
         }));
 
-        self.settings
-            .connect_use_wide_panel_resize_handle_changed(clone!(@weak self as this => move |s| {
-                this.panel_grid.set_wide_handle(s.use_wide_panel_resize_handle());
-            }));
-        self.panel_grid.set_wide_handle(self.settings.use_wide_panel_resize_handle());
+        self.settings.bind_use_wide_panel_resize_handle(&*self.panel_grid, "wide-handle").build();
+        self.settings.bind_show_panel_headers(&*self.panel_grid, "show-panel-headers").build();
 
-        self.settings.connect_show_panel_headers_changed(clone!(@weak self as this => move |s| {
-            this.panel_grid.set_show_panel_headers(s.show_panel_headers());
-        }));
-        self.panel_grid.set_show_panel_headers(self.settings.show_panel_headers());
-
-        self.panel_grid.connect_selected_notify(clone!(@weak self as this => move |s| {
+        self.panel_grid.connect_selected_notify(clone!(@weak self as this => move |_| {
             this.on_selected_panel_change();
         }));
 
@@ -141,6 +140,9 @@ impl TerminalTab {
             let panel = obj.downcast_ref::<Panel>();
             let term_obj = panel.map(Panel::child);
             let term = term_obj.and_downcast_ref::<Terminal>();
+
+            info!("Selected terminal: {:?}", term);
+
             this.selected_terminal_signals.set_target(term);
             this.selected_terminal_bindings.set_source(term);
         }));
@@ -172,12 +174,9 @@ impl TerminalTab {
         debug!("on panel changed: {:?}", panel);
         self.selected_panel_signals.set_target(panel.as_ref());
 
-        if let Some(panel) = panel.as_ref() {
-            let term = panel.child().downcast::<Terminal>();
+        if let Some(term) = panel.as_ref().map(Panel::child).and_downcast::<Terminal>() {
             debug!("Set active term {:?}", term);
-            if let Ok(term) = term {
-                term.grab_focus();
-            }
+            term.grab_focus();
         }
     }
 
@@ -186,6 +185,7 @@ impl TerminalTab {
         // term.grab_focus();
 
         let panel = self.panel_grid.split(&term, orientation);
+        self.panel_grid.set_selected(Some(&panel));
         self.connect_terminal_signals(&term, &panel);
     }
 

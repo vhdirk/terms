@@ -4,11 +4,12 @@
   <requires lib="gtk" version="4.10" />
   <requires lib="libadwaita" version="1.4" />
 
-  <template class="TermsTerminalTab" parent="AdwBin">
-  <child>
-    <object class="TwlPanelGrid" id="panel_grid"></object>
-  </child>
-
+  <template class="TermsTerminalTab" parent="GtkWidget">
+    <property name="layout-manager">
+      <object class="GtkBinLayout"/>
+    </property>
+    <child>
+      <object class="TwlPanelGrid" id="panel_grid"></object>
+    </child>
   </template>
-
 </interface>

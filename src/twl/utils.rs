@@ -88,6 +88,38 @@ pub fn twl_widget_grab_focus(widget: &impl IsA<gtk::Widget>) -> bool {
     false
 }
 
+// GtkSizeRequestMode
+// adw_widget_get_request_mode (GtkWidget *widget)
+// {
+//   GtkWidget *child;
+//   int wfh = 0, hfw = 0;
+
+//   for (child = gtk_widget_get_first_child (widget);
+//        child;
+//        child = gtk_widget_get_next_sibling (child)) {
+//     GtkSizeRequestMode mode = gtk_widget_get_request_mode (child);
+
+//     switch (mode) {
+//     case GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH:
+//       hfw++;
+//       break;
+//     case GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT:
+//       wfh++;
+//       break;
+//     case GTK_SIZE_REQUEST_CONSTANT_SIZE:
+//     default:
+//       break;
+//     }
+//   }
+
+//   if (hfw == 0 && wfh == 0)
+//     return GTK_SIZE_REQUEST_CONSTANT_SIZE;
+//   else
+//     return wfh > hfw ?
+//         GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT :
+//         GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
+// }
+
 fn old_focus_coords(widget: &impl IsA<gtk::Widget>) -> Option<graphene::Rect> {
     widget
         .as_ref()
@@ -458,38 +490,6 @@ fn axis_info(bounds: &graphene::Rect, orientation: gtk::Orientation) -> (f32, f3
 //   *vexpand_p = FALSE;
 // }
 
-// GtkSizeRequestMode
-// adw_widget_get_request_mode (GtkWidget *widget)
-// {
-//   GtkWidget *child;
-//   int wfh = 0, hfw = 0;
-
-//   for (child = gtk_widget_get_first_child (widget);
-//        child;
-//        child = gtk_widget_get_next_sibling (child)) {
-//     GtkSizeRequestMode mode = gtk_widget_get_request_mode (child);
-
-//     switch (mode) {
-//     case GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH:
-//       hfw++;
-//       break;
-//     case GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT:
-//       wfh++;
-//       break;
-//     case GTK_SIZE_REQUEST_CONSTANT_SIZE:
-//     default:
-//       break;
-//     }
-//   }
-
-//   if (hfw == 0 && wfh == 0)
-//     return GTK_SIZE_REQUEST_CONSTANT_SIZE;
-//   else
-//     return wfh > hfw ?
-//         GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT :
-//         GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
-// }
-
 // /* FIXME: Replace this with public color API and make public */
 // gboolean
 // adw_widget_lookup_color (GtkWidget  *widget,
@@ -520,37 +520,4 @@ fn axis_info(bounds: &graphene::Rect, orientation: gtk::Orientation) -> (f32, f3
 //   }
 
 //   return widget;
-// }
-
-// gboolean
-// adw_decoration_layout_prefers_start (const char *layout)
-// {
-//   int counts[2];
-//   char **sides;
-//   int i;
-
-//   sides = g_strsplit (layout, ":", 2);
-
-//   for (i = 0; i < 2; i++) {
-//     char **elements;
-//     int j;
-
-//     counts[i] = 0;
-
-//     if (sides[i] == NULL)
-//       continue;
-
-//     elements = g_strsplit (sides[i], ",", -1);
-
-//     for (j = 0; elements[j]; j++) {
-//       if (!g_strcmp0 (elements[j], "close"))
-//         counts[i]++;
-//     }
-
-//     g_strfreev (elements);
-//   }
-
-//   g_strfreev (sides);
-
-//   return counts[0] > counts[1];
 // }

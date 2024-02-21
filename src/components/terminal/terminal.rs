@@ -84,6 +84,9 @@ pub struct Terminal {
     #[template_child]
     scrolled: TemplateChild<gtk::ScrolledWindow>,
 
+    #[template_child]
+    banner: TemplateChild<adw::Banner>,
+
     #[property(get, set, construct, nullable)]
     directory: RefCell<Option<PathBuf>>,
 
@@ -117,6 +120,7 @@ impl Default for Terminal {
             search_toolbar: Default::default(),
             popover_menu: Default::default(),
             scrolled: Default::default(),
+            banner: Default::default(),
 
             directory: Default::default(),
             command: Default::default(),
@@ -138,7 +142,7 @@ impl Default for Terminal {
 impl ObjectSubclass for Terminal {
     const NAME: &'static str = "TermsTerminal";
     type Type = super::Terminal;
-    type ParentType = gtk::Box;
+    type ParentType = gtk::Widget;
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
@@ -191,11 +195,20 @@ impl ObjectImpl for Terminal {
                 spawn_handle.abort()
             }
         }
+
+        self.term.unparent();
+        self.search_toolbar.unparent();
+        self.popover_menu.unparent();
+        self.scrolled.unparent();
+        self.banner.unparent();
     }
 }
 
-impl WidgetImpl for Terminal {}
-impl BoxImpl for Terminal {}
+impl WidgetImpl for Terminal {
+    fn grab_focus(&self) -> bool {
+        self.term.grab_focus()
+    }
+}
 
 #[gtk::template_callbacks]
 impl Terminal {
@@ -530,7 +543,6 @@ impl Terminal {
     fn show_menu(&self, x: f64, y: f64) {
         let (match_str, tag) = self.term.check_match_at(x, y);
         let match_str = match_str.map(|t| t.to_string());
-        // TODO: customize menu based on match_str
 
         info!("match: {:?} {:?}", match_str, tag);
 
