@@ -107,6 +107,11 @@
               </object>
             </child>
             <child>
+              <object class="AdwSwitchRow" id="small_panel_headers_switch">
+                <property name="title" translatable="yes">Small Panel headers</property>
+              </object>
+            </child>
+            <child>
               <object class="AdwSwitchRow" id="wide_panel_resize_handle_switch">
                 <property name="title" translatable="yes">Use wide resize handle</property>
               </object>

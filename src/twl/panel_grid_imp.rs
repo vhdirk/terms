@@ -14,6 +14,8 @@ use super::split_paned::SplitPaned;
 use super::utils::{twl_widget_grab_focus, TwlWidgetExt};
 use super::Panel;
 
+const TWL_PANED_CSS_CLASS: &str = "twl-paned";
+
 #[derive(Debug, Default, Properties)]
 #[properties(wrapper_type=super::PanelGrid)]
 pub struct PanelGrid {
@@ -107,8 +109,9 @@ impl PanelGrid {
         self.wide_handle.set(wide_handle);
 
         for paned in self.get_all::<gtk::Paned>().iter() {
-            // TODO: can we filter for Paned only created by us?
-            paned.set_wide_handle(wide_handle);
+            if paned.has_css_class(TWL_PANED_CSS_CLASS) {
+                paned.set_wide_handle(wide_handle);
+            }
         }
     }
 
@@ -202,9 +205,23 @@ impl PanelGrid {
         }
     }
 
+    fn preferred_orientation(&self, panel: &Panel) -> gtk::Orientation {
+        if panel.width() > panel.height() {
+            gtk::Orientation::Vertical
+        } else {
+            gtk::Orientation::Horizontal
+        }
+    }
+
+    fn create_paned(&self, orientation: gtk::Orientation) -> gtk::Paned {
+        let paned = gtk::Paned::new(orientation);
+        paned.set_wide_handle(self.wide_handle.get());
+        paned.add_css_class(TWL_PANED_CSS_CLASS);
+        paned
+    }
+
     fn split_panel(&self, panel: &Panel, new_panel: &Panel, orientation: Option<gtk::Orientation>) {
-        let new_paned = gtk::Paned::new(orientation.unwrap_or_else(|| self.preferred_orientation(panel)));
-        new_paned.set_wide_handle(self.wide_handle.get());
+        let new_paned = self.create_paned(orientation.unwrap_or_else(|| self.preferred_orientation(panel)));
         debug!("panel {:?} parent {:?}", panel, panel.parent());
 
         match panel.parent().and_downcast::<gtk::Paned>() {
@@ -222,14 +239,6 @@ impl PanelGrid {
         new_paned.set_end_child(Some(new_panel));
         self.update_headers_visibility();
         self.obj().notify_n_panels();
-    }
-
-    fn preferred_orientation(&self, panel: &Panel) -> gtk::Orientation {
-        if panel.width() > panel.height() {
-            gtk::Orientation::Vertical
-        } else {
-            gtk::Orientation::Horizontal
-        }
     }
 
     fn find_parent<T: IsA<gtk::Widget>>(&self, widget: &impl IsA<gtk::Widget>) -> Option<T> {

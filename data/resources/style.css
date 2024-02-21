@@ -57,9 +57,9 @@ window:not(.about) headerbar,
   margin-left: 34px;
 }
 
-.toolbar {
+/* .toolbar {
   background-color: @headerbar_bg_color;
-}
+} */
 
 /* .toolbar>* {
   padding: 2px 8px;
@@ -150,12 +150,16 @@ panel_header {
 
 
 panel_header.toolbar {
+  background-color: @headerbar_bg_color;
+
+}
+
+panel_header.toolbar.small {
   padding: 0px;
   border-spacing: 0px;
 }
 
-
-panel_header button {
+panel_header.toolbar.small button {
   min-height: 16px;
   min-width: 16px;
 }

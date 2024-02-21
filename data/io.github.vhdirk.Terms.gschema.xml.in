@@ -99,6 +99,10 @@
       <default>true</default>
       <summary>Show panel headers</summary>
     </key>
+    <key name="small-panel-headers" type="b">
+      <default>false</default>
+      <summary>Use smaller panel headers</summary>
+    </key>
     <key name="use-wide-panel-resize-handle" type="b">
       <default>false</default>
       <summary>Use wide panel resize handle</summary>

@@ -15,8 +15,7 @@ use crate::settings::Settings;
 use crate::twl::{Panel, PanelGrid};
 use crate::util::EnvMap;
 
-#[derive(Debug, CompositeTemplate, Properties)]
-#[template(resource = "/io/github/vhdirk/Terms/gtk/terminal_tab.ui")]
+#[derive(Debug, Properties)]
 #[properties(wrapper_type = super::TerminalTab)]
 pub struct TerminalTab {
     settings: Settings,
@@ -32,18 +31,16 @@ pub struct TerminalTab {
     #[property(set, get, construct_only, nullable)]
     env: RefCell<Option<EnvMap>>,
 
-    #[property(get, set, construct, nullable)]
+    #[property(get, set, construct, nullable, explicit_notify)]
     title: RefCell<Option<String>>,
 
     #[property(get, set, construct, nullable)]
     icon: RefCell<Option<String>>,
 
-    #[template_child]
-    panel_grid: TemplateChild<PanelGrid>,
-
     #[property(get=Self::get_selected, nullable)]
     selected: PhantomData<Option<Terminal>>,
 
+    panel_grid: PanelGrid,
     selected_panel_signals: glib::SignalGroup,
     selected_terminal_signals: glib::SignalGroup,
     selected_terminal_bindings: glib::BindingGroup,
@@ -58,9 +55,9 @@ impl Default for TerminalTab {
             env: Default::default(),
             title: Default::default(),
             icon: Default::default(),
-            panel_grid: Default::default(),
             selected: Default::default(),
 
+            panel_grid: PanelGrid::new(),
             selected_panel_signals: glib::SignalGroup::new::<Panel>(),
             selected_terminal_signals: glib::SignalGroup::new::<Terminal>(),
             selected_terminal_bindings: glib::BindingGroup::new(),
@@ -75,12 +72,7 @@ impl ObjectSubclass for TerminalTab {
     type ParentType = gtk::Widget;
 
     fn class_init(klass: &mut Self::Class) {
-        klass.bind_template();
-        klass.bind_template_callbacks();
-    }
-
-    fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
-        obj.init_template();
+        klass.set_layout_manager_type::<gtk::BinLayout>();
     }
 }
 
@@ -88,7 +80,6 @@ impl ObjectSubclass for TerminalTab {
 impl ObjectImpl for TerminalTab {
     fn constructed(&self) {
         self.parent_constructed();
-
         self.setup_widgets();
     }
 
@@ -105,6 +96,7 @@ impl ObjectImpl for TerminalTab {
 impl WidgetImpl for TerminalTab {
     fn grab_focus(&self) -> bool {
         self.panel_grid.grab_focus()
+        // self.panel_grid.try_get().map(|p| p.grab_focus()).unwrap_or(false)
     }
 }
 impl BinImpl for TerminalTab {}
@@ -112,28 +104,25 @@ impl BinImpl for TerminalTab {}
 #[gtk::template_callbacks]
 impl TerminalTab {
     fn setup_widgets(&self) {
-        let term = Terminal::new(self.directory.borrow().clone(), self.command.borrow().clone(), self.env.borrow().clone());
-        term.grab_focus();
+        self.panel_grid.set_parent(&*self.obj());
 
-        let panel = self.panel_grid.set_initial_child(&term);
+        // self.selected_terminal_bindings.bind("title", &*self.obj(), "title").build();
 
-        self.connect_terminal_signals(&term, &panel);
+        self.selected_terminal_signals.connect_notify_local(
+            Some("title"),
+            clone!(@weak self as this => move|obj, _|{
 
-        self.panel_grid
-            .connect_panel_close(clone!(@weak self as this => @default-return glib::Propagation::Proceed, move |_grid, panel| {
-                this.on_panel_close_request(panel)
-            }));
+                this.update_title(obj.property("title"));
+            }),
+        );
 
-        self.panel_grid.connect_n_panels_notify(clone!(@weak self as this => move |_| {
-            this.on_num_panels_changed()
-        }));
-
-        self.settings.bind_use_wide_panel_resize_handle(&*self.panel_grid, "wide-handle").build();
-        self.settings.bind_show_panel_headers(&*self.panel_grid, "show-panel-headers").build();
-
-        self.panel_grid.connect_selected_notify(clone!(@weak self as this => move |_| {
-            this.on_selected_panel_change();
-        }));
+        self.selected_terminal_signals.connect_notify_local(
+            Some("directory"),
+            clone!(@weak self as this => move |obj, _| {
+                info!("active term: directory");
+                this.directory.set(obj.property("directory"));
+            }),
+        );
 
         self.selected_panel_signals.connect_bind_local(clone!(@weak self as this => move |_sg, obj| {
             info!("selected page: bind");
@@ -147,8 +136,33 @@ impl TerminalTab {
             this.selected_terminal_bindings.set_source(term);
         }));
 
-        // self.selected_terminal_bindings.bind("directory", self.obj().as_ref(), "directory").sync_create().build();
-        // self.selected_terminal_bindings.bind("title", self.obj().as_ref(), "title").sync_create().build();
+        self.panel_grid
+            .connect_panel_close(clone!(@weak self as this => @default-return glib::Propagation::Proceed, move |_grid, panel| {
+                this.on_panel_close_request(panel)
+            }));
+
+        self.panel_grid.connect_n_panels_notify(clone!(@weak self as this => move |_| {
+            this.on_num_panels_changed()
+        }));
+
+        self.settings.bind_use_wide_panel_resize_handle(&self.panel_grid, "wide-handle").build();
+        self.settings.connect_small_panel_headers_changed(clone!(@weak self as this => move |s| {
+            this.set_small_panel_headers(s.small_panel_headers());
+        }));
+        self.set_small_panel_headers(self.settings.small_panel_headers());
+
+        self.settings.bind_show_panel_headers(&self.panel_grid, "show-panel-headers").build();
+
+        self.panel_grid.connect_selected_notify(clone!(@weak self as this => move |_| {
+            this.on_selected_panel_change();
+        }));
+
+        let term = Terminal::new(self.directory.borrow().clone(), self.command.borrow().clone(), self.env.borrow().clone());
+        let panel = self.panel_grid.set_initial_child(&term);
+
+        self.connect_terminal_signals(&term, &panel);
+
+        self.panel_grid.set_selected(Some(&panel));
     }
 
     fn update_title(&self, terminal_title: Option<String>) {
@@ -212,6 +226,16 @@ impl TerminalTab {
         if n_panels == 0 {
             info!("emit close signal");
             self.obj().emit_by_name::<()>("close", &[]);
+        }
+    }
+
+    fn set_small_panel_headers(&self, small: bool) {
+        for panel_header in self.panel_grid.panels().iter().map(|p| p.header()) {
+            if small {
+                panel_header.add_css_class("small");
+            } else {
+                panel_header.remove_css_class("small");
+            }
         }
     }
 }

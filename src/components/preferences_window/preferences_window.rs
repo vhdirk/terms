@@ -40,6 +40,9 @@ pub struct PreferencesWindow {
     pub show_panel_headers_switch: TemplateChild<adw::SwitchRow>,
 
     #[template_child]
+    pub small_panel_headers_switch: TemplateChild<adw::SwitchRow>,
+
+    #[template_child]
     pub wide_panel_resize_handle_switch: TemplateChild<adw::SwitchRow>,
 
     #[template_child]
@@ -115,6 +118,7 @@ impl PreferencesWindow {
         self.settings
             .bind_use_wide_panel_resize_handle(&*self.wide_panel_resize_handle_switch, "active")
             .build();
+        self.settings.bind_small_panel_headers(&*self.small_panel_headers_switch, "active").build();
     }
 
     #[template_callback]
