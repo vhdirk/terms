@@ -15,6 +15,8 @@ use crate::settings::Settings;
 use crate::twl::{Panel, PanelGrid};
 use crate::util::EnvMap;
 
+const PANEL_HEADER_SMALL_CSS_CLASS: &str = "small";
+
 #[derive(Debug, Properties)]
 #[properties(wrapper_type = super::TerminalTab)]
 pub struct TerminalTab {
@@ -106,12 +108,9 @@ impl TerminalTab {
     fn setup_widgets(&self) {
         self.panel_grid.set_parent(&*self.obj());
 
-        // self.selected_terminal_bindings.bind("title", &*self.obj(), "title").build();
-
         self.selected_terminal_signals.connect_notify_local(
             Some("title"),
             clone!(@weak self as this => move|obj, _|{
-
                 this.update_title(obj.property("title"));
             }),
         );
@@ -204,6 +203,10 @@ impl TerminalTab {
     }
 
     fn connect_terminal_signals(&self, terminal: &Terminal, panel: &Panel) {
+        if self.settings.small_panel_headers() {
+            panel.header().add_css_class(PANEL_HEADER_SMALL_CSS_CLASS);
+        }
+
         terminal.connect_exit(clone!(@weak self as this, @weak panel as panel => move |term, code| {
             info!("Terminal {:?} exited with code {:?}", term, code);
             this.panel_grid.close_panel(&panel);
@@ -232,9 +235,9 @@ impl TerminalTab {
     fn set_small_panel_headers(&self, small: bool) {
         for panel_header in self.panel_grid.panels().iter().map(|p| p.header()) {
             if small {
-                panel_header.add_css_class("small");
+                panel_header.add_css_class(PANEL_HEADER_SMALL_CSS_CLASS);
             } else {
-                panel_header.remove_css_class("small");
+                panel_header.remove_css_class(PANEL_HEADER_SMALL_CSS_CLASS);
             }
         }
     }

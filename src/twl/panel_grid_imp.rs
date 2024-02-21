@@ -207,9 +207,9 @@ impl PanelGrid {
 
     fn preferred_orientation(&self, panel: &Panel) -> gtk::Orientation {
         if panel.width() > panel.height() {
-            gtk::Orientation::Vertical
-        } else {
             gtk::Orientation::Horizontal
+        } else {
+            gtk::Orientation::Vertical
         }
     }
 
