@@ -4,7 +4,8 @@ use std::{
     future::IntoFuture,
     io,
     num::ParseIntError,
-    os::fd::{AsRawFd, FromRawFd},
+    os::fd::BorrowedFd,
+    os::fd::{AsRawFd, FromRawFd, RawFd},
     path::PathBuf,
     pin::Pin,
     process::ExitCode,
@@ -24,7 +25,7 @@ use terms_util::{libc_util, toolbox};
 use thiserror::Error;
 use tracing::*;
 use vte::{self, InputStreamExtManual, TerminalExt, TerminalExtManual};
-use zbus::zvariant::Fd;
+use zbus::zvariant::{Fd, OwnedFd};
 
 use crate::error::TermsError;
 
@@ -231,7 +232,7 @@ impl Spawner for FlatpakSpawner {
     }
 
     async fn foreground_pid(&self, pty: &vte::Pty) -> Result<libc::pid_t, TermsError> {
-        let fds = HashMap::from([(3, Fd::from(pty.fd().as_raw_fd()))]);
+        let fds = HashMap::from([(3, pty.fd())]);
         let out = Self::run_host_toolbox_command("child-pid", None::<bool>, fds, HashMap::new()).await?;
         Ok(out.parse::<libc::pid_t>()?)
     }
@@ -280,13 +281,13 @@ impl Spawner for FlatpakSpawner {
             err
         })?;
 
-        let mut pty_slaves = HashMap::<u32, Fd>::new();
+        let mut pty_slaves = HashMap::<u32, BorrowedFd>::new();
 
-        let slave_fd = libc_util::open(&PathBuf::from(&slave_name), libc::O_RDWR | libc::O_CLOEXEC, 0).map_err(|err| {
+        let slave_fd: RawFd = libc_util::open(&PathBuf::from(&slave_name), libc::O_RDWR | libc::O_CLOEXEC, 0).map_err(|err| {
             warn!("Failed opening slave pseudoterminal device {:?}", err);
             err
         })?;
-        pty_slaves.insert(0, slave_fd.into());
+        pty_slaves.insert(0, unsafe { BorrowedFd::borrow_raw(slave_fd) });
 
         // TODO: what's the point of these extra slave pty's?
         for i in 1..3 {
@@ -294,7 +295,7 @@ impl Spawner for FlatpakSpawner {
                 warn!("Failed to duplicate slave pseudoterminal device {:?}", err);
                 err
             })?;
-            pty_slaves.insert(i, dup.into());
+            pty_slaves.insert(i, unsafe { BorrowedFd::borrow_raw(dup) });
         }
 
         let dev_proxy = flatpak::Development::new().await?;
@@ -369,10 +370,10 @@ impl FlatpakSpawner {
 
     /// A thin wrapper over sendHostCommand that asks the terms-toolbox for information
     /// about the host system.
-    async fn run_host_toolbox_command(
+    async fn run_host_toolbox_command<'fd>(
         command: &str,
         command_arg: Option<impl ToString>,
-        mut fds: HashMap<u32, Fd>,
+        mut fds: HashMap<u32, BorrowedFd<'fd>>,
         envs: HashMap<&str, &str>,
     ) -> Result<String, TermsError> {
         let toolbox_path = Self::toolbox_path().await?;
@@ -388,11 +389,11 @@ impl FlatpakSpawner {
         // other. We'll pass one fd to the HostCommand as stdout, which means
         // we'll be able to read what is HostCommand prints out from the other
         // fd we just opened.
-        let (read_fd, write_fd) = glib::unix_open_pipe(FD_CLOEXEC)?;
+        let (read_fd, write_fd): (RawFd, RawFd) = glib::unix_open_pipe(FD_CLOEXEC)?;
 
         let mut spawn_exit = dev_proxy.receive_spawn_exited().await?;
 
-        fds.insert(1, write_fd.into());
+        fds.insert(1, unsafe { BorrowedFd::borrow_raw(write_fd) });
 
         info!("Spawning toolbox command: argv: {:?}, fds: {:?}, envs:{:?}", &argv, &fds, &envs);
         let pid = dev_proxy
