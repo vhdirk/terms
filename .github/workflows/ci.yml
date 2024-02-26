@@ -86,13 +86,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
       - name: Install cargo-binstall
         uses: cargo-bins/cargo-binstall@v1.6.3
       - name: Install dependencies
-        run: cargo binstall mdbook
+        run: cargo binstall --no-confirm mdbook
       - name: Build
         run: mdbook build
-
       - name: Deploy to GitHub Pages
         if: ${{ github.event_name != 'pull_request' }}
         uses: peaceiris/actions-gh-pages@v3
