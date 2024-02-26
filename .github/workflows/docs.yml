@@ -29,15 +29,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      MDBOOK_VERSION: 0.4.36
+      MDBOOK_VERSION: 0.4.37
     steps:
       - uses: actions/checkout@v4
-      - name: Install mdBook
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.6.3
+      - name: Install dependencies
         run: |
-          curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf -y | sh
-          rustup update
-          cargo install --version ${MDBOOK_VERSION} mdbook
-          cargo install mdbook-admonish mdbook-catppuccin
+          cargo binstall --no-confirm --version ${MDBOOK_VERSION} mdbook
+          cargo binstall mdbook-admonish mdbook-catppuccin
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
