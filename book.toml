@@ -4,3 +4,18 @@ language = "en"
 multilingual = false
 src = "docs"
 title = "Terms"
+
+[preprocessor]
+
+[preprocessor.admonish]
+command = "mdbook-admonish"
+assets_version = "3.0.2" # do not edit: managed by `mdbook-admonish install`
+
+[preprocessor.catppuccin]
+assets_version = "2.1.0" # DO NOT EDIT: Managed by `mdbook-catppuccin install`
+
+[output]
+
+[output.html]
+additional-css = ["./docs/theme/catppuccin.css", "./docs/theme/catppuccin-admonish.css"]
+
