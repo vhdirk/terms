@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           cargo binstall --no-confirm --version ${MDBOOK_VERSION} mdbook
-          cargo binstall mdbook-admonish mdbook-catppuccin
+          cargo binstall --no-confirm mdbook-admonish mdbook-catppuccin
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
