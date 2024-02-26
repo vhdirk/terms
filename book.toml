@@ -21,3 +21,6 @@ default-theme = "latte"
 preferred-dark-theme = "macchiato"
 additional-css = ["./docs/theme/mdbook-admonish.css", "./docs/theme/catppuccin.css", "./docs/theme/catppuccin-admonish.css"]
 
+git-repository-url = "https://github.com/vhdirk/terms"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/vhdirk/terms/edit/main/docs/{path}"
