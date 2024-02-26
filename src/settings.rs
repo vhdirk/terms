@@ -1,7 +1,6 @@
-use crate::{config::APP_ID, error::TermsError};
+use crate::config::APP_ID;
 use gettextrs::gettext;
 use gio::prelude::{SettingsExt, SettingsExtManual};
-use glib::prelude::*;
 use gsettings_macro::gen_settings;
 use gtk::Settings as SystemSettings;
 use std::{
@@ -102,7 +101,7 @@ impl Settings {
     }
 }
 
-#[gen_settings(file = "data/io.github.vhdirk.Terms.gschema.xml.in", id = "@app-id@.shortcuts", default = false)]
+#[gen_settings(file = "data/io.github.vhdirk.Terms.gschema.xml.in", id = "@app-id@.shortcuts", default = false, globals = false)]
 pub struct ShortcutSettings;
 
 impl Default for ShortcutSettings {

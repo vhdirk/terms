@@ -496,6 +496,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "cfg_aliases"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e"
+
+[[package]]
 name = "chrono"
 version = "0.4.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1371,7 +1377,7 @@ dependencies = [
 [[package]]
 name = "gsettings-macro"
 version = "0.2.0"
-source = "git+https://github.com/vhdirk/gsettings-macro.git?branch=mine#143359d7efaa83773562f1739332f2deb7dcc329"
+source = "git+https://github.com/vhdirk/gsettings-macro.git?branch=multiple-schemas#b415a5d8b7c7d8c3124fbe42edd4f4e442dd94e7"
 dependencies = [
  "deluxe",
  "heck",
@@ -1913,6 +1919,18 @@ dependencies = [
  "cfg-if",
  "libc",
  "memoffset",
+]
+
+[[package]]
+name = "nix"
+version = "0.28.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ab2156c4fce2f8df6c499cc1c763e4394b7482525bf2a9701c9d79d215f519e4"
+dependencies = [
+ "bitflags 2.4.2",
+ "cfg-if",
+ "cfg_aliases",
+ "libc",
  "pin-utils",
 ]
 
@@ -2911,7 +2929,7 @@ dependencies = [
  "libadwaita",
  "libc",
  "librsvg",
- "nix",
+ "nix 0.28.0",
  "num-traits",
  "once_cell",
  "pango",
@@ -3568,7 +3586,7 @@ dependencies = [
  "futures-sink",
  "futures-util",
  "hex",
- "nix",
+ "nix 0.27.1",
  "ordered-stream",
  "rand",
  "serde",

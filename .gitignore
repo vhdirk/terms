@@ -14,3 +14,6 @@ vendor
 .flatpak-builder/
 .fenv/
 flatpak_app/
+
+book
+docs/book

@@ -81,3 +81,21 @@ jobs:
           manifest-path: build-aux/io.github.vhdirk.Terms.Devel.json
           run-tests: true
           cache-key: flatpak-builder-${{ github.sha }}
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.6.3
+      - name: Install dependencies
+        run: cargo binstall mdbook
+      - name: Build
+        run: mdbook build
+
+      - name: Deploy to GitHub Pages
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: book

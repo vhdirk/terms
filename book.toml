@@ -1,0 +1,6 @@
+[book]
+authors = ["Dirk Van Haerenborgh"]
+language = "en"
+multilingual = false
+src = "docs"
+title = "Terms"
