@@ -1,5 +1,5 @@
 use clap::{self, Parser, Subcommand};
-use libc;
+
 use std::process::ExitCode;
 use terms_util::{libc_util, toolbox};
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};

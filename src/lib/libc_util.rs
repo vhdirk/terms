@@ -2,7 +2,7 @@ use std::{ffi::CString, io::Result, mem, os::fd::RawFd, path::Path};
 
 pub fn map_error<T>(status: i32, item: T) -> Result<T> {
     if status == -1 {
-        Err(std::io::Error::last_os_error().into())
+        Err(std::io::Error::last_os_error())
     } else {
         Ok(item)
     }

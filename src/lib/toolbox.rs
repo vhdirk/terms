@@ -1,8 +1,4 @@
-use std::{
-    ffi::{CString, NulError},
-    os::fd::{AsRawFd, BorrowedFd, RawFd},
-    path::PathBuf,
-};
+use std::{ffi::NulError, path::PathBuf};
 use thiserror::Error;
 use tracing::*;
 
@@ -33,7 +29,7 @@ pub fn passwd_line_filter(uid: libc::uid_t) -> impl FnMut(&Result<String, std::i
 }
 
 pub fn shell_from_passwd_line(passwd_line: &str) -> Result<String, ToolboxError> {
-    let parts: Vec<&str> = passwd_line.split(":").collect();
+    let parts: Vec<&str> = passwd_line.split(':').collect();
 
     if parts.len() < 7 {
         return Err(ToolboxError::Unknown(format!("Could not parse user line from passwd line {}", { passwd_line })));
@@ -68,7 +64,7 @@ pub async fn user_shell_async(uid: libc::uid_t) -> Result<String, ToolboxError> 
 
 pub fn process_libc_stat(pid: libc::pid_t) -> Result<libc::stat, ToolboxError> {
     let path = PathBuf::from(format!("/proc/{}/stat", pid));
-    let stat = crate::libc_util::stat(&path)?;
+    let stat = crate::libc_util::stat(path)?;
     Ok(stat)
 }
 
