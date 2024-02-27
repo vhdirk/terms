@@ -1,6 +1,5 @@
-mod shortcuts_preferences_page;
+mod imp;
 use glib::prelude::*;
-use shortcuts_preferences_page as imp;
 
 glib::wrapper! {
         pub struct ShortcutsPreferencesPage(ObjectSubclass<imp::ShortcutsPreferencesPage>)

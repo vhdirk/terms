@@ -1,6 +1,5 @@
-mod shortcut_dialog;
+mod imp;
 use glib::{closure_local, prelude::*, subclass::prelude::*};
-use shortcut_dialog as imp;
 
 glib::wrapper! {
         pub struct ShortcutDialog(ObjectSubclass<imp::ShortcutDialog>)

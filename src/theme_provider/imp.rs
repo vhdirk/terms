@@ -34,19 +34,10 @@ pub enum ThemePaletteColorIndex {
     LightForeground = 15,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct ThemeProviderContext {
     css_provider: Option<gtk::CssProvider>,
     themes: HashMap<String, Theme>,
-}
-
-impl Default for ThemeProviderContext {
-    fn default() -> Self {
-        Self {
-            css_provider: Default::default(),
-            themes: Default::default(),
-        }
-    }
 }
 
 pub struct ThemeProvider {
@@ -114,7 +105,7 @@ impl ThemeProvider {
     }
 
     fn ensure_user_themes_dir_exists() {
-        if let Err(err) = fs::create_dir_all(&Self::user_themes_dir()) {
+        if let Err(err) = fs::create_dir_all(Self::user_themes_dir()) {
             error!("Error creating directory: {}", err);
         }
     }
@@ -314,10 +305,10 @@ impl ThemeProvider {
                         @define-color ssh_context_color     mix(@window_bg_color, {ssh_context_color}, 0.6);
                     "#,
                     destructive_color = palette[ThemePaletteColorIndex::LightRed as usize].to_string(),
-                    success_color = palette[ThemePaletteColorIndex::LightGreen as usize].to_string(),
+                    success_color = palette[ThemePaletteColorIndex::LightGreen as usize],
                     accent_color = palette[ThemePaletteColorIndex::LightBlue as usize].to_string(),
-                    warning_color = palette[ThemePaletteColorIndex::LightYellow as usize].to_string(),
-                    ssh_context_color = palette[ThemePaletteColorIndex::LightPurple as usize].to_string()
+                    warning_color = palette[ThemePaletteColorIndex::LightYellow as usize],
+                    ssh_context_color = palette[ThemePaletteColorIndex::LightPurple as usize]
                 ));
             } else {
                 gtk_theme.push_str(&format!(
@@ -338,10 +329,10 @@ impl ThemeProvider {
                         @define-color ssh_context_color     mix(@window_bg_color, {ssh_context_color}, 0.6);
                     "#,
                     destructive_color = palette[ThemePaletteColorIndex::Red as usize].to_string(),
-                    success_color = palette[ThemePaletteColorIndex::Green as usize].to_string(),
+                    success_color = palette[ThemePaletteColorIndex::Green as usize],
                     accent_color = palette[ThemePaletteColorIndex::Blue as usize].to_string(),
-                    warning_color = palette[ThemePaletteColorIndex::Yellow as usize].to_string(),
-                    ssh_context_color = palette[ThemePaletteColorIndex::Purple as usize].to_string()
+                    warning_color = palette[ThemePaletteColorIndex::Yellow as usize],
+                    ssh_context_color = palette[ThemePaletteColorIndex::Purple as usize]
                 ));
             }
         }

@@ -176,7 +176,7 @@ impl TerminalTab {
         self.panel_grid.selected().map(|p| p.child()).and_downcast()
     }
 
-    fn set_selected(&self, terminal: Option<Terminal>) {
+    fn set_selected(&self, _terminal: Option<Terminal>) {
         // todo!();
         // self.panel_grid.set_select
     }
@@ -217,7 +217,7 @@ impl TerminalTab {
     pub fn on_panel_close_request(&self, panel: &Panel) -> glib::Propagation {
         info!("on_panel_close_request: {:?}", panel);
         // TODO: test if process is still running
-        if let Some(terminal) = panel.child().downcast_ref::<Terminal>() {}
+        if let Some(_terminal) = panel.child().downcast_ref::<Terminal>() {}
 
         glib::Propagation::Proceed
     }

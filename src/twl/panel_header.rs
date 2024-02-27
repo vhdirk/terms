@@ -1,11 +1,17 @@
 use gtk::prelude::*;
 
-use super::{panel_header_imp as imp, utils::TwlWidgetExt, Panel};
+use super::{panel_header_imp as imp, utils::TwlWidgetExt};
 
 glib::wrapper! {
         pub struct PanelHeader(ObjectSubclass<imp::PanelHeader>)
                 @extends gtk::Widget,
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
+}
+
+impl Default for PanelHeader {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl PanelHeader {

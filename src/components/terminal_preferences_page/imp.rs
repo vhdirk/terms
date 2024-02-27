@@ -229,7 +229,7 @@ impl TerminalPreferencesPage {
             .set_mapping(|value, _ty| value.get::<u32>().ok().map(|v| WorkingDirectoryMode::from(v).into()))
             .build();
 
-        self.settings.connect_working_directory_mode_changed(clone!(@weak self as this => move|s| {
+        self.settings.connect_working_directory_mode_changed(clone!(@weak self as this => move|_s| {
             this.set_custom_working_dir_row_visible();
         }));
         self.set_custom_working_dir_row_visible();
@@ -397,7 +397,7 @@ impl TerminalPreferencesPage {
     #[template_callback]
     fn on_open_themes_folder(&self) {
         glib::spawn_future_local(
-            gtk::FileLauncher::new(Some(&gio::File::for_path(&ThemeProvider::user_themes_dir()))).launch_future(self.window.borrow().as_ref()),
+            gtk::FileLauncher::new(Some(&gio::File::for_path(ThemeProvider::user_themes_dir()))).launch_future(self.window.borrow().as_ref()),
         );
     }
 

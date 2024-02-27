@@ -1,10 +1,9 @@
 mod constants;
+mod imp;
 mod spawn;
-mod terminal;
-use std::{collections::HashMap, path::PathBuf};
+use std::path::PathBuf;
 
 use glib::{closure_local, prelude::*};
-use terminal as imp;
 
 use crate::util::EnvMap;
 

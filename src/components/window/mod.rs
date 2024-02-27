@@ -1,9 +1,8 @@
-mod window;
+mod imp;
 use std::path::PathBuf;
 
 use glib::{prelude::*, subclass::prelude::*};
 use tracing::*;
-use window as imp;
 
 use crate::util::EnvMap;
 

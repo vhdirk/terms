@@ -6,7 +6,6 @@ use approx::abs_diff_eq;
 use glib::subclass::SignalInvocationHint;
 use gtk::graphene;
 use num_traits as num;
-use tracing_log::log::warn;
 
 pub fn signal_accumulator_propagation(_hint: &SignalInvocationHint, return_accu: &mut glib::Value, handler_return: &glib::Value) -> bool {
     let signal_propagate = glib::Propagation::from(handler_return.get::<bool>().unwrap_or(true));
@@ -65,15 +64,13 @@ pub fn twl_widget_compute_expand(widget: &impl IsA<gtk::Widget>, hexpand: &mut b
     }
 }
 
-pub fn twl_widget_focus(widget: &impl IsA<gtk::Widget>, direction: gtk::DirectionType) -> bool {
+pub fn twl_widget_focus_move(widget: &impl IsA<gtk::Widget>, direction: gtk::DirectionType) -> bool {
     let focus_child = widget.as_ref().focus_child();
 
     let mut ret = false;
-    for child in focus_sort(widget, direction.clone()).into_iter() {
-        if focus_child.as_ref() == Some(&child) {
-            ret = child.child_focus(direction.clone());
-        } else if child.is_mapped() && child.is_ancestor(widget.as_ref()) {
-            ret = child.child_focus(direction.clone());
+    for child in focus_sort(widget, direction).into_iter() {
+        if focus_child.as_ref() == Some(&child) || (child.is_mapped() && child.is_ancestor(widget.as_ref())) {
+            ret = child.child_focus(direction);
         }
     }
     ret
@@ -131,7 +128,7 @@ fn old_focus_coords(widget: &impl IsA<gtk::Widget>) -> Option<graphene::Rect> {
 /// Look for a child in @children that is intermediate between the focus widget
 /// and container. This widget, if it exists, acts as the starting widget for
 /// focus navigation.
-fn find_old_focus(widget: &impl IsA<gtk::Widget>, children: &mut Vec<gtk::Widget>) -> Option<gtk::Widget> {
+fn find_old_focus(widget: &impl IsA<gtk::Widget>, children: &mut [gtk::Widget]) -> Option<gtk::Widget> {
     for child in children {
         let mut test_child = child.clone();
         let mut found = true;
@@ -158,7 +155,7 @@ fn find_old_focus(widget: &impl IsA<gtk::Widget>, children: &mut Vec<gtk::Widget
     None
 }
 
-fn focus_sort_tab(widget: &impl IsA<gtk::Widget>, children: &mut Vec<gtk::Widget>, direction: gtk::DirectionType) {
+fn focus_sort_tab(widget: &impl IsA<gtk::Widget>, children: &mut [gtk::Widget], direction: gtk::DirectionType) {
     let text_direction = widget.as_ref().direction();
     children.sort_by(|child1, child2| {
         let child_bounds1 = child1.parent().and_then(|p1| child1.compute_bounds(&p1));
@@ -181,11 +178,11 @@ fn focus_sort_tab(widget: &impl IsA<gtk::Widget>, children: &mut Vec<gtk::Widget
             let mut inv = if text_direction == gtk::TextDirection::Rtl { -1 } else { 1 };
 
             if direction == gtk::DirectionType::TabBackward {
-                inv = inv * -1;
+                inv = -inv;
             }
 
             let ordering = if x1 < x2 {
-                -1 * inv
+                -inv
             } else if abs_diff_eq!(x1, x2) {
                 0
             } else {
@@ -197,7 +194,7 @@ fn focus_sort_tab(widget: &impl IsA<gtk::Widget>, children: &mut Vec<gtk::Widget
             let mut ordering = if y1 < y2 { -1 } else { 1 };
 
             if direction == gtk::DirectionType::TabBackward {
-                ordering = ordering * -1;
+                ordering = -ordering;
             }
             ordering.cmp(&0)
         }
@@ -266,12 +263,10 @@ fn focus_sort_left_right(widget: &impl IsA<gtk::Widget>, children: &mut Vec<gtk:
             } else {
                 bounds.x() + bounds.width()
             }
+        } else if direction == gtk::DirectionType::Left {
+            0.0
         } else {
-            if direction == gtk::DirectionType::Left {
-                0.0
-            } else {
-                bounds.width()
-            }
+            bounds.width()
         };
 
         (compare_x, compare_y)
@@ -343,12 +338,10 @@ fn focus_sort_up_down(widget: &impl IsA<gtk::Widget>, children: &mut Vec<gtk::Wi
             } else {
                 bounds.y() + bounds.height()
             }
+        } else if direction == gtk::DirectionType::Down {
+            0.0
         } else {
-            if direction == gtk::DirectionType::Down {
-                0.0
-            } else {
-                bounds.height()
-            }
+            bounds.height()
         };
 
         (compare_x, compare_y)
@@ -379,7 +372,7 @@ fn axis_compare(
     child1: &impl IsA<gtk::Widget>,
     child2: &impl IsA<gtk::Widget>,
     x: f32,
-    y: f32,
+    _y: f32,
     reverse: bool,
     orientation: gtk::Orientation,
 ) -> Ordering {
@@ -393,8 +386,8 @@ fn axis_compare(
     let (mut start1, end1) = axis_info(bounds1.as_ref().unwrap(), orientation);
     let (mut start2, end2) = axis_info(bounds2.as_ref().unwrap(), orientation);
 
-    start1 = start1 + (end1 / 2.0);
-    start2 = start2 + (end2 / 2.0);
+    start1 += end1 / 2.0;
+    start2 += end2 / 2.0;
 
     let (x1, x2) = if start1 == start2 {
         //  Now use origin/bounds to compare the 2 widgets on the other axis
@@ -411,7 +404,7 @@ fn axis_compare(
 
     let inv = if reverse { -1 } else { 1 };
     let ordering = if x1 < x2 {
-        -1 * inv
+        -inv
     } else if abs_diff_eq!(x1, x2) {
         0
     } else {

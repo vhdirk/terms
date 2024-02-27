@@ -2,22 +2,22 @@ use constcat::concat;
 
 // Copyright (c) 2011-2017 elementary LLC. (https://elementary.io)
 // From: https://github.com/elementary/terminal/blob/c3e36fb2ab64c18028ff2b4a6da5bfb2171c1c04/src/Widgets/TerminalWidget.vala
-pub const USERCHARS: &'static str = "-[:alnum:]";
-pub const USERCHARS_CLASS: &'static str = concat!("[", USERCHARS, "]");
-pub const PASSCHARS_CLASS: &'static str = "[-[:alnum:]\\Q,?;.:/!%$^*&~\"#'\\E]";
-pub const HOSTCHARS_CLASS: &'static str = "[-[:alnum:]]";
-pub const HOST: &'static str = concat!(HOSTCHARS_CLASS, "+(\\.", HOSTCHARS_CLASS, "+)*");
-pub const PORT: &'static str = "(?:\\:[[:digit:]]{1,5})?";
-pub const PATHCHARS_CLASS: &'static str = "[-[:alnum:]\\Q_$.+!*,;:@&=?/~#%\\E]";
-pub const PATHTERM_CLASS: &'static str = "[^\\Q]'.}>) \t\r\n,\"\\E]";
-pub const SCHEME: &'static str = concat!(
+pub const USERCHARS: &str = "-[:alnum:]";
+pub const USERCHARS_CLASS: &str = concat!("[", USERCHARS, "]");
+pub const PASSCHARS_CLASS: &str = "[-[:alnum:]\\Q,?;.:/!%$^*&~\"#'\\E]";
+pub const HOSTCHARS_CLASS: &str = "[-[:alnum:]]";
+pub const HOST: &str = concat!(HOSTCHARS_CLASS, "+(\\.", HOSTCHARS_CLASS, "+)*");
+pub const PORT: &str = "(?:\\:[[:digit:]]{1,5})?";
+pub const PATHCHARS_CLASS: &str = "[-[:alnum:]\\Q_$.+!*,;:@&=?/~#%\\E]";
+pub const PATHTERM_CLASS: &str = "[^\\Q]'.}>) \t\r\n,\"\\E]";
+pub const SCHEME: &str = concat!(
     "(?:news:|telnet:|nntp:|file:\\/|https?:|ftps?:|sftp:|webcal:",
     "|irc:|sftp:|ldaps?:|nfs:|smb:|rsync:|ssh:|rlogin:|telnet:|git:",
     "|git\\+ssh:|bzr:|bzr\\+ssh:|svn:|svn\\+ssh:|hg:|mailto:|magnet:)"
 );
 
-pub const USERPASS: &'static str = concat!(USERCHARS_CLASS, "+(?:", PASSCHARS_CLASS, "+)?");
-pub const URLPATH: &'static str = concat!(
+pub const USERPASS: &str = concat!(USERCHARS_CLASS, "+(?:", PASSCHARS_CLASS, "+)?");
+pub const URLPATH: &str = concat!(
     "(?:(/",
     PATHCHARS_CLASS,
     "+(?:[(]",

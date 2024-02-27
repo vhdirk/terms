@@ -1,9 +1,8 @@
-mod terminal_tab;
+mod imp;
 use std::path::PathBuf;
 
 use glib::{closure_local, subclass::prelude::*};
 use gtk::prelude::*;
-use terminal_tab as imp;
 
 use crate::util::EnvMap;
 

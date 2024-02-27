@@ -1,6 +1,5 @@
-mod terminal_preferences_page;
+mod imp;
 use glib::prelude::*;
-use terminal_preferences_page as imp;
 
 glib::wrapper! {
         pub struct TerminalPreferencesPage(ObjectSubclass<imp::TerminalPreferencesPage>)

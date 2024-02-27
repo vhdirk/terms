@@ -12,12 +12,12 @@ mod window;
 
 pub use preferences_window::*;
 pub use process_manager::*;
-pub use search_toolbar::*;
+
 pub use shortcut_dialog::*;
 pub use shortcut_row::*;
-pub use shortcuts_preferences_page::*;
+
 pub use terminal::*;
-pub use terminal_preferences_page::*;
+
 pub use terminal_tab::*;
 pub use theme_thumbnail::*;
 pub use window::*;

@@ -62,7 +62,7 @@ impl ObjectSubclass for ShortcutsPreferencesPage {
             },
         );
 
-        klass.install_action(ACTION_RESET_ALL_SHORTCUTS, None, |page: &super::ShortcutsPreferencesPage, _, payload| {
+        klass.install_action(ACTION_RESET_ALL_SHORTCUTS, None, |page: &super::ShortcutsPreferencesPage, _, _payload| {
             page.imp().reset_all_shortcuts();
         });
     }
@@ -119,8 +119,8 @@ impl ShortcutsPreferencesPage {
 
         let dialog = adw::MessageDialog::builder()
             .modal(true)
-            .title(&gettext("Reset shortcuts?"))
-            .body(&gettext("Are you sure you want to reset all shortcuts to their defaults?"))
+            .title(gettext("Reset shortcuts?"))
+            .body(gettext("Are you sure you want to reset all shortcuts to their defaults?"))
             .build();
 
         dialog.set_transient_for(self.window.borrow().as_ref());
@@ -131,12 +131,9 @@ impl ShortcutsPreferencesPage {
         dialog.connect_response(
             None,
             clone!(@weak self as this => move |_d, resp| {
-                match resp {
-                    "reset" => {
-                        let shortcut_settings = this.settings.shortcuts();
-                        shortcut_settings.reset_all();
-                    }
-                    _ => ()
+                if resp == "reset" {
+                    let shortcut_settings = this.settings.shortcuts();
+                    shortcut_settings.reset_all();
                 }
             }),
         );

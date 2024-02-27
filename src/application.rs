@@ -1,4 +1,3 @@
-use adw;
 use gettextrs::gettext;
 use gio::ApplicationFlags;
 use glib::ExitCode;
@@ -32,10 +31,10 @@ impl AppProfile {
     }
 }
 
-impl Into<&str> for &AppProfile {
+impl From<&AppProfile> for &str {
     /// The string representation of this `AppProfile`.
-    fn into(self) -> &'static str {
-        match *self {
+    fn from(val: &AppProfile) -> Self {
+        match *val {
             AppProfile::Stable => "stable",
             AppProfile::Beta => "beta",
             AppProfile::Devel => "devel",

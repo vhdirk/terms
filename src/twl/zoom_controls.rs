@@ -6,6 +6,12 @@ glib::wrapper! {
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
 }
 
+impl Default for ZoomControls {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ZoomControls {
     pub fn new() -> Self {
         glib::Object::builder().build()

@@ -126,8 +126,8 @@ impl PreferencesWindow {
         let dialog = adw::MessageDialog::builder()
             .transient_for(&*self.obj())
             .modal(true)
-            .title(&gettext("Reset all?"))
-            .body(&gettext("Are you sure you want to reset all settings to their defaults?"))
+            .title(gettext("Reset all?"))
+            .body(gettext("Are you sure you want to reset all settings to their defaults?"))
             .build();
 
         dialog.add_responses(&[("cancel", &gettext("_Cancel")), ("reset", &gettext("_Reset all preferences"))]);

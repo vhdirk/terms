@@ -1,8 +1,8 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use glib::subclass::basic::ClassStruct;
+
 use glib::subclass::Signal;
-use glib::{clone, Properties};
+use glib::Properties;
 use gtk::{graphene, gsk};
 use num_traits as num;
 use once_cell::sync::Lazy;

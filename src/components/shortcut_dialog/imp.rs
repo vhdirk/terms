@@ -1,14 +1,13 @@
 use std::cell::Cell;
 use std::cell::OnceCell;
 use std::cell::RefCell;
-use std::marker::PhantomData;
 
 use adw::subclass::prelude::*;
 use gdk::prelude::*;
 use gdk::KeyEvent;
-use gdk::ModifierType;
+
 use gettextrs::gettext;
-use gio::prelude::*;
+
 use glib::subclass::Signal;
 use glib::Properties;
 use gtk::glib;
@@ -165,7 +164,7 @@ impl ShortcutDialog {
 
         let consumed = key_event.consumed_modifiers();
 
-        let mut mods = gtk_accel.as_ref().map(|(_, mods)| mods.clone()).unwrap_or(gdk::ModifierType::empty());
+        let mut mods = gtk_accel.as_ref().map(|(_, mods)| *mods).unwrap_or(gdk::ModifierType::empty());
         mods &= !consumed;
 
         let is_valid = gtk_accel.is_some() &&

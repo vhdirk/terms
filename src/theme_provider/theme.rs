@@ -1,5 +1,5 @@
 use serde_with::{serde_as, skip_serializing_none, DisplayFromStr};
-use std::{ffi::OsStr, fs, path::Path};
+use std::{fs, path::Path};
 use tracing::*;
 
 use serde::{Deserialize, Serialize};
@@ -83,15 +83,15 @@ impl ThemeTemp {
     }
 }
 
-impl Into<Theme> for ThemeTemp {
-    fn into(self) -> Theme {
+impl From<ThemeTemp> for Theme {
+    fn from(val: ThemeTemp) -> Self {
         Theme {
-            name: self.name.clone(),
-            comment: self.comment.clone(),
-            foreground: self.foreground.clone(),
-            background: self.background.clone(),
-            cursor: self.cursor.clone(),
-            palette: self.palette().clone(),
+            name: val.name.clone(),
+            comment: val.comment.clone(),
+            foreground: val.foreground,
+            background: val.background,
+            cursor: val.cursor,
+            palette: val.palette().clone(),
         }
     }
 }
@@ -119,9 +119,7 @@ impl Theme {
         };
 
         let ext = file_path.extension().map(|ext| ext.to_string_lossy().to_string());
-        if ext.is_none() {
-            return None;
-        }
+        ext.as_ref()?;
         let ext = ext.unwrap();
         match ext.as_str() {
             "yml" | "yaml" => serde_yaml::from_str(&content)

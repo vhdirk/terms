@@ -1,4 +1,3 @@
-use std::marker::PhantomData;
 use std::time::Duration;
 use std::{cell::RefCell, collections::HashMap};
 
@@ -10,7 +9,7 @@ use glib::Properties;
 use gtk::glib;
 use gtk::graphene;
 use gtk::CompositeTemplate;
-use gtk::Settings as SystemSettings;
+
 use tracing::*;
 use vte::prelude::*;
 use vte::TerminalExtManual;
@@ -277,7 +276,7 @@ impl Terminal {
         // env.extend(TERMS_ENV.clone());
         let env = TERMS_ENV.clone();
 
-        let mut cmd = match self.settings.shell_command().map(|cmd| glib::shell_parse_argv(&cmd)) {
+        let mut cmd = match self.settings.shell_command().map(glib::shell_parse_argv) {
             Some(Ok(shell_command)) => shell_command.iter().map(PathBuf::from).collect(),
             _ => {
                 info!("Getting shell from spawner");
@@ -307,7 +306,7 @@ impl Terminal {
 
         info!("Spawning pty");
         let flags = vte::PtyFlags::DEFAULT;
-        let child_exit = match self.spawner.spawn(&*self.term, flags, working_dir, cmd, env, Duration::from_secs(1)).await {
+        let child_exit = match self.spawner.spawn(&self.term, flags, working_dir, cmd, env, Duration::from_secs(1)).await {
             Ok(handle) => {
                 info!("Spawned pty with id: {:?}", handle.pid);
                 handle.child_exit
@@ -432,7 +431,7 @@ impl Terminal {
         }
 
         if let Ok(text) = value.get::<String>() {
-            self.term.feed_child(glib::shell_quote(&text).as_encoded_bytes());
+            self.term.feed_child(glib::shell_quote(text).as_encoded_bytes());
             self.term.feed_child(" ".as_bytes());
             return glib::Propagation::Proceed;
         }
@@ -446,7 +445,7 @@ impl Terminal {
             return glib::Propagation::Proceed;
         }
 
-        if let Some(update_source) = self.update_source.as_ref() {
+        if let Some(_update_source) = self.update_source.as_ref() {
             glib::Propagation::Proceed
         } else {
             // Handle easy copy/paste
@@ -578,7 +577,7 @@ impl Terminal {
 
     fn feed_child_file(&self, file: &gio::File) {
         if let Some(path) = file.path() {
-            self.term.feed_child(glib::shell_quote(&path).as_encoded_bytes());
+            self.term.feed_child(glib::shell_quote(path).as_encoded_bytes());
             self.term.feed_child(" ".as_bytes());
         }
     }

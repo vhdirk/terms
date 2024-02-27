@@ -137,10 +137,10 @@ impl PanelGrid {
     where
         T: IsA<gtk::Widget> + ObjectType,
     {
-        self.get_all_inner(&self.inner.upcast_ref()).into_iter().collect()
+        Self::get_all_inner(self.inner.upcast_ref()).into_iter().collect()
     }
 
-    fn get_all_inner<T>(&self, root: &gtk::Widget) -> HashSet<T>
+    fn get_all_inner<T>(root: &gtk::Widget) -> HashSet<T>
     where
         T: IsA<gtk::Widget> + ObjectType,
     {
@@ -155,7 +155,7 @@ impl PanelGrid {
                 elems.insert(elem);
             }
 
-            let child_elems = self.get_all_inner(&child);
+            let child_elems = Self::get_all_inner(&child);
             elems.extend(child_elems);
         }
 
@@ -333,12 +333,12 @@ impl PanelGrid {
         }
         *self.selected.borrow_mut() = panel.cloned();
 
-        for p in self.get_all::<Panel>() {
+        for _p in self.get_all::<Panel>() {
 
             // p.set_selected(false);
         }
 
-        if let Some(panel) = panel {
+        if let Some(_panel) = panel {
             // panel.set_selected(true);
         }
         self.obj().notify_selected();

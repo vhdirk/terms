@@ -1,5 +1,4 @@
-mod shortcut_row;
-use shortcut_row as imp;
+mod imp;
 
 pub const ACTION_ADD_SHORTCUT: &str = "shortcuts.add";
 pub const ACTION_REMOVE_SHORTCUT: &str = "shortcuts.remove";

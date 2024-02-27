@@ -106,7 +106,7 @@ impl ShortcutRow {
 
         let section = gio::Menu::new();
         for accel in accelerators.iter() {
-            let item = gio::MenuItem::new(Some(&gettext!("Remove {}", self.settings.accel_as_label(&accel))), None);
+            let item = gio::MenuItem::new(Some(&gettext!("Remove {}", self.settings.accel_as_label(accel))), None);
             item.set_action_and_target_value(Some(super::ACTION_REMOVE_SHORTCUT), Some(&accel.to_variant()));
             section.append_item(&item);
 

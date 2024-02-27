@@ -1,31 +1,25 @@
 use std::{
-    cell::{Cell, RefCell},
+    cell::Cell,
     collections::HashMap,
-    future::IntoFuture,
-    io,
-    num::ParseIntError,
     os::fd::BorrowedFd,
     os::fd::{AsRawFd, FromRawFd, RawFd},
     path::PathBuf,
     pin::Pin,
-    process::ExitCode,
     rc::Rc,
-    string::FromUtf8Error,
     time::Duration,
 };
 
 use ashpd::flatpak;
 use async_std::{io::ReadExt, stream::StreamExt};
 use async_trait::async_trait;
-use gio::GioFutureResult;
+
 use glib::{clone, prelude::*};
 use libc::FD_CLOEXEC;
 use std::future::Future;
 use terms_util::{libc_util, toolbox};
-use thiserror::Error;
+
 use tracing::*;
-use vte::{self, InputStreamExtManual, TerminalExt, TerminalExtManual};
-use zbus::zvariant::{Fd, OwnedFd};
+use vte::{self, TerminalExt, TerminalExtManual};
 
 use crate::error::TermsError;
 
@@ -254,7 +248,7 @@ impl Spawner for FlatpakSpawner {
         working_dir: PathBuf,
         argv: Vec<PathBuf>,
         envv: HashMap<String, String>,
-        timeout: Duration,
+        _timeout: Duration,
     ) -> Result<SpawnHandle, TermsError> {
         // Open a new PTY master
         let pty = term.pty_new_sync_future(flags | vte::PtyFlags::NO_CTTY).await.map_err(|err| {
@@ -283,7 +277,7 @@ impl Spawner for FlatpakSpawner {
 
         let mut pty_slaves = HashMap::<u32, BorrowedFd>::new();
 
-        let slave_fd: RawFd = libc_util::open(&PathBuf::from(&slave_name), libc::O_RDWR | libc::O_CLOEXEC, 0).map_err(|err| {
+        let slave_fd: RawFd = libc_util::open(PathBuf::from(&slave_name), libc::O_RDWR | libc::O_CLOEXEC, 0).map_err(|err| {
             warn!("Failed opening slave pseudoterminal device {:?}", err);
             err
         })?;

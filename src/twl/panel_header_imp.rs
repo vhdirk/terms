@@ -12,6 +12,7 @@ use super::{FadingLabel, PackBox};
 #[derive(Debug, CompositeTemplate, Properties)]
 #[template(resource = "/io/github/vhdirk/Twl/gtk/panel_header.ui")]
 #[properties(wrapper_type=super::PanelHeader)]
+#[derive(Default)]
 pub struct PanelHeader {
     #[property(get, set=Self::set_title, construct, nullable)]
     title: RefCell<Option<String>>,
@@ -24,18 +25,6 @@ pub struct PanelHeader {
 
     #[template_child]
     title_container: TemplateChild<adw::Bin>,
-}
-
-impl Default for PanelHeader {
-    fn default() -> Self {
-        Self {
-            title: Default::default(),
-            title_widget: Default::default(),
-
-            container: Default::default(),
-            title_container: Default::default(),
-        }
-    }
 }
 
 #[glib::object_subclass]

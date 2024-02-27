@@ -67,8 +67,8 @@ impl OrientableImpl for PackBox {}
 impl BuildableImpl for PackBox {
     fn add_child(&self, builder: &gtk::Builder, child: &glib::Object, type_: Option<&str>) {
         match (child.downcast_ref::<gtk::Widget>(), type_) {
-            (Some(widget), Some(wtype)) if wtype == "start" => self.pack_start(widget),
-            (Some(widget), Some(wtype)) if wtype == "end" => self.pack_end(widget),
+            (Some(widget), Some("start")) => self.pack_start(widget),
+            (Some(widget), Some("end")) => self.pack_end(widget),
             (Some(widget), _) => self.append(widget),
             (_, _) => self.parent_add_child(builder, child, type_),
         }

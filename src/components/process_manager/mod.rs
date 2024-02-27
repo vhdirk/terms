@@ -1,13 +1,17 @@
 use glib::subclass::prelude::*;
 
 mod flatpak;
+mod imp;
 mod native;
-mod process_manager;
-
-use process_manager as imp;
 
 glib::wrapper! {
     pub struct ProcessManager(ObjectSubclass<imp::ProcessManager>);
+}
+
+impl Default for ProcessManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ProcessManager {

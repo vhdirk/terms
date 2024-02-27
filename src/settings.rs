@@ -23,9 +23,9 @@ impl Default for Settings {
 
 impl Settings {}
 
-impl Into<adw::ColorScheme> for StylePreference {
-    fn into(self) -> adw::ColorScheme {
-        match self {
+impl From<StylePreference> for adw::ColorScheme {
+    fn from(val: StylePreference) -> Self {
+        match val {
             StylePreference::System => adw::ColorScheme::Default,
             StylePreference::Light => adw::ColorScheme::ForceLight,
             StylePreference::Dark => adw::ColorScheme::ForceDark,
@@ -120,11 +120,11 @@ impl ShortcutSettings {
     }
 
     pub fn action(&self, key: &str) -> String {
-        key.replacen("-", ".", 1)
+        key.replacen('-', ".", 1)
     }
 
     pub fn key(&self, action: &str) -> String {
-        action.replacen(".", "-", 1)
+        action.replacen('.', "-", 1)
     }
 
     pub fn keys(&self) -> Vec<String> {
@@ -144,12 +144,12 @@ impl ShortcutSettings {
     }
 
     pub fn actionmap(&self) -> HashMap<String, Vec<String>> {
-        self.keys().into_iter().map(|k| ((self.action(&k), self.accels(&k)))).collect()
+        self.keys().into_iter().map(|k| (self.action(&k), self.accels(&k))).collect()
     }
 
     pub fn accel_in_use(&self, accel: &str) -> Option<String> {
         let accel = accel.to_string();
-        self.keys().into_iter().find(|key| self.accels(&key).contains(&accel))
+        self.keys().into_iter().find(|key| self.accels(key).contains(&accel))
     }
 
     pub fn add_accel(&self, key: &str, accel: &str) {

@@ -1,6 +1,6 @@
 use adw::subclass::prelude::*;
-use adw::TabPage;
-use glib::{clone, Properties, SignalHandlerId};
+
+use glib::{clone, Properties};
 use gtk::prelude::*;
 use gtk::{gio, glib};
 use std::cell::{Cell, RefCell};
@@ -163,11 +163,11 @@ impl Window {
             this.active_tab_bindings.set_source(tab);
         }));
 
-        self.active_tab_signals.connect_bind_local(move |sg, obj| {
+        self.active_tab_signals.connect_bind_local(move |_sg, _obj| {
             info!("active tab: bind");
         });
 
-        self.selected_page_signals.connect_notify_local(Some("pinned"), move |obj, param| {
+        self.selected_page_signals.connect_notify_local(Some("pinned"), move |_obj, _param| {
             info!("selected page: pinned");
         });
 
@@ -181,7 +181,7 @@ impl Window {
         //     info!("active tab: bind");
         // });
 
-        self.active_tab_bindings.connect_notify_local(Some("zoom"), move |obj, param| {
+        self.active_tab_bindings.connect_notify_local(Some("zoom"), move |_obj, _param| {
             info!("active tab: zoom");
         });
 
@@ -263,7 +263,7 @@ impl Window {
             }
         }));
 
-        self.tab_view.connect_selected_page_notify(clone!(@weak self as this => move |tab_view| {
+        self.tab_view.connect_selected_page_notify(clone!(@weak self as this => move |_tab_view| {
             info!("tab_view.selected_page_notify");
             // if let Some(page) = tab_view.selected_page() {
             //     this.obj().set_title(Some(&page.title()))
@@ -349,7 +349,7 @@ impl Window {
     }
 
     fn zoom_out(&self) {
-        if let Some(tab) = self.tab_view.selected_page().and_then(|page| page.child().downcast::<TerminalTab>().ok()) {
+        if let Some(_tab) = self.tab_view.selected_page().and_then(|page| page.child().downcast::<TerminalTab>().ok()) {
             // tab.zoom_out();
         }
 

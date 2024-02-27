@@ -1,9 +1,8 @@
 use glib::subclass::prelude::*;
-mod theme_thumbnail;
-use theme_thumbnail as imp;
 
 use crate::theme_provider::Theme;
 
+mod imp;
 mod thumbnail_paintable;
 
 glib::wrapper! {

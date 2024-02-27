@@ -9,6 +9,12 @@ glib::wrapper! {
                 @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
 }
 
+impl Default for PanelGrid {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PanelGrid {
     pub fn new() -> Self {
         glib::Object::builder().build()

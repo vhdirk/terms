@@ -25,14 +25,14 @@ use ref_thread_local::{ref_thread_local, RefThreadLocal};
 use tracing::*;
 
 use gdk::subclass::prelude::*;
-use glib::subclass::prelude::*;
+
 use glib::subclass::{object::ObjectImpl, types::ObjectSubclass};
 use gtk::subclass::prelude::*;
 
-use crate::theme_provider::{Theme, ThemeProvider};
+use crate::theme_provider::Theme;
 
 ref_thread_local! {
-    static managed INSTANCE: Lazy<ThemeThumbnailProvider> = Lazy::new(|| ThemeThumbnailProvider::new());
+    static managed INSTANCE: Lazy<ThemeThumbnailProvider> = Lazy::new(ThemeThumbnailProvider::new);
 }
 
 impl Default for ThemeThumbnailProvider {
@@ -85,9 +85,7 @@ impl ThemeThumbnailProvider {
     pub fn apply_theme(&self, theme: &Theme) -> Option<String> {
         info!("Rerendering svg in theme {}", theme.name);
 
-        if self.element.is_none() {
-            return None;
-        }
+        self.element.as_ref()?;
 
         let mut element = self.element.as_ref().unwrap().clone();
         Self::process_node(&mut element, theme);

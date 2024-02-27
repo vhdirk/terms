@@ -1,10 +1,6 @@
-use crate::application::AppProfile;
-use crate::config::PROFILE;
 use adw::subclass::prelude::*;
 use gtk::glib;
 use gtk::prelude::*;
-
-use super::*;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/search_toolbar.ui")]

@@ -1,7 +1,6 @@
-mod preferences_window;
+mod imp;
 
 use glib::prelude::*;
-use preferences_window as imp;
 
 glib::wrapper! {
         pub struct PreferencesWindow(ObjectSubclass<imp::PreferencesWindow>)

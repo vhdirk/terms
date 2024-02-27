@@ -37,9 +37,9 @@ impl From<HashMap<String, String>> for EnvMap {
     }
 }
 
-impl Into<HashMap<String, String>> for EnvMap {
-    fn into(self) -> HashMap<String, String> {
-        self.imp().inner.take()
+impl From<EnvMap> for HashMap<String, String> {
+    fn from(val: EnvMap) -> Self {
+        val.imp().inner.take()
     }
 }
 
