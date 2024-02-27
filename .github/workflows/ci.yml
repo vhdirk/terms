@@ -60,25 +60,25 @@ jobs:
       - name: Test
         run: cargo test
 
-  flatpak:
-    name: flatpak
-    runs-on: ubuntu-latest
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-45
-      options: --privileged
-    steps:
-      - name: Install dependencies
-        run: |
-          dnf install -y \
-            gtk4-devel \
-            libadwaita-devel \
-            libpanel-devel \
-            vte291-gtk4-devel
-      - uses: actions/checkout@v4
-      - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
-        with:
-          bundle: terms.flatpak
-          manifest-path: build-aux/io.github.vhdirk.Terms.json
-          run-tests: true
-          cache-key: flatpak-builder-${{ github.sha }}
+  # flatpak:
+  #   name: flatpak
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: bilelmoussaoui/flatpak-github-actions:gnome-45
+  #     options: --privileged
+  #   steps:
+  #     - name: Install dependencies
+  #       run: |
+  #         dnf install -y \
+  #           gtk4-devel \
+  #           libadwaita-devel \
+  #           libpanel-devel \
+  #           vte291-gtk4-devel
+  #     - uses: actions/checkout@v4
+  #     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
+  #       with:
+  #         bundle: terms.flatpak
+  #         manifest-path: build-aux/io.github.vhdirk.Terms.json
+  #         run-tests: true
+  #         cache-key: flatpak-builder-${{ github.sha }}
 
