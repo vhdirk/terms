@@ -34,6 +34,24 @@
         "*.a"
     ],
     "modules": [
+       {
+            "name" : "libportal",
+            "config-opts" : [
+                "--buildtype=debugoptimized",
+                "-Dbackends=gtk4",
+                "-Ddocs=false",
+                "-Dtests=false"
+            ],
+            "buildsystem" : "meson",
+            "builddir" : true,
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/flatpak/libportal/releases/download/0.6/libportal-0.6.tar.xz",
+                    "sha256" : "88a12c3ba71bc31acff7238c280de697d609cebc50830c3766776ec35abc6566"
+                }
+            ]
+        },
         {
             "name": "vte",
             "buildsystem": "meson",
@@ -62,13 +80,14 @@
             "name": "terms",
             "builddir": true,
             "buildsystem": "meson",
-            "sources": [
+            
+            "sources" : [
                 {
-                    "type": "git",
-                    "branch": "release",
-                    "url": "https://github.com/vhdirk/terms.git"
+                    "type" : "dir",
+                    "path" : "."
                 }
             ]
+            
         }
     ]
 }
