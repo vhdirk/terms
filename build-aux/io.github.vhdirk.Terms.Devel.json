@@ -61,47 +61,7 @@
                 },
                 {
                     "type": "patch",
-                    "path": "../build-aux/vte/0001-Add-sequences-and-signals-for-desktop-notification.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0002-vte.sh-Emit-OSC-777-from-PROMPT_COMMAND.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0003-Test-the-notification-received-signal.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0004-Support-preexec-notifications-from-an-interactive-sh.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0005-Test-the-shell-preexec-signal.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0006-Support-precmd-notifications-from-an-interactive-she.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0007-Test-the-shell-precmd-signal.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0008-Support-tracking-the-active-container-inside-the-ter.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/0009-expose-notification-shellcmd-containers-to-GTK-4.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/Allow-background-color-and-color-on-VteTerminal-widgets-t.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "../build-aux/vte/widget-a11y-Add-missing-text-changes-on-scrolling-with-mo.patch"
+                    "path": "../build-aux/vte/0001-add-notification-and-shell-precmd-preexec.patch"
                 }
             ]
         },
