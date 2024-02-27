@@ -54,7 +54,7 @@ async-trait = "0.1.77"
 clap = { version = "4.5.1", features = ["derive"] }
 libc = "0.2.153"
 thiserror = "1.0.57"
-anyhow = "1.0.79"
+anyhow = "1.0.80"
 zbus = "4.1.1"
 num-traits = "0.2.18"
 approx = "0.5.1"
