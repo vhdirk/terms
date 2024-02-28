@@ -137,9 +137,8 @@ impl PreferencesWindow {
         dialog.connect_response(
             None,
             clone!(@weak self as this => move |_d, resp| {
-                match resp {
-                    "reset" => this.settings.reset_all(),
-                    _ => ()
+                if resp == "reset" {
+                    this.settings.reset_all();
                 }
             }),
         );

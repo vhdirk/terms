@@ -27,7 +27,6 @@ use tracing::*;
 use gdk::subclass::prelude::*;
 
 use glib::subclass::{object::ObjectImpl, types::ObjectSubclass};
-use gtk::subclass::prelude::*;
 
 use crate::theme_provider::Theme;
 

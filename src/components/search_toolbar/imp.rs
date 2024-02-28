@@ -1,6 +1,5 @@
 use adw::subclass::prelude::*;
 use gtk::glib;
-use gtk::prelude::*;
 
 #[derive(Debug, Default, gtk::CompositeTemplate)]
 #[template(resource = "/io/github/vhdirk/Terms/gtk/search_toolbar.ui")]

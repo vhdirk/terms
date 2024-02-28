@@ -1,5 +1,3 @@
-use gtk::prelude::*;
-
 use super::{panel_header_imp as imp, utils::TwlWidgetExt};
 
 glib::wrapper! {

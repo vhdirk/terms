@@ -344,7 +344,7 @@ impl FlatpakSpawner {
         let keyfile = glib::KeyFile::new();
         keyfile.load_from_bytes(&glib::Bytes::from(&contents), glib::KeyFileFlags::NONE)?;
         let host_root = keyfile.string("Instance", "app-path")?;
-        Ok(PathBuf::from(host_root).join("/bin"))
+        Ok(PathBuf::from(host_root).join("bin"))
     }
 
     async fn toolbox_path() -> Result<PathBuf, TermsError> {

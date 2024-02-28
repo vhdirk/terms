@@ -1,5 +1,3 @@
-use glib::subclass::prelude::*;
-
 mod flatpak;
 mod imp;
 mod native;

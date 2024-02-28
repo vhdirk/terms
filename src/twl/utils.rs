@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 
 use adw::prelude::*;
-use adw::subclass::prelude::*;
 use approx::abs_diff_eq;
 use glib::subclass::SignalInvocationHint;
 use gtk::graphene;
@@ -64,7 +63,7 @@ pub fn twl_widget_compute_expand(widget: &impl IsA<gtk::Widget>, hexpand: &mut b
     }
 }
 
-pub fn twl_widget_focus_move(widget: &impl IsA<gtk::Widget>, direction: gtk::DirectionType) -> bool {
+pub fn twl_widget_move_focus(widget: &impl IsA<gtk::Widget>, direction: gtk::DirectionType) -> bool {
     let focus_child = widget.as_ref().focus_child();
 
     let mut ret = false;

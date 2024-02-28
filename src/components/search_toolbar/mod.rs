@@ -1,5 +1,4 @@
 mod imp;
-use glib::subclass::prelude::*;
 
 glib::wrapper! {
         pub struct SearchToolbar(ObjectSubclass<imp::SearchToolbar>)

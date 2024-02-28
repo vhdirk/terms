@@ -1,4 +1,4 @@
-use glib::{prelude::*, subclass::prelude::*};
+use glib::prelude::*;
 
 use super::{bin_imp as imp, utils::TwlWidgetExt};
 

@@ -147,7 +147,7 @@ impl WidgetImpl for FadingLabel {
 
 impl FadingLabel {
     fn set_label(&self, label: &str) {
-        if label == &self.get_label() {
+        if label == self.get_label() {
             return;
         }
 

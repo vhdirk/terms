@@ -1,5 +1,3 @@
-use glib::{prelude::*, subclass::prelude::*};
-
 use super::{fading_label_imp as imp, utils::TwlWidgetExt};
 
 glib::wrapper! {
