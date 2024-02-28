@@ -341,11 +341,8 @@ impl TerminalPreferencesPage {
             Some(&font),
             None::<&gio::Cancellable>,
             clone!(@weak self as this => move |result| {
-                match result {
-                    Ok(font) => {
-                        this.settings.set_custom_font(&font.to_str());
-                    },
-                    _ => ()
+                if let Ok(font) = result {
+                    this.settings.set_custom_font(&font.to_str());
                 }
             }),
         );
