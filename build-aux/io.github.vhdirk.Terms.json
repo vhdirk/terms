@@ -3,7 +3,10 @@
     "runtime": "org.gnome.Platform",
     "runtime-version": "45",
     "sdk": "org.gnome.Sdk",
-    "sdk-extensions": ["org.freedesktop.Sdk.Extension.rust-stable"],
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.rust-stable",
+        "org.freedesktop.Sdk.Extension.llvm16"
+    ],
     "command": "terms",
     "finish-args": [
         "--filesystem=home",
@@ -16,10 +19,15 @@
         "--talk-name=org.freedesktop.Flatpak"
     ],
     "build-options": {
-        "append-path": "/usr/lib/sdk/rust-stable/bin",
+        "append-path": "/usr/lib/sdk/llvm16/bin:/usr/lib/sdk/rust-stable/bin",
+        "append-ld-library-path": "/usr/lib/sdk/llvm16/lib",
         "build-args": ["--share=network"],
         "env": {
-            "CARGO_HOME": "/run/build/terms/cargo"
+            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER": "clang",
+            "CARGO_REGISTRIES_CRATES_IO_PROTOCOL": "sparse",
+            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\"",
+            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER": "clang",
+            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\""
         }
     },
     "cleanup": [
@@ -34,21 +42,21 @@
         "*.a"
     ],
     "modules": [
-       {
-            "name" : "libportal",
-            "config-opts" : [
+        {
+            "name": "libportal",
+            "config-opts": [
                 "--buildtype=debugoptimized",
                 "-Dbackends=gtk4",
                 "-Ddocs=false",
                 "-Dtests=false"
             ],
-            "buildsystem" : "meson",
-            "builddir" : true,
-            "sources" : [
+            "buildsystem": "meson",
+            "builddir": true,
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://github.com/flatpak/libportal/releases/download/0.6/libportal-0.6.tar.xz",
-                    "sha256" : "88a12c3ba71bc31acff7238c280de697d609cebc50830c3766776ec35abc6566"
+                    "type": "archive",
+                    "url": "https://github.com/flatpak/libportal/releases/download/0.6/libportal-0.6.tar.xz",
+                    "sha256": "88a12c3ba71bc31acff7238c280de697d609cebc50830c3766776ec35abc6566"
                 }
             ]
         },
@@ -78,16 +86,16 @@
         },
         {
             "name": "terms",
-            "builddir": true,
             "buildsystem": "meson",
-            
-            "sources" : [
+            "run-tests": true,
+
+            "builddir": true,
+            "sources": [
                 {
-                    "type" : "dir",
-                    "path" : "../"
+                    "type": "dir",
+                    "path": "../"
                 }
             ]
-            
         }
     ]
 }

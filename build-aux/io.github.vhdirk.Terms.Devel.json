@@ -1,14 +1,14 @@
 {
-    "id" : "io.github.vhdirk.Terms.Devel",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "45",
-    "sdk" : "org.gnome.Sdk",
-    "sdk-extensions" : [
+    "id": "io.github.vhdirk.Terms.Devel",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "45",
+    "sdk": "org.gnome.Sdk",
+    "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.rust-stable",
         "org.freedesktop.Sdk.Extension.llvm16"
     ],
-    "command" : "terms",
-    "finish-args" : [
+    "command": "terms",
+    "finish-args": [
         "--allow=devel",
         "--filesystem=home",
         "--filesystem=host",
@@ -22,25 +22,49 @@
         "--env=G_MESSAGES_DEBUG=none",
         "--env=RUST_BACKTRACE=1"
     ],
-    "build-options" : {
-        "append-path" : "/usr/lib/sdk/llvm16/bin:/usr/lib/sdk/rust-stable/bin",
-        "append-ld-library-path" : "/usr/lib/sdk/llvm16/lib",
-        "build-args" : [
-            "--share=network"
-        ],
-        "env" : {
-            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER" : "clang",
-            "CARGO_REGISTRIES_CRATES_IO_PROTOCOL" : "sparse",
-            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS" : "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\"",
-            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER" : "clang",
-            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS" : "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\""
+    "build-options": {
+        "append-path": "/usr/lib/sdk/llvm16/bin:/usr/lib/sdk/rust-stable/bin",
+        "append-ld-library-path": "/usr/lib/sdk/llvm16/lib",
+        "build-args": ["--share=network"],
+        "env": {
+            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER": "clang",
+            "CARGO_REGISTRIES_CRATES_IO_PROTOCOL": "sparse",
+            "CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\"",
+            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER": "clang",
+            "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS": "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold --cfg=ruma_identifiers_storage=\"Arc\""
         },
-        "test-args" : [
-            "--socket=x11",
-            "--share=network"
-        ]
+        "test-args": ["--socket=x11", "--share=network"]
     },
-    "modules" : [
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a"
+    ],
+    "modules": [
+        {
+            "name": "libportal",
+            "config-opts": [
+                "--buildtype=debugoptimized",
+                "-Dbackends=gtk4",
+                "-Ddocs=false",
+                "-Dtests=false"
+            ],
+            "buildsystem": "meson",
+            "builddir": true,
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/flatpak/libportal/releases/download/0.6/libportal-0.6.tar.xz",
+                    "sha256": "88a12c3ba71bc31acff7238c280de697d609cebc50830c3766776ec35abc6566"
+                }
+            ]
+        },
         {
             "name": "vte",
             "buildsystem": "meson",
