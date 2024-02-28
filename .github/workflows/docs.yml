@@ -88,12 +88,12 @@ jobs:
         run: flatpak install -y org.gnome.Sdk/${{ matrix.arch }}/45 org.freedesktop.Sdk.Extension.rust-stable/${{ matrix.arch }}/23.08 org.gnome.Platform/${{ matrix.arch }}/45 org.freedesktop.Sdk.Extension.llvm16/${{ matrix.arch }}/23.08
 
       # See "GPG Signing" below
-      # - name: Setup GPG
-      #   id: gpg
-      #   uses: crazy-max/ghaction-import-gpg@v5
-      #   with:
-      #     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-      #     passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Setup GPG
+        id: gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       # - name: Generate CNAME
       #   run: |
@@ -106,8 +106,8 @@ jobs:
           files: |
             build-aux/io.github.vhdirk.Terms.json
           arch: ${{ matrix.arch }}
-          # gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
-          # upload-bundles: true
+          gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
+          upload-bundles: true
           # upload-pages-artifact: ${{ matrix.arch == 'x86_64' }}
           # upload-pages-includes: |
           #   CNAME
