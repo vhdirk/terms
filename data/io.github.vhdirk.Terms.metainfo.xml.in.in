@@ -7,6 +7,9 @@
   <name>Terms</name>
   <summary>A terminal emulator where conditions apply</summary>
   <description>
+  <p>
+      Terms is a tiling terminal emulator for GNOME.
+  </p>
   </description>
   <screenshots>
   </screenshots>
@@ -19,7 +22,7 @@ https://hughsie.github.io/oars/index.html
 -->
   <content_rating type="oars-1.0" />
   <releases>
-
+    <release version="0.1.0" date="2024-02-28" />
   </releases>
   <kudos>
     <kudo>ModernToolkit</kudo>
