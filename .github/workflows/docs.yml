@@ -65,8 +65,6 @@ jobs:
       options: --privileged
 
     strategy:
-      matrix:
-        arch: [x86_64 ] # , aarch64]
       fail-fast: false
       # Only one job at a time can use the shared repository cache
       max-parallel: 1
@@ -121,7 +119,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: repo
-          path: ${{ steps.flatpak-build.outputs.repository }}
+          path: ${{ steps.flatpak-build.outputs.repository }}/index.flatpakrepo
 
 
 
@@ -136,7 +134,7 @@ jobs:
         uses: actions/download-artifact@v4
       - name: Merge artifacts
         run: |
-          cp -r repo book
+          cp repo/index.flatpakrepo book
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
