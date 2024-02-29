@@ -2,7 +2,7 @@
 Highly experimental
 
 
-[Enable repository](./index.flatpakrepo)
+[Enable repository](./repo/index.flatpakrepo)
 
 
 
