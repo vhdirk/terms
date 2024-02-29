@@ -52,6 +52,8 @@ jobs:
     name: Flatter
     runs-on: ubuntu-latest
     needs: docs
+    env:
+      MDBOOK_VERSION: 0.4.37
 
     container:
       image: ghcr.io/andyholmes/flatter/gnome:45
@@ -113,12 +115,33 @@ jobs:
           #   CNAME
           #   default.css
           #   index.html
-      - name: Deploy Repository
-        uses: JamesIves/github-pages-deploy-action@releases/v4
-        with:
-          folder: ${{ steps.flatpak-build.outputs.repository }}
-          target-folder: repo
 
+      # - name: Deploy Repository
+      #   uses: JamesIves/github-pages-deploy-action@releases/v4
+      #   with:
+      #     folder: ${{ steps.flatpak-build.outputs.repository }}
+      #     target-folder: repo
+
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.6.3
+      - name: Install dependencies
+        run: |
+          cargo binstall --no-confirm --version ${MDBOOK_VERSION} mdbook
+          cargo binstall --no-confirm mdbook-admonish mdbook-catppuccin
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+      - name: Build with mdBook
+        run: mdbook build
+
+      - name: Copy repo to book
+        run: |
+          cp -r ${{ steps.flatpak-build.outputs.repository }} ./book/repo
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./book
 
   # Deployment job
   deploy:
