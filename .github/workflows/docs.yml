@@ -43,17 +43,22 @@ jobs:
         uses: actions/configure-pages@v4
       - name: Build with mdBook
         run: mdbook build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      # - name: Upload artifact
+      #   uses: actions/upload-pages-artifact@v3
+      #   with:
+      #     path: ./book
+      - name: Archive book
+        uses: actions/upload-artifact@v4
         with:
-          path: ./book
+          name: book
+          path: "./book"
 
   flatpak:
     name: Flatter
     runs-on: ubuntu-latest
-    needs: docs
     env:
       MDBOOK_VERSION: 0.4.37
+      GNOME_VERSION: 45
 
     container:
       image: ghcr.io/andyholmes/flatter/gnome:45
@@ -87,7 +92,7 @@ jobs:
             libpanel-devel \
             vte291-gtk4-devel
       - name: Install flatpak dependencies
-        run: flatpak install -y org.gnome.Sdk/${{ matrix.arch }}/45 org.freedesktop.Sdk.Extension.rust-stable/${{ matrix.arch }}/23.08 org.gnome.Platform/${{ matrix.arch }}/45 org.freedesktop.Sdk.Extension.llvm16/${{ matrix.arch }}/23.08
+        run: flatpak install -y org.gnome.Sdk/${{ matrix.arch }}/${GNOME_VERSION} org.freedesktop.Sdk.Extension.rust-stable/${{ matrix.arch }}/23.08 org.gnome.Platform/${{ matrix.arch }}/${GNOME_VERSION} org.freedesktop.Sdk.Extension.llvm16/${{ matrix.arch }}/23.08
 
       # See "GPG Signing" below
       - name: Setup GPG
@@ -116,32 +121,33 @@ jobs:
           #   default.css
           #   index.html
 
-      # - name: Deploy Repository
-      #   uses: JamesIves/github-pages-deploy-action@releases/v4
-      #   with:
-      #     folder: ${{ steps.flatpak-build.outputs.repository }}
-      #     target-folder: repo
+      - name: Archive flatpak repo
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo
+          path: ${{ steps.flatpak-build.outputs.repository }}
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.6.3
-      - name: Install dependencies
+
+
+  merge:
+    name: Merge artifacts
+    needs:
+      - flatpak
+      - docs
+    runs-on: macOS-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+      - name: Merge artifacts
         run: |
-          cargo binstall --no-confirm --version ${MDBOOK_VERSION} mdbook
-          cargo binstall --no-confirm mdbook-admonish mdbook-catppuccin
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v4
-      - name: Build with mdBook
-        run: mdbook build
-
-      - name: Copy repo to book
-        run: |
-          cp -r ${{ steps.flatpak-build.outputs.repository }} ./book/repo
-
+          mkdir pages
+          cp -r book/book/* pages
+          cp -r repo pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./book
+          path: ./pages
+
 
   # Deployment job
   deploy:
@@ -149,7 +155,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: flatpak
+    needs: merge
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
