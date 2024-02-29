@@ -119,10 +119,10 @@ jobs:
 
       - name: Archive flatpak repo
         uses: actions/upload-artifact@v4
+        if: ${{ matrix.arch == 'x86_64' }}
         with:
           name: repo
           path: ${{ steps.flatpak-build.outputs.repository }}/index.flatpakrepo
-
 
 
   merge:
