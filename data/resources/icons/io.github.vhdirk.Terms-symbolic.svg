@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
-Terms Logo
-
-This logo is work derived from Prompt
-(https://gitlab.gnome.org/chergert/prompt/-/blob/main/data/icons/org.gnome.Prompt.Source.svg) and
-Tilix
-(https://github.com/gnunn1/tilix/blob/master/data/icons/hicolor/scalable/apps/com.gexperts.Tilix-symbolic.svg).
-
-Copyright 2023 Christian Hergert <chergert@redhat.com>
-Copyright 2015 Gerald Nunn <gerald.b.nunn@gmail.com>
-
-Prompt is licensed GNU GPLv3
-The icons in Tilix are licenced under the terms of either the GNU LGPL v3 or
-Creative Commons Attribution-Share Alike 3.0 United States License.
--->
+<!-- See io.github.vhdirk.Terms.Source.svg for license and attributions. -->
 <svg
    width="16"
    height="16.000019"
