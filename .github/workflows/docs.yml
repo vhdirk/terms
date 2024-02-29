@@ -108,7 +108,7 @@ jobs:
           upload-bundles: true
           generate-flatpakrepo: true
           flatpakrepo-url: https://vhdirk.github.io/terms/repo
-          flatpakrepo-icon: https://raw.githubusercontent.com/vhdirk/terms/main/data/resources/icons/io.github.vhdirk.Terms.png
+          flatpakrepo-icon: https://raw.githubusercontent.com/vhdirk/terms/main/data/resources/icons/io.github.vhdirk.Terms.svg
 
       - name: Archive flatpak repo
         uses: actions/upload-artifact@v4
