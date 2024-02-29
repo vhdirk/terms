@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- See io.github.vhdirk.Terms.Source.svg for license and attributions. -->
-<svg
-   width="16"
-   height="16.000019"
-   version="1.1"
-   id="svg7384"
-   sodipodi:docname="io.github.vhdirk.Terms-symbolic.svg"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+<svg width="16" height="16.000019" version="1.1" id="svg7384" sodipodi:docname="io.github.vhdirk.Terms-symbolic.svg" inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -14,83 +7,40 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <sodipodi:namedview
-     id="namedview1423"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     showgrid="false"
-     showguides="true"
-     inkscape:zoom="50.56244"
-     inkscape:cx="8.0000095"
-     inkscape:cy="8.0000095"
-     inkscape:window-width="1920"
-     inkscape:window-height="1011"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
-  <metadata
-     id="metadata90">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>Gnome Symbolic Icon Theme</dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <title
-     id="title9167">Gnome Symbolic Icon Theme</title>
-  <defs
-     id="defs7386" />
-  <g
-     inkscape:groupmode="layer"
-     id="layer1"
-     inkscape:label="Layer 1">
-    <g
-       inkscape:label="apps"
-       id="layer11-6"
-       transform="translate(-121.99999,-488.99999)"
-       style="display:inline;fill:#241f31;enable-background:new">
-      <path
-         style="color:#bebebe;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:'Bitstream Vera Sans';-inkscape-font-specification:'Bitstream Vera Sans';text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#241f31;fill-opacity:1;stroke:none;stroke-width:2;marker:none;enable-background:accumulate"
-         id="rect11749-5-9"
-         d="M 124.1875,490 C 122.98196,490 122,491.01672 122,492.21875 v 9.5625 c 0,1.20203 0.98197,2.21875 2.1875,2.21875 h 11.625 c 1.20553,0 2.1875,-1.01671 2.1875,-2.21875 v -9.5625 C 138,491.01671 137.01804,490 135.8125,490 Z m 0,2 h 11.625 c 0.1228,0 0.1875,0.0809 0.1875,0.21875 v 9.5625 C 136,501.91909 135.93531,502 135.8125,502 h -11.625 C 124.06469,502 124,501.9191 124,501.78125 v -9.5625 C 124,492.0809 124.0647,492 124.1875,492 Z"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ssssssssssssssssss" />
-      <path
-         style="color:#bebebe;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:'Bitstream Vera Sans';-inkscape-font-specification:'Bitstream Vera Sans';text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#241f31;fill-opacity:1;stroke:none;stroke-width:1.2;marker:none;enable-background:accumulate"
-         id="path11751-2-3"
-         d="m 124.93984,495.96875 a 0.60006002,0.60006002 0 0 0 -0.25,1.03125 l 1.5625,1.5625 -1.5625,1.5625 a 0.61871843,0.61871843 0 1 0 0.875,0.875 l 2,-2 a 0.60006002,0.60006002 0 0 0 0,-0.875 l -2,-2 a 0.60006002,0.60006002 0 0 0 -0.625,-0.15625 z"
-         inkscape:connector-curvature="0" />
-      <rect
-         style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#241f31;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.903767;marker:none;enable-background:accumulate"
-         width="2.4503987"
-         height="1.00001"
-         id="rect4987"
-         y="500.0625"
-         x="126.96043" />
-    </g>
-    <rect
-       style="fill:#241f31;stroke:none;stroke-width:1.02228;stroke-opacity:0;fill-opacity:1"
-       id="rect3768"
-       width="0.99706548"
-       height="10.645486"
-       x="8.0002413"
-       y="2.8417833" />
-    <rect
-       style="fill:#241f31;fill-opacity:1;stroke:none;stroke-width:0.751474;stroke-opacity:0"
-       id="rect3768-7"
-       width="5.8517528"
-       height="0.98014671"
-       x="8.618907"
-       y="7.5669565" />
-  </g>
+   <!--
+      Terms Logo
+
+      This logo is work derived from Prompt
+      (https://gitlab.gnome.org/chergert/prompt/-/blob/main/data/icons/org.gnome.Prompt.Source.svg) and
+      Tilix
+      (https://github.com/gnunn1/tilix/blob/master/data/icons/hicolor/scalable/apps/com.gexperts.Tilix.svg).
+
+      Copyright 2023 Christian Hergert <chergert@redhat.com>
+      Copyright 2015 Gerald Nunn <gerald.b.nunn@gmail.com>
+
+      Prompt is licensed GNU GPLv3
+      The icons in Tilix are licenced under the terms of either the GNU LGPL v3 or
+      Creative Commons Attribution-Share Alike 3.0 United States License.
+   -->
+   <sodipodi:namedview id="namedview1423" pagecolor="#ffffff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" showgrid="false" showguides="true" inkscape:zoom="50.56244" inkscape:cx="8.0000095" inkscape:cy="8.0000095" inkscape:window-width="1920" inkscape:window-height="1011" inkscape:window-x="0" inkscape:window-y="0" inkscape:window-maximized="1" inkscape:current-layer="layer1" />
+   <metadata id="metadata90">
+      <rdf:RDF>
+         <cc:Work rdf:about="">
+            <dc:format>image/svg+xml</dc:format>
+            <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+            <dc:title>Gnome Symbolic Icon Theme</dc:title>
+         </cc:Work>
+      </rdf:RDF>
+   </metadata>
+   <title id="title9167">Gnome Symbolic Icon Theme</title>
+   <defs id="defs7386" />
+   <g inkscape:groupmode="layer" id="layer1" inkscape:label="Layer 1">
+      <g inkscape:label="apps" id="layer11-6" transform="translate(-121.99999,-488.99999)" style="display:inline;fill:#241f31;enable-background:new">
+         <path style="color:#bebebe;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:'Bitstream Vera Sans';-inkscape-font-specification:'Bitstream Vera Sans';text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#241f31;fill-opacity:1;stroke:none;stroke-width:2;marker:none;enable-background:accumulate" id="rect11749-5-9" d="M 124.1875,490 C 122.98196,490 122,491.01672 122,492.21875 v 9.5625 c 0,1.20203 0.98197,2.21875 2.1875,2.21875 h 11.625 c 1.20553,0 2.1875,-1.01671 2.1875,-2.21875 v -9.5625 C 138,491.01671 137.01804,490 135.8125,490 Z m 0,2 h 11.625 c 0.1228,0 0.1875,0.0809 0.1875,0.21875 v 9.5625 C 136,501.91909 135.93531,502 135.8125,502 h -11.625 C 124.06469,502 124,501.9191 124,501.78125 v -9.5625 C 124,492.0809 124.0647,492 124.1875,492 Z" inkscape:connector-curvature="0" sodipodi:nodetypes="ssssssssssssssssss" />
+         <path style="color:#bebebe;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:'Bitstream Vera Sans';-inkscape-font-specification:'Bitstream Vera Sans';text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#241f31;fill-opacity:1;stroke:none;stroke-width:1.2;marker:none;enable-background:accumulate" id="path11751-2-3" d="m 124.93984,495.96875 a 0.60006002,0.60006002 0 0 0 -0.25,1.03125 l 1.5625,1.5625 -1.5625,1.5625 a 0.61871843,0.61871843 0 1 0 0.875,0.875 l 2,-2 a 0.60006002,0.60006002 0 0 0 0,-0.875 l -2,-2 a 0.60006002,0.60006002 0 0 0 -0.625,-0.15625 z" inkscape:connector-curvature="0" />
+         <rect style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#241f31;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.903767;marker:none;enable-background:accumulate" width="2.4503987" height="1.00001" id="rect4987" y="500.0625" x="126.96043" />
+      </g>
+      <rect style="fill:#241f31;stroke:none;stroke-width:1.02228;stroke-opacity:0;fill-opacity:1" id="rect3768" width="0.99706548" height="10.645486" x="8.0002413" y="2.8417833" />
+      <rect style="fill:#241f31;fill-opacity:1;stroke:none;stroke-width:0.751474;stroke-opacity:0" id="rect3768-7" width="5.8517528" height="0.98014671" x="8.618907" y="7.5669565" />
+   </g>
 </svg>
