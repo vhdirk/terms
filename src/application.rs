@@ -250,7 +250,7 @@ impl Application {
             .license_type(gtk::License::Gpl30)
             .developer_name("Dirk Van Haerenborgh")
             .copyright("© 2023 Dirk Van Haerenborgh")
-            .website("https://github.com/vhdirk/terms/")
+            .website("https://vhdirk.github.io/terms")
             .issue_url("https://github.com/vhdirk/terms/issues")
             // .translator_credits(gettext("translator-credits").replace("\\n", "\n"))
             .developers(vec!["Dirk Van Haerenborgh <vhdirk@gmail.com>"])

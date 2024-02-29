@@ -8,7 +8,7 @@
   <name xml:lang="en">Terms</name>
   <shortdesc xml:lang="en">A terminal</shortdesc>
   <description xml:lang="en">Terms is a terminal.</description>
-  <homepage rdf:resource="https://github.com/vhdirk/terms/" />
+  <homepage rdf:resource="https://vhdirk.github.io/terms/" />
   <download-page rdf:resource="https://github.com/vhdirk/terms/" />
   <bug-database rdf:resource="https://github.com/vhdirk/terms/issues" />
   <developer-forum rdf:resource="https://github.com/vhdirk/terms/" />
