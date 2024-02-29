@@ -107,7 +107,7 @@ jobs:
       #     echo "vhdirk.github.io" > CNAME
 
       - name: Build
-        uses: andyholmes/flatter@main
+        uses: vhdirk/flatter@generate-flatpakrepo
         id: flatpak-build
         with:
           files: |
@@ -115,11 +115,7 @@ jobs:
           arch: ${{ matrix.arch }}
           gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
           upload-bundles: true
-          # upload-pages-artifact: ${{ matrix.arch == 'x86_64' }}
-          # upload-pages-includes: |
-          #   CNAME
-          #   default.css
-          #   index.html
+          generate-flatpakrepo: true
 
       - name: Archive flatpak repo
         uses: actions/upload-artifact@v4
@@ -134,20 +130,17 @@ jobs:
     needs:
       - flatpak
       - docs
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
       - name: Merge artifacts
         run: |
-          mkdir pages
-          cp -r book/book/* pages
-          cp -r repo pages
+          cp -r repo book
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./pages
-
+          path: ./book
 
   # Deployment job
   deploy:
