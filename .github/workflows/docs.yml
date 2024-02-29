@@ -1,8 +1,4 @@
-# Sample workflow for building and deploying a mdBook site to GitHub Pages
-#
-# To get started with mdBook see: https://rust-lang.github.io/mdBook/index.html
-#
-name: Deploy docs
+name: docs
 
 on:
   # Runs on pushes targeting the default branch
@@ -94,17 +90,12 @@ jobs:
       - name: Install flatpak dependencies
         run: flatpak install -y org.gnome.Sdk/${{ matrix.arch }}/${GNOME_VERSION} org.freedesktop.Sdk.Extension.rust-stable/${{ matrix.arch }}/23.08 org.gnome.Platform/${{ matrix.arch }}/${GNOME_VERSION} org.freedesktop.Sdk.Extension.llvm16/${{ matrix.arch }}/23.08
 
-      # See "GPG Signing" below
       - name: Setup GPG
         id: gpg
         uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
-
-      # - name: Generate CNAME
-      #   run: |
-      #     echo "vhdirk.github.io" > CNAME
 
       - name: Build
         uses: vhdirk/flatter@generate-flatpakrepo
@@ -116,40 +107,35 @@ jobs:
           gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
           upload-bundles: true
           generate-flatpakrepo: true
+          flatpakrepo-url: https://vhdirk.github.io/terms/repo
+          flatpakrepo-icon: https://raw.githubusercontent.com/vhdirk/terms/main/data/resources/icons/io.github.vhdirk.Terms.png
 
       - name: Archive flatpak repo
         uses: actions/upload-artifact@v4
         if: ${{ matrix.arch == 'x86_64' }}
         with:
           name: repo
-          path: ${{ steps.flatpak-build.outputs.repository }}/index.flatpakrepo
+          path: ${{ steps.flatpak-build.outputs.repository }}
 
-
-  merge:
-    name: Merge artifacts
+  deploy:
     needs:
       - flatpak
       - docs
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
       - name: Merge artifacts
         run: |
-          cp repo/index.flatpakrepo book
+          mv repo book
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./book
-
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: merge
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
