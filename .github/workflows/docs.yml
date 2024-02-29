@@ -107,6 +107,7 @@ jobs:
           gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
           upload-bundles: true
           generate-flatpakrepo: true
+          flatpakrepo-title: Terms
           flatpakrepo-url: https://vhdirk.github.io/terms/repo
           flatpakrepo-icon: https://raw.githubusercontent.com/vhdirk/terms/main/data/resources/icons/io.github.vhdirk.Terms.svg
 
