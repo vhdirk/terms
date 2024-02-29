@@ -9,7 +9,7 @@ flatpak:
     - flatpak
   variables:
     BUNDLE: "terms-nightly.flatpak"
-    MANIFEST_PATH: "build-aux/io.github.vhdirk.Terms.Devel.json"
+    MANIFEST_PATH: "build-aux/io.github.vhdirk.Terms.Devel.yml"
     FLATPAK_MODULE: "terms"
     APP_ID: "io.github.vhdirk.Terms.Devel"
     RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"

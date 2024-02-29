@@ -98,18 +98,14 @@ jobs:
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Build
-        uses: vhdirk/flatter@generate-flatpakrepo
+        uses: andyholmes/flatter@main
         id: flatpak-build
         with:
           files: |
-            build-aux/io.github.vhdirk.Terms.json
+            build-aux/io.github.vhdirk.Terms.yml
           arch: ${{ matrix.arch }}
           gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
           upload-bundles: true
-          generate-flatpakrepo: true
-          flatpakrepo-title: Terms
-          flatpakrepo-url: https://vhdirk.github.io/terms/repo
-          flatpakrepo-icon: https://raw.githubusercontent.com/vhdirk/terms/main/data/resources/icons/io.github.vhdirk.Terms.svg
 
       - name: Archive flatpak repo
         uses: actions/upload-artifact@v4
