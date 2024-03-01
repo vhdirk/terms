@@ -75,9 +75,9 @@ modules:
   - name: terms
     buildsystem: meson
     run-tests: true
+    builddir: true
     config-opts:
       - -Dprofile=development
-    builddir: true
     sources:
       - type: dir
         path: ../
