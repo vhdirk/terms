@@ -1,7 +1,6 @@
 subdir('resources')
 
-install_subdir('themes',
-    install_dir: join_paths(get_option('datadir'), 'terms'))
+install_subdir('themes', install_dir: datadir / 'terms')
 
 # Desktop file
 desktop_conf = configuration_data()
