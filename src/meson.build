@@ -22,6 +22,7 @@ run_command(
 
 cargo_options = [ '--manifest-path', meson.project_source_root() / 'Cargo.toml' ]
 cargo_options += [ '--target-dir', meson.project_build_root() / 'src' ]
+cargo_options += [ '--all' ]
 
 if profile == 'Devel'
   rust_target = 'debug'
