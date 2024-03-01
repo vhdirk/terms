@@ -7,15 +7,22 @@
   <name>Terms</name>
   <summary>A terminal emulator where conditions apply</summary>
   <description>
-  <p>
+    <p>
       Terms is a tiling terminal emulator for GNOME.
-  </p>
+    </p>
   </description>
-
   <url type="homepage">https://vhdirk.github.io/terms/</url>
   <url type="bugtracker">https://github.com/vhdirk/terms/issues</url>
   <url type="donation">https://github.com/sponsors/vhdirk</url>
-<!--
+  <screenshots>
+    <screenshot type="default">
+      <image>https://vhdirk.github.io/terms/img/main_window.png</image>
+      <caption>Main Window</caption>
+    </screenshot>
+  </screenshots>
+
+
+  <!--
 Open Age Rating Service
 https://hughsie.github.io/oars/index.html
 -->

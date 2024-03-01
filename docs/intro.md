@@ -29,3 +29,7 @@ flatpak install --user  io.github.vhdirk.Terms
 ```
 
 You can also download the [latest build](https://nightly.link/vhdirk/terms/workflows/docs/main/io.github.vhdirk.Terms-x86_64.zip).
+
+## Screenshots
+
+![Main window](img/main_window.png)
