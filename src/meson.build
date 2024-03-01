@@ -50,6 +50,8 @@ cargo_build = custom_target(
     cargo, 'build',
     cargo_options,
     '&&',
-    'cp', 'src' / rust_target / 'terms', 'src' / rust_target / 'terms-toolbox', '@OUTPUT@',
+    'cp', 'src' / rust_target / 'terms', '@OUTPUT0@',
+    '&&',
+    'cp', 'src' / rust_target / 'terms-toolbox', '@OUTPUT1@',
   ]
 )

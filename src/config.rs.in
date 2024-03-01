@@ -1,5 +1,5 @@
-use constcat::concat;
 use crate::application::AppProfile;
+use constcat::concat;
 
 pub const APP_NAME: &str = "Terms";
 pub const APP_ID: &str = @APP_ID@;
