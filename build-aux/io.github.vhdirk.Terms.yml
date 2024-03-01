@@ -62,7 +62,7 @@ modules:
     sources:
       - type: git
         url: https://gitlab.gnome.org/GNOME/vte.git
-        branch: master
+        branch: vte-0-76
       - type: patch
         path: ../build-aux/vte/0001-add-notification-and-shell-precmd-preexec.patch
   - name: terms
