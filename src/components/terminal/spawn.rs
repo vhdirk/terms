@@ -349,15 +349,15 @@ impl FlatpakSpawner {
 
     async fn toolbox_path() -> Result<PathBuf, TermsError> {
         // first try if toolbox is found as sibling
-        if let Some(toolbox) = std::env::current_exe()
-            .ok()
-            .as_ref()
-            .and_then(|current_exe| current_exe.parent())
-            .map(|parent_dir| parent_dir.join(TOOLBOX))
-            .filter(|toolbox| toolbox.exists())
-        {
-            return Ok(toolbox);
-        }
+        // if let Some(toolbox) = std::env::current_exe()
+        //     .ok()
+        //     .as_ref()
+        //     .and_then(|current_exe| current_exe.parent())
+        //     .map(|parent_dir| parent_dir.join(TOOLBOX))
+        //     .filter(|toolbox| toolbox.exists())
+        // {
+        //     return Ok(toolbox);
+        // }
 
         Ok(Self::host_root().await?.join(TOOLBOX))
     }
