@@ -10,7 +10,7 @@
     <a href="#gallery">Gallery</a> •
     <a href="./CHANGELOG.md">Changelog</a> -->
     <br/>
-    <!-- <a href="https://github.com/vhdirk/terms/-/wikis/home">Wiki</a> • -->
+    <a href="https://vhdirk.github.io/terms/">Docs</a> •
     <a href="./LICENSE">License</a> •
     <!-- <a href="./CONTRIBUTING.md">Contributing</a> -->
   </p>
