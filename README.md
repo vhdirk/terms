@@ -6,10 +6,10 @@
 
   ![Matrix](https://img.shields.io/matrix/terms%3Amatrix.org)
 
-    <!-- <a href="#features">Features</a> •
-    <a href="#install">Install</a> •
-    <a href="#gallery">Gallery</a> •
-    <a href="./CHANGELOG.md">Changelog</a> -->
+  <!-- <a href="#features">Features</a> •
+  <a href="#install">Install</a> •
+  <a href="#gallery">Gallery</a> •
+  <a href="./CHANGELOG.md">Changelog</a> -->
 
   <br/>
 
