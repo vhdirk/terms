@@ -43,7 +43,7 @@ Terms is still very much in development. The following features are present but 
 - [x] Tabs
 - [x] Tiling
 - [ ] Profiles
-- [ ] Store and load session like Tilix and Prompt do
+- [ ] Store and load session like [Tilix] and [Ptyxis] do
 - [ ] tmux Control Mode, based on <https://github.com/gnome-terminator/terminator/pull/408> and <https://github.com/iamjackg/terminator/tree/tmux-v2>
 
 ## Credits
@@ -55,7 +55,7 @@ Many files are derived work (ported to rust) or even plainly copied from these.
 - [Tilix]
 - [Fractal]
 - [Zoha]
-- [Prompt]
+- [Ptyxis]
 - [Terminator]
 
 I strive to properly attribute and give credit to the original authors. If you feel like
@@ -66,5 +66,5 @@ please let me know! This project would not exist without you!
 [Tilix]: https://github.com/gnunn1/tilix
 [Fractal]: https://gitlab.gnome.org/World/fractal
 [Zoha]: https://github.com/hkoosha/zoha4
-[Prompt]: https://gitlab.gnome.org/chergert/prompt
+[Ptyxis]: https://gitlab.gnome.org/chergert/ptyxis
 [Terminator]: https://github.com/gnome-terminator/terminator
