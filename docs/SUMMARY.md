@@ -1,6 +1,6 @@
 # Summary
 
-- [Terms](./intro.md)
+[Terms](./intro.md)
 
 
 
