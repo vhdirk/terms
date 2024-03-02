@@ -41,7 +41,7 @@ Terms is still very much in development. The following features are present but 
 - [x] Flatpak support
 - [x] Shortcuts
 - [x] Tabs
-- [ ] Tiling
+- [x] Tiling
 - [ ] Profiles
 - [ ] Store and load session like Tilix and Prompt do
 - [ ] tmux Control Mode, based on <https://github.com/gnome-terminator/terminator/pull/408> and <https://github.com/iamjackg/terminator/tree/tmux-v2>
