@@ -11,7 +11,6 @@ mod theme_thumbnail;
 mod window;
 
 pub use preferences_window::*;
-pub use process_manager::*;
 
 pub use shortcut_dialog::*;
 pub use shortcut_row::*;

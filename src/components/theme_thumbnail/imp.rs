@@ -137,7 +137,8 @@ impl ThemeThumbnail {
 
             if let Some(bg_color) = theme.background {
                 let css_provider = gtk::CssProvider::new();
-                css_provider.load_from_data(&format!("picture {{ background-color: {}; }}", bg_color));
+                css_provider.load_from_string(&format!("picture {{ background-color: {}; }}", bg_color));
+                #[allow(deprecated)]
                 img.style_context().add_provider(&css_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
             }
         }

@@ -78,6 +78,7 @@ modules:
     builddir: true
     config-opts:
       - -Dprofile=development
+      - -Dflatpak=true
     sources:
       - type: dir
         path: ../

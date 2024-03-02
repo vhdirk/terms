@@ -19,7 +19,6 @@ use glib::{clone, subclass::Signal, JoinHandle, Value};
 use once_cell::sync::Lazy;
 
 use crate::components::search_toolbar::SearchToolbar;
-use crate::components::ProcessManager;
 use crate::config::APP_NAME;
 use crate::pcre2::PCRE2Flags;
 use crate::settings::ScrollbackMode;
@@ -63,8 +62,6 @@ pub struct Terminal {
     spawn_handle: RefCell<Option<JoinHandle<()>>>,
 
     padding_provider: RefCell<Option<gtk::CssProvider>>,
-
-    process_manager: ProcessManager,
 
     update_source: Option<glib::SourceId>,
 
@@ -129,7 +126,6 @@ impl Default for Terminal {
 
             uuid: glib::uuid_string_random().to_string(),
             spawner: get_spawner(),
-            process_manager: ProcessManager::new(),
             last_match: Default::default(),
 
             update_source: Default::default(),
@@ -486,14 +482,16 @@ impl Terminal {
     fn on_padding_changed(&self) {
         // TODO: move to themeprovider
         if let Some(padding_provider) = self.padding_provider.borrow_mut().take() {
+            #[allow(deprecated)]
             self.term.style_context().remove_provider(&padding_provider);
         }
 
         let (top, right, bottom, left) = self.settings.terminal_padding();
 
         let provider = gtk::CssProvider::new();
-        provider.load_from_data(&format!("vte-terminal {{ padding: {}px {}px {}px {}px; }}", top, right, bottom, left));
+        provider.load_from_string(&format!("vte-terminal {{ padding: {}px {}px {}px {}px; }}", top, right, bottom, left));
 
+        #[allow(deprecated)]
         self.term.style_context().add_provider(&provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
         self.padding_provider.borrow_mut().replace(provider);
     }

@@ -39,9 +39,7 @@ desktop_file_validate = find_program('desktop-file-validate', required: false)
 appstream_util = find_program('appstream-util', required: false)
 cargo = find_program('cargo', required: true)
 cargo_version = run_command(cargo, '--version', check: true).stdout().strip()
-message(cargo_version)
 rustc_version = run_command('rustc', '--version', check: true).stdout().strip()
-message(rustc_version)
 
 version = meson.project_version()
 
@@ -77,7 +75,7 @@ if profile == 'Devel'
 else
   version_suffix = ''
   application_id = base_id
-  release_date = run_command('git', 'show', '-s', '--format=%cI').stdout().strip()
+  release_date = run_command('git', 'show', '-s', '--format=%cI', check: false).stdout().strip()
 endif
 full_version += version_suffix
 
@@ -109,6 +107,7 @@ summary({
 
 summary({
     'Profile': get_option('profile'),
+    'Flatpak': get_option('flatpak'),
   },
   section: 'Build options',
 )

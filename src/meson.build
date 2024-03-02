@@ -13,6 +13,7 @@ config = configure_file(
   output: 'config.rs',
   configuration: global_conf
 )
+
 # Copy the config.rs output to the source directory.
 run_command(
   'cp',
@@ -36,6 +37,23 @@ endif
 
 cargo_env = [ 'CARGO_HOME=' + meson.project_build_root() / 'cargo-home', 'BUILD_IS_MESON=true' ]
 
+cargo_command = [
+  'env',
+  cargo_env,
+  cargo, 'build',
+  cargo_options,
+  '&&',
+  'cp', 'src' / rust_target / 'terms', '@OUTPUT0@',
+]
+
+if get_option('flatpak')
+  cargo_command += [
+    '&&',
+    'cp', 'src' / rust_target / 'terms-toolbox', '@OUTPUT1@',
+  ]
+endif
+
+
 cargo_build = custom_target(
   'cargo-build',
   build_by_default: true,
@@ -45,14 +63,5 @@ cargo_build = custom_target(
   install: true,
   install_dir: bindir,
   depends: resources,
-  command: [
-    'env',
-    cargo_env,
-    cargo, 'build',
-    cargo_options,
-    '&&',
-    'cp', 'src' / rust_target / 'terms', '@OUTPUT0@',
-    '&&',
-    'cp', 'src' / rust_target / 'terms-toolbox', '@OUTPUT1@',
-  ]
+  command: cargo_command
 )

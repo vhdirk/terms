@@ -69,6 +69,8 @@ modules:
     buildsystem: meson
     run-tests: true
     builddir: true
+    config-opts:
+      - -Dflatpak=true
     sources:
       - type: dir
         path: ../

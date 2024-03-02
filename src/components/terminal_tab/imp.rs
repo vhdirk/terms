@@ -176,11 +176,6 @@ impl TerminalTab {
         self.panel_grid.selected().map(|p| p.child()).and_downcast()
     }
 
-    fn set_selected(&self, _terminal: Option<Terminal>) {
-        // todo!();
-        // self.panel_grid.set_select
-    }
-
     fn on_selected_panel_change(&self) {
         let panel = self.panel_grid.selected();
         debug!("on panel changed: {:?}", panel);

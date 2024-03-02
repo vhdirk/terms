@@ -10,3 +10,9 @@ option(
   value: 'default',
   description: 'The build profile for Terms. One of "default", "beta", "development" or "hack".'
 )
+
+option(
+  'flatpak',
+  type: 'boolean',
+  value : false
+)
