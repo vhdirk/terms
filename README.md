@@ -5,6 +5,7 @@
   <p>
 
   ![Matrix](https://img.shields.io/matrix/terms%3Amatrix.org)
+  ![Build](https://github.com/vhdirk/terms/actions/workflows/ci.yml/badge.svg)
 
   <!-- <a href="#features">Features</a> •
   <a href="#install">Install</a> •
