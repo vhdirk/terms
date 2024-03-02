@@ -12,7 +12,7 @@
     <br/>
     <a href="https://vhdirk.github.io/terms/">Docs</a> •
     <a href="./LICENSE">License</a> •
-    <!-- <a href="./CONTRIBUTING.md">Contributing</a> -->
+    <a href="./CONTRIBUTING.md">Contributing</a>
   </p>
   <p>
   </p>
@@ -20,10 +20,10 @@
 </div>
 
 
-<!-- <div align="center">
+<div align="center">
 
-![Main window](data/resources/screenshots/screenshot1.png "Main window")
-</div> -->
+![Main window](docs/img/main_window.png "Main window")
+</div>
 
 ## Goal
 
@@ -46,24 +46,6 @@ Terms is still very much in development. The following features are present but 
 - [ ] Profiles
 - [ ] Store and load session like Tilix and Prompt do
 - [ ] tmux Control Mode, based on <https://github.com/gnome-terminator/terminator/pull/408> and <https://github.com/iamjackg/terminator/tree/tmux-v2>
-
-
-<!-- ## Building the project
-
-Make sure you have `flatpak` and `flatpak-builder` installed. Then run the commands below. Replace `io.github.vhdirk.Terms` with the value you entered during project creation. Please note that these commands are just for demonstration purposes. Normally this would be handled by your IDE, such as GNOME Builder or VS Code with the Flatpak extension.
-
-```
-flatpak install org.gnome.Sdk//44 org.freedesktop.Sdk.Extension.rust-stable//22.08 org.gnome.Platform//43
-flatpak-builder --user flatpak_app build-aux/io.github.vhdirk.Terms.Devel.yml
-```
-
-## Running the project
-
-Once the project is build, run the command below. Replace Replace `io.github.vhdirk.Terms` and `<project_name>` with the values you entered during project creation. Please note that these commands are just for demonstration purposes. Normally this would be handled by your IDE, such as GNOME Builder or VS Code with the Flatpak extension.
-
-```
-flatpak-builder --run flatpak_app build-aux/io.github.vhdirk.Terms.Devel.yml <project_name>
-``` -->
 
 ## Credits
 
