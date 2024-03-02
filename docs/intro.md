@@ -33,3 +33,5 @@ You can also download the [latest build](https://nightly.link/vhdirk/terms/workf
 ## Screenshots
 
 ![Main window](img/main_window.png)
+
+![Main window dark](img/main_window_dark.png)

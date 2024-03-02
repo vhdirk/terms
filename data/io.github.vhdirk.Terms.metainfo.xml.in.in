@@ -5,10 +5,10 @@
   <metadata_license>CC0</metadata_license>
   <project_license>MPL-2.0</project_license>
   <name>Terms</name>
-  <summary>A terminal emulator where conditions apply</summary>
+  <summary>Terms is a tiling terminal emulator for GNOME</summary>
   <description>
     <p>
-      Terms is a tiling terminal emulator for GNOME.
+      Terms is an experimental tiling terminal emulator fro GNOME.
     </p>
   </description>
   <url type="homepage">https://vhdirk.github.io/terms/</url>
@@ -18,6 +18,10 @@
     <screenshot type="default">
       <image>https://vhdirk.github.io/terms/img/main_window.png</image>
       <caption>Main Window</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://vhdirk.github.io/terms/img/main_window_dark.png</image>
+      <caption>Main Window Dark</caption>
     </screenshot>
   </screenshots>
 
