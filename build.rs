@@ -1,3 +1,4 @@
+use git_version::git_version;
 use std::{env, fs, path::Path, process::Command};
 
 fn render_schema(gschema: &str, out_dir: &Path) {
@@ -43,6 +44,38 @@ pub fn compile_schemas<P: AsRef<Path>>(gschemas: &[P]) {
     );
 }
 
+fn quote(input: &str) -> String {
+    format!(r#""{}""#, input)
+}
+
+fn render_config() {
+    let app_id = env::var("APP_ID").unwrap();
+    let gettext_package = env::var("GETTEXT_PACKAGE").unwrap();
+    let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let src_dir = Path::new(&manifest_dir).join("src");
+    let locale_dir = Path::new(&manifest_dir).join("po");
+    let data_dir = Path::new(&manifest_dir).join("data");
+    let out_dir = env::var("OUT_DIR").unwrap();
+
+    let config_in_path = src_dir.join("config.rs.in");
+    let config_out_path = src_dir.join("config.rs");
+
+    let contents = fs::read_to_string(&config_in_path).unwrap();
+    let new = contents
+        .replace("@APP_ID@", &quote(&app_id))
+        .replace("@GETTEXT_PACKAGE@", &quote(&gettext_package))
+        .replace("@LOCALEDIR@", &quote(&locale_dir.to_string_lossy()))
+        .replace("@PKGDATADIR@", &quote(&data_dir.to_string_lossy()))
+        .replace("@RESOURCEDIR@", &quote(&out_dir))
+        .replace("@PROFILE@", &"Devel")
+        .replace("@VERSION@", &quote(git_version!()));
+
+    fs::write(&config_out_path, new).unwrap();
+
+    let config_in = config_in_path.to_string_lossy();
+    println!("cargo:rerun-if-changed={config_in}");
+}
+
 fn compile_glib() {
     glib_build_tools::compile_resources(&["data/resources/"], "data/resources/resources.gresource.xml", "resources.gresource");
 
@@ -52,5 +85,6 @@ fn compile_glib() {
 fn main() {
     if !env::var("BUILD_IS_MESON").is_ok_and(|val| val == "true") {
         compile_glib();
+        render_config();
     }
 }
