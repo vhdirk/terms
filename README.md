@@ -1,24 +1,24 @@
-![Matrix](https://img.shields.io/matrix/terms%3Amatrix.org)
-
 <div align="center">
   <h1><img src="./data/resources/icons/io.github.vhdirk.Terms.svg" height="64" style="vertical-align: middle" />Terms</h1>
 
   <h4>A tiling terminal emulator for GNOME</h4>
   <p>
+
+  ![Matrix](https://img.shields.io/matrix/terms%3Amatrix.org)
+
     <!-- <a href="#features">Features</a> •
     <a href="#install">Install</a> •
     <a href="#gallery">Gallery</a> •
     <a href="./CHANGELOG.md">Changelog</a> -->
-    <br/>
-    <a href="https://vhdirk.github.io/terms/">Docs</a> •
-    <a href="./LICENSE">License</a> •
-    <a href="./CONTRIBUTING.md">Contributing</a>
-  </p>
-  <p>
+
+  <br/>
+
+  <a href="https://vhdirk.github.io/terms/">Docs</a> •
+  <a href="./LICENSE">License</a> •
+  <a href="./CONTRIBUTING.md">Contributing</a>
   </p>
 
 </div>
-
 
 <div align="center">
 
