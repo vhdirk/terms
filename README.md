@@ -6,7 +6,7 @@
 
   ![Matrix](https://img.shields.io/matrix/terms%3Amatrix.org)
   ![Build](https://github.com/vhdirk/terms/actions/workflows/ci.yml/badge.svg)
-
+  ![License](https://img.shields.io/github/license/vhdirk/terms)
   <!-- <a href="#features">Features</a> •
   <a href="#install">Install</a> •
   <a href="#gallery">Gallery</a> •
