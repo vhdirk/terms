@@ -294,9 +294,9 @@ impl Terminal {
         }
 
         info!("Working directory {:?}", self.directory.borrow());
-
-        let working_dir = match self.directory.borrow().as_ref() {
-            Some(working_dir) => working_dir.clone(),
+        let working_dir = self.directory.borrow().clone();
+        let working_dir = match working_dir {
+            Some(working_dir) => working_dir,
             None => self.spawner.working_dir().await.unwrap_or(PathBuf::from("/")),
         };
 
