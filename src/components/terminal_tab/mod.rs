@@ -1,8 +1,8 @@
 mod imp;
 use std::path::PathBuf;
 
-use glib::{closure_local, subclass::prelude::*};
-use gtk::prelude::*;
+use glib::closure_local;
+use gtk::{prelude::*, subclass::prelude::*};
 
 use crate::util::EnvMap;
 

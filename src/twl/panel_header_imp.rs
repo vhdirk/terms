@@ -1,11 +1,9 @@
-use adw::prelude::*;
-use adw::subclass::prelude::*;
-use glib::subclass::Signal;
-use glib::{self, Properties};
+use std::{cell::RefCell, marker::PhantomData};
+
+use adw::{prelude::*, subclass::prelude::*};
+use glib::{subclass::Signal, Properties};
 use gtk::CompositeTemplate;
 use once_cell::sync::Lazy;
-use std::cell::RefCell;
-use std::marker::PhantomData;
 
 use super::{FadingLabel, PackBox};
 

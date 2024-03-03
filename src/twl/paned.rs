@@ -1,22 +1,23 @@
 use gtk::prelude::*;
 use tracing::*;
 
-pub trait SplitPaned {
+const TWL_PANED_CSS_CLASS: &str = "twl-paned";
+pub trait PanedExt {
     fn new(orientation: gtk::Orientation) -> Self;
-    fn is_split_paned(&self) -> bool;
+    fn is_twl_paned(&self) -> bool;
     fn replace(&self, child: Option<&impl IsA<gtk::Widget>>, new_child: Option<&impl IsA<gtk::Widget>>);
     fn sibling(&self, child: Option<&impl IsA<gtk::Widget>>) -> Option<gtk::Widget>;
 }
 
-impl SplitPaned for gtk::Paned {
+impl PanedExt for gtk::Paned {
     fn new(orientation: gtk::Orientation) -> Self {
         let paned = gtk::Paned::new(orientation);
-        paned.add_css_class("twl-split-paned");
+        paned.add_css_class(TWL_PANED_CSS_CLASS);
         paned
     }
 
-    fn is_split_paned(&self) -> bool {
-        self.has_css_class("twl-split-paned")
+    fn is_twl_paned(&self) -> bool {
+        self.has_css_class(TWL_PANED_CSS_CLASS)
     }
 
     fn replace(&self, child: Option<&impl IsA<gtk::Widget>>, new_child: Option<&impl IsA<gtk::Widget>>) {

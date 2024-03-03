@@ -14,7 +14,7 @@ mod panel_header;
 mod panel_header_imp;
 pub use panel_header::*;
 
-mod split_paned;
+mod paned;
 
 mod panel_grid;
 mod panel_grid_imp;

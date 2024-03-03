@@ -2,7 +2,6 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::Properties;
 use glib::{clone, subclass::Signal};
-use gtk::glib;
 use once_cell::sync::Lazy;
 use std::cell::RefCell;
 use std::marker::PhantomData;

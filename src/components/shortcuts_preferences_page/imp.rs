@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use adw::{prelude::*, subclass::prelude::*};
 use gettextrs::gettext;
-use glib::{self, clone, Properties};
+use glib::{clone, Properties};
 use tracing::*;
 
 use crate::{

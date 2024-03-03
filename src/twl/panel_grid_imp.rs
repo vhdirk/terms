@@ -9,11 +9,9 @@ use tracing::*;
 
 use crate::twl::utils::signal_accumulator_propagation;
 
-use super::split_paned::SplitPaned;
+use super::paned::PanedExt;
 use super::utils::{twl_widget_grab_focus, TwlWidgetExt};
 use super::Panel;
-
-const TWL_PANED_CSS_CLASS: &str = "twl-paned";
 
 #[derive(Debug, Default, Properties)]
 #[properties(wrapper_type=super::PanelGrid)]
@@ -108,7 +106,7 @@ impl PanelGrid {
         self.wide_handle.set(wide_handle);
 
         for paned in self.get_all::<gtk::Paned>().iter() {
-            if paned.has_css_class(TWL_PANED_CSS_CLASS) {
+            if paned.is_twl_paned() {
                 paned.set_wide_handle(wide_handle);
             }
         }
@@ -213,9 +211,8 @@ impl PanelGrid {
     }
 
     fn create_paned(&self, orientation: gtk::Orientation) -> gtk::Paned {
-        let paned = gtk::Paned::new(orientation);
+        let paned: gtk::Paned = PanedExt::new(orientation);
         paned.set_wide_handle(self.wide_handle.get());
-        paned.add_css_class(TWL_PANED_CSS_CLASS);
         paned
     }
 
