@@ -59,6 +59,7 @@ zbus = "4.1.2"
 num-traits = "0.2.18"
 approx = "0.5.1"
 nix = { version = "0.28", features = ["term", "aio", "fs", "process"] }
+convert_case = "0.6.0"
 
 [build-dependencies]
 glib-build-tools = "0.19.0"

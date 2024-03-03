@@ -20,6 +20,6 @@ impl ThemeThumbnail {
     }
 
     pub fn theme(&self) -> Option<Theme> {
-        self.imp().ctx.borrow().theme.as_ref().cloned()
+        self.imp().theme.get().cloned()
     }
 }
