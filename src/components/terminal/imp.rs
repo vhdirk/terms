@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::time::Duration;
 use std::{cell::RefCell, collections::HashMap};
 
@@ -12,7 +13,6 @@ use gtk::CompositeTemplate;
 
 use tracing::*;
 use vte::prelude::*;
-use vte::TerminalExtManual;
 use vte::{CursorBlinkMode, CursorShape};
 
 use glib::{clone, subclass::Signal, JoinHandle, Value};
@@ -28,9 +28,7 @@ use crate::theme_provider::ThemeProvider;
 use crate::util::EnvMap;
 
 use super::constants::URL_REGEX_STRINGS;
-use super::spawn::get_spawner;
-use super::spawn::Spawner;
-use super::*;
+use super::spawn::{get_spawner, Spawner};
 
 static TERMS_DEFAULT_SHELL: &str = "/bin/sh";
 static TERMS_ENV: Lazy<HashMap<String, String>> = Lazy::new(|| {

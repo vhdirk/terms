@@ -1,8 +1,7 @@
 use std::{cell::Cell, marker::PhantomData};
 
-use adw::prelude::*;
-use adw::subclass::prelude::*;
-use glib::{self, Properties};
+use adw::{prelude::*, subclass::prelude::*};
+use glib::Properties;
 use gtk::{graphene, gsk};
 
 use approx::abs_diff_eq;

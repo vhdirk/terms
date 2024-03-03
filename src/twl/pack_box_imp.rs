@@ -1,8 +1,7 @@
 use std::marker::PhantomData;
 
-use adw::prelude::*;
-use adw::subclass::prelude::*;
-use glib::{self, Properties};
+use adw::{prelude::*, subclass::prelude::*};
+use glib::Properties;
 
 use super::utils::twl_widget_compute_expand;
 

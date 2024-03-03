@@ -1,4 +1,4 @@
-use glib::{clone, prelude::*, subclass::prelude::*, ParamSpecBuilderExt};
+use glib::{clone, prelude::*, subclass::prelude::*};
 use std::{
     cell::RefCell,
     collections::HashMap,

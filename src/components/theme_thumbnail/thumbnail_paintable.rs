@@ -16,17 +16,15 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ///
 use elementtree::Element;
-use glib::{prelude::*, subclass::prelude::*};
+use gdk::cairo::Rectangle;
+use gdk::subclass::prelude::*;
 use gtk::graphene;
 use gtk::prelude::*;
-use once_cell::sync::Lazy;
+use once_cell::sync::{Lazy, OnceCell};
 use rand::Rng;
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
+use rsvg::{CairoRenderer, SvgHandle};
 use tracing::*;
-
-use gdk::subclass::prelude::*;
-
-use glib::subclass::{object::ObjectImpl, types::ObjectSubclass};
 
 use crate::theme_provider::Theme;
 
@@ -93,10 +91,6 @@ impl ThemeThumbnailProvider {
 }
 
 mod imp {
-    use gdk::cairo::Rectangle;
-    use once_cell::sync::OnceCell;
-    use rsvg::{CairoRenderer, SvgHandle};
-
     use super::*;
 
     #[derive(Default)]

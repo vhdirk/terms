@@ -2,8 +2,7 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashSet;
 use std::marker::PhantomData;
 
-use adw::prelude::*;
-use adw::{prelude::BinExt, subclass::prelude::*};
+use adw::{prelude::*, subclass::prelude::*};
 use glib::{clone, subclass::Signal, Properties};
 use once_cell::sync::Lazy;
 use tracing::*;

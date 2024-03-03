@@ -1,7 +1,7 @@
+use adw::{prelude::*, subclass::prelude::*};
 use gettextrs::gettext;
-use gio::ApplicationFlags;
-use glib::ExitCode;
-use gtk::{gio, glib, prelude::*, subclass::prelude::*};
+use gio::{self, ApplicationFlags};
+use glib::{self, ExitCode};
 use std::{cell::RefCell, path::PathBuf};
 use std::{fmt, rc::Rc};
 use tracing::*;
@@ -10,6 +10,8 @@ use crate::{
     components::Window,
     config::{self, APP_ID, APP_NAME, VERSION},
     settings::Settings,
+    theme_provider::ThemeProvider,
+    util::EnvMap,
 };
 
 /// The profile that was built.
@@ -49,12 +51,6 @@ impl fmt::Display for AppProfile {
 }
 
 mod imp {
-
-    use adw::subclass::prelude::AdwApplicationImpl;
-    // use panel::{prelude::WorkbenchExt, subclass::prelude::PanelApplicationImpl};
-
-    use crate::{components::Window, config::APP_ID, theme_provider::ThemeProvider, util::EnvMap};
-
     use super::*;
 
     #[derive(Debug, Default)]

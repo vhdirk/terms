@@ -2,7 +2,6 @@ use adw::subclass::prelude::*;
 
 use glib::{clone, Properties};
 use gtk::prelude::*;
-use gtk::{gio, glib};
 use std::cell::{Cell, RefCell};
 use std::path::PathBuf;
 use tracing::*;

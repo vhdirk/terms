@@ -1,10 +1,9 @@
 use std::cell::RefCell;
 use std::marker::PhantomData;
 
-use adw::subclass::prelude::*;
+use adw::{prelude::*, subclass::prelude::*};
 use gettextrs::gettext;
-use glib::{self, clone, Properties};
-use gtk::prelude::*;
+use glib::{clone, Properties};
 use itertools::Itertools;
 use tracing::*;
 

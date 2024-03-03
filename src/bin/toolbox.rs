@@ -1,4 +1,4 @@
-use clap::{self, Parser, Subcommand};
+use clap::{Parser, Subcommand};
 
 use std::process::ExitCode;
 use terms_util::{libc_util, toolbox};
