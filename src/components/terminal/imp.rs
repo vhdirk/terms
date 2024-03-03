@@ -58,8 +58,6 @@ pub struct Terminal {
 
     spawn_handle: RefCell<Option<JoinHandle<()>>>,
 
-    padding_provider: RefCell<Option<gtk::CssProvider>>,
-
     update_source: Option<glib::SourceId>,
 
     #[template_child]
@@ -109,7 +107,6 @@ impl Default for Terminal {
             term: Default::default(),
             terminal_menu: Default::default(),
             spawn_handle: Default::default(),
-            padding_provider: Default::default(),
             search_toolbar: Default::default(),
             popover_menu: Default::default(),
             scrolled: Default::default(),
@@ -226,10 +223,6 @@ impl Terminal {
                 this.on_font_changed();
             }));
 
-        self.settings.connect_terminal_padding_changed(clone!(@weak self as this => move |_| {
-            this.on_padding_changed();
-        }));
-
         self.settings.connect_opacity_changed(clone!(@weak self as this => move |_| {
             this.on_theme_changed();
         }));
@@ -240,7 +233,6 @@ impl Terminal {
         self.bind_data();
         self.on_theme_changed();
         self.on_font_changed();
-        self.on_padding_changed();
 
         self.spawn();
     }
@@ -474,21 +466,6 @@ impl Terminal {
             Some(self.settings.custom_font())
         };
         self.term.set_font_desc(font.map(|f| pango::FontDescription::from_string(&f)).as_ref())
-    }
-
-    fn on_padding_changed(&self) {
-        // TODO: move to themeprovider
-        if let Some(padding_provider) = self.padding_provider.borrow_mut().take() {
-            gtk::style_context_remove_provider_for_display(&self.obj().display(), &padding_provider);
-        }
-
-        let (top, right, bottom, left) = self.settings.terminal_padding();
-
-        let provider = gtk::CssProvider::new();
-        provider.load_from_string(&format!("vte-terminal {{ padding: {}px {}px {}px {}px; }}", top, right, bottom, left));
-
-        gtk::style_context_add_provider_for_display(&self.obj().display(), &provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
-        self.padding_provider.borrow_mut().replace(provider);
     }
 
     fn background_color(&self, theme: &Theme) -> Option<gdk::RGBA> {

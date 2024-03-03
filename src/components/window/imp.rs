@@ -1,8 +1,8 @@
-use adw::subclass::prelude::*;
-
+use adw::{prelude::*, subclass::prelude::*};
 use glib::{clone, Properties};
-use gtk::prelude::*;
+use itertools::Itertools;
 use std::cell::{Cell, RefCell};
+use std::collections::HashMap;
 use std::path::PathBuf;
 use tracing::*;
 
@@ -63,6 +63,8 @@ pub struct Window {
     #[template_child]
     pub toolbar_view: TemplateChild<adw::ToolbarView>,
 
+    css_provider: gtk::CssProvider,
+    css: RefCell<HashMap<String, String>>,
     selected_page_signals: glib::SignalGroup,
     active_tab_signals: glib::SignalGroup,
     active_tab_bindings: glib::BindingGroup,
@@ -87,6 +89,8 @@ impl Default for Window {
             toolbar_view: Default::default(),
             tab_overview: Default::default(),
 
+            css_provider: gtk::CssProvider::new(),
+            css: Default::default(),
             selected_page_signals: glib::SignalGroup::new::<adw::TabPage>(),
             active_tab_signals: glib::SignalGroup::new::<TerminalTab>(),
             active_tab_bindings: glib::BindingGroup::new(),
@@ -128,10 +132,16 @@ impl ObjectImpl for Window {
         self.parent_constructed();
 
         if PROFILE.should_use_devel_class() {
-            let obj = self.obj();
-            obj.add_css_class("devel");
+            self.obj().add_css_class("devel");
         }
 
+        gtk::style_context_add_provider_for_display(
+            &gtk::prelude::WidgetExt::display(self.obj().as_ref()),
+            &self.css_provider,
+            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+        );
+
+        self.apply_css();
         self.setup_signals();
         self.setup_widgets();
         self.setup_gactions();
@@ -217,6 +227,22 @@ impl Window {
                 });
             }
         }));
+
+        self.settings.connect_terminal_padding_changed(clone!(@weak self as this => move |_| {
+            info!("window.terminal_padding_changed");
+            this.on_terminal_padding_changed();
+        }));
+        self.on_terminal_padding_changed();
+    }
+
+    fn on_terminal_padding_changed(&self) {
+        let (top, right, bottom, left) = self.settings.terminal_padding();
+
+        self.css.borrow_mut().insert(
+            "terminal-padding".to_string(),
+            format!("vte-terminal {{ padding: {}px {}px {}px {}px; }}", top, right, bottom, left),
+        );
+        self.apply_css();
     }
 
     fn setup_widgets(&self) {
@@ -330,6 +356,11 @@ impl Window {
     pub fn open_preferences(&self) {
         let prefs_window = PreferencesWindow::new(Some(self.obj().as_ref()));
         prefs_window.set_visible(true);
+    }
+
+    fn apply_css(&self) {
+        let css_string = self.css.borrow().values().join("\n");
+        self.css_provider.load_from_string(&css_string);
     }
 
     pub fn new_tab(&self, command: Option<String>, directory: Option<PathBuf>, env: Option<EnvMap>) -> adw::TabPage {

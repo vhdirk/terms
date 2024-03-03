@@ -51,6 +51,8 @@ impl fmt::Display for AppProfile {
 }
 
 mod imp {
+    use glib::clone;
+
     use super::*;
 
     #[derive(Debug, Default)]
@@ -72,10 +74,11 @@ mod imp {
     impl ObjectImpl for Application {
         fn constructed(&self) {
             self.parent_constructed();
-            let obj = self.obj().clone();
-            obj.setup_gactions();
 
-            obj.setup_shortcuts();
+            self.setup_gactions();
+
+            self.setup_shortcuts();
+            self.setup_signals();
 
             self.setup_command_line();
         }
@@ -174,6 +177,41 @@ mod imp {
             app.add_window(&window);
             window.present();
         }
+
+        fn setup_gactions(&self) {
+            let quit_action = gio::ActionEntry::builder("quit")
+                .activate(move |app: &super::Application, _, _| app.quit())
+                .build();
+            let about_action = gio::ActionEntry::builder("about")
+                .activate(move |app: &super::Application, _, _| app.show_about())
+                .build();
+            let new_window = gio::ActionEntry::builder("new-window")
+                .activate(move |app: &super::Application, _, _| app.new_window())
+                .build();
+
+            self.obj().add_action_entries([quit_action, about_action, new_window]);
+        }
+
+        fn setup_signals(&self) {
+            for key in self.settings.shortcuts().keys() {
+                self.settings.shortcuts().connect_changed(
+                    Some(&key),
+                    clone!(@weak self as this => move |_, key| {
+                        let (action, accels) = this.settings.shortcuts().entry(&key);
+                        this.obj()
+                            .set_accels_for_action(&action, &accels.iter().map(|a| a.as_str()).collect::<Vec<_>>());
+                    }),
+                );
+            }
+        }
+
+        fn setup_shortcuts(&self) {
+            let shortcut_settings = self.settings.shortcuts();
+            for (action, accels) in shortcut_settings.entries() {
+                self.obj()
+                    .set_accels_for_action(&action, &accels.iter().map(|a| a.as_str()).collect::<Vec<_>>())
+            }
+        }
     }
 }
 
@@ -207,24 +245,6 @@ impl Application {
         info!("Datadir: {}", config::PKGDATADIR);
 
         ApplicationExtManual::run(self)
-    }
-
-    fn setup_gactions(&self) {
-        let quit_action = gio::ActionEntry::builder("quit").activate(move |app: &Self, _, _| app.quit()).build();
-        let about_action = gio::ActionEntry::builder("about").activate(move |app: &Self, _, _| app.show_about()).build();
-        let new_window = gio::ActionEntry::builder("new-window")
-            .activate(move |app: &Self, _, _| app.new_window())
-            .build();
-
-        self.add_action_entries([quit_action, about_action, new_window]);
-    }
-
-    fn setup_shortcuts(&self) {
-        // TODO: watch for changes in shortcuts
-        let shortcut_settings = self.imp().settings.shortcuts();
-        for (action, accels) in shortcut_settings.actionmap() {
-            self.set_accels_for_action(&action, &accels.iter().map(|a| a.as_str()).collect::<Vec<_>>())
-        }
     }
 
     fn new_window(&self) {

@@ -143,8 +143,12 @@ impl ShortcutSettings {
         SettingsExtManual::get::<Vec<String>>(&self.0, key)
     }
 
-    pub fn actionmap(&self) -> HashMap<String, Vec<String>> {
-        self.keys().into_iter().map(|k| (self.action(&k), self.accels(&k))).collect()
+    pub fn entry(&self, key: &str) -> (String, Vec<String>) {
+        (self.action(&key), self.accels(&key))
+    }
+
+    pub fn entries(&self) -> HashMap<String, Vec<String>> {
+        self.keys().into_iter().map(|k| self.entry(&k)).collect()
     }
 
     pub fn accel_in_use(&self, accel: &str) -> Option<String> {
