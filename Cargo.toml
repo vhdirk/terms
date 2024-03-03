@@ -67,3 +67,6 @@ git-version = "0.3.9"
 
 [patch.crates-io]
 gsettings-macro = { git = "https://github.com/vhdirk/gsettings-macro.git", branch = "multiple-schemas" }
+
+[dev-dependencies]
+xtr = "0.1.9"

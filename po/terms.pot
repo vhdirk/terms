@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: terms\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-03 17:01+0100\n"
+"POT-Creation-Date: 2024-03-03 17:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -874,6 +874,22 @@ msgstr ""
 msgid "Reset preferences"
 msgstr ""
 
+#: src/components/preferences_window/imp.rs:129
+msgid "Reset all?"
+msgstr ""
+
+#: src/components/preferences_window/imp.rs:130
+msgid "Are you sure you want to reset all settings to their defaults?"
+msgstr ""
+
+#: src/components/preferences_window/imp.rs:133
+msgid "_Cancel"
+msgstr ""
+
+#: src/components/preferences_window/imp.rs:133
+msgid "_Reset all preferences"
+msgstr ""
+
 #: src/components/shortcut_dialog/shortcut_dialog.ui:6
 msgid "Add Shortcut"
 msgstr ""
@@ -1462,3 +1478,88 @@ msgstr ""
 #: src/twl/zoom_controls.ui:52 src/twl/zoom_controls.ui:58
 msgid "Zoom in"
 msgstr ""
+
+#: src/application.rs:99 src/application.rs:99
+msgid "Terms"
+msgstr ""
+
+#: src/application.rs:147 src/application.rs:147
+msgid "Show app version"
+msgstr ""
+
+#: src/application.rs:155 src/application.rs:155
+msgid "Set current working directory"
+msgstr ""
+
+#: src/application.rs:163 src/application.rs:163
+msgid "Execute command in a terminal"
+msgstr ""
+
+#: src/application.rs:275 src/application.rs:275
+msgid "A terminal where conditions apply."
+msgstr ""
+
+#: src/components/preferences_window/imp.rs:129
+msgid "Reset all?"
+msgstr ""
+
+#: src/components/preferences_window/imp.rs:130
+msgid "Are you sure you want to reset all settings to their defaults?"
+msgstr ""
+
+#: src/components/preferences_window/imp.rs:133 src/components/shortcuts_preferences_page/imp.rs:127
+msgid "_Cancel"
+msgstr ""
+
+#: src/components/preferences_window/imp.rs:133
+msgid "_Reset all preferences"
+msgstr ""
+
+#: src/components/shortcut_dialog/imp.rs:104
+msgid "Enter new shortcut for \"{}\""
+msgstr ""
+
+#: src/components/shortcut_dialog/imp.rs:105
+msgid "Enter new shortcut"
+msgstr ""
+
+#: src/components/shortcut_row/imp.rs:86
+msgid "Add shortcut"
+msgstr ""
+
+#: src/components/shortcut_row/imp.rs:93
+msgid "Reset shortcuts"
+msgstr ""
+
+#: src/components/shortcut_row/imp.rs:101
+msgid "Disabled"
+msgstr ""
+
+#: src/components/shortcut_row/imp.rs:108
+msgid "Remove {}"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/imp.rs:122
+msgid "Reset shortcuts?"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/imp.rs:123
+msgid "Are you sure you want to reset all shortcuts to their defaults?"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/imp.rs:127
+msgid "_Reset all shortcuts"
+msgstr ""
+
+#: src/components/terminal_preferences_page/imp.rs:319
+msgid "Terminal Font"
+msgstr ""
+
+#: src/settings.rs:184 src/settings.rs:184
+msgid "unable to display shortcut"
+msgstr ""
+
+#: src/settings.rs:187 src/settings.rs:187
+msgid "invalid shortcut"
+msgstr ""
+

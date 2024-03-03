@@ -2965,6 +2965,7 @@ dependencies = [
  "tracing-log",
  "tracing-subscriber",
  "vte4",
+ "xtr",
  "zbus",
 ]
 
@@ -3098,6 +3099,16 @@ dependencies = [
  "serde_spanned",
  "toml_datetime",
  "winnow",
+]
+
+[[package]]
+name = "tr"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "21111d9e56891e526f1acf8edc6d69a8a0434240319419d33911c182f1897a76"
+dependencies = [
+ "gettext-rs",
+ "lazy_static",
 ]
 
 [[package]]
@@ -3588,6 +3599,21 @@ dependencies = [
  "log",
  "mac",
  "markup5ever",
+]
+
+[[package]]
+name = "xtr"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "74218d5df3b890add5589c80193a51b9630c3dc6425d53485f09743ec9d6825d"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.48",
+ "tr",
 ]
 
 [[package]]
