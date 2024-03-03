@@ -13,7 +13,7 @@
   <a href="./CHANGELOG.md">Changelog</a> -->
 
   <a href="https://vhdirk.github.io/terms/">Docs</a> •
-  <a href="./LICENSE">License</a> •
+  
   <a href="./CONTRIBUTING.md">Contributing</a>
   </p>
 
