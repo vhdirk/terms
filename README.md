@@ -46,6 +46,17 @@ Terms is still very much in development. The following features are present but 
 - [ ] Store and load session like [Tilix] and [Ptyxis] do
 - [ ] tmux Control Mode, based on <https://github.com/gnome-terminator/terminator/pull/408> and <https://github.com/iamjackg/terminator/tree/tmux-v2>
 
+
+## Translations
+
+Terms is accepting translations through Weblate! If you'd like to contribute with translations,
+visit the [Weblate project](https://hosted.weblate.org/projects/terms/).
+
+<a href="https://hosted.weblate.org/projects/terms/terms/">
+  <img src="https://hosted.weblate.org/widgets/terms/-/terms/multi-auto.svg" alt="Translation status" />
+</a>
+
+
 ## Credits
 
 The following projects gave me _lots_ of ideas.
