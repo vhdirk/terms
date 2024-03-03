@@ -1,3 +1,4 @@
+use once_cell::sync::Lazy;
 use std::path::PathBuf;
 use std::time::Duration;
 use std::{cell::RefCell, collections::HashMap};
@@ -7,15 +8,13 @@ use gio::prelude::*;
 use glib::translate::FromGlib;
 use glib::translate::IntoGlib;
 use glib::Properties;
+use glib::{clone, subclass::Signal, JoinHandle, Value};
 use gtk::graphene;
 use gtk::CompositeTemplate;
 
 use tracing::*;
 use vte::prelude::*;
 use vte::{CursorBlinkMode, CursorShape};
-
-use glib::{clone, subclass::Signal, JoinHandle, Value};
-use once_cell::sync::Lazy;
 
 use crate::components::search_toolbar::SearchToolbar;
 use crate::config::APP_NAME;
