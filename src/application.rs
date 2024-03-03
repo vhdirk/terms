@@ -197,7 +197,7 @@ mod imp {
                 self.settings.shortcuts().connect_changed(
                     Some(&key),
                     clone!(@weak self as this => move |_, key| {
-                        let (action, accels) = this.settings.shortcuts().entry(&key);
+                        let (action, accels) = this.settings.shortcuts().entry(key);
                         this.obj()
                             .set_accels_for_action(&action, &accels.iter().map(|a| a.as_str()).collect::<Vec<_>>());
                     }),

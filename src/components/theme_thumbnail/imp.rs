@@ -18,7 +18,6 @@ use once_cell::sync::OnceCell;
 ///
 use std::cell::Cell;
 
-use convert_case::{Case, Casing};
 use glib::{clone, Properties};
 use gtk::{prelude::*, subclass::prelude::*};
 
@@ -34,7 +33,7 @@ pub struct ThemeThumbnail {
     pub theme: OnceCell<Theme>,
     pub picture: OnceCell<gtk::Picture>,
     pub check_icon: OnceCell<gtk::Image>,
-    pub css_provider: OnceCell<gtk::CssProvider>,
+    pub css_provider: gtk::CssProvider,
 }
 
 #[glib::object_subclass]
@@ -48,6 +47,8 @@ impl ObjectSubclass for ThemeThumbnail {
 impl ObjectImpl for ThemeThumbnail {
     fn constructed(&self) {
         self.parent_constructed();
+
+        gtk::style_context_add_provider_for_display(&self.obj().display(), &self.css_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
         let picture = gtk::Picture::builder()
             .width_request(110)
@@ -89,9 +90,7 @@ impl ObjectImpl for ThemeThumbnail {
         if let Some(check_icon) = self.check_icon.get() {
             check_icon.unparent();
         }
-        if let Some(css_provider) = self.css_provider.get() {
-            gtk::style_context_remove_provider_for_display(&self.obj().display(), css_provider);
-        }
+        gtk::style_context_remove_provider_for_display(&self.obj().display(), &self.css_provider);
     }
 }
 
@@ -111,15 +110,13 @@ impl ThemeThumbnail {
         if let Some(pic) = self.picture.get() {
             pic.set_paintable(Some(&paintable));
 
-            let css_class = theme.name.to_case(Case::Snake);
+            let mut css_class = theme.name.replace(&['(', ')', ',', '\"', '.', ';', ':', '\'', ' ', '+'][..], "");
+            css_class.insert(0, 'T');
             pic.add_css_class(&css_class);
 
             if let Some(bg_color) = theme.background {
-                let css_provider = gtk::CssProvider::new();
-                css_provider.load_from_string(&format!("picture.{} {{ background-color: {}; }}", css_class, bg_color));
-
-                gtk::style_context_add_provider_for_display(&self.obj().display(), &css_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
-                self.css_provider.set(css_provider).unwrap();
+                self.css_provider
+                    .load_from_string(&format!("picture.{} {{ background-color: {}; }}", css_class, bg_color));
             }
         }
     }

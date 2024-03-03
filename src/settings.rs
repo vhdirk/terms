@@ -144,7 +144,7 @@ impl ShortcutSettings {
     }
 
     pub fn entry(&self, key: &str) -> (String, Vec<String>) {
-        (self.action(&key), self.accels(&key))
+        (self.action(key), self.accels(key))
     }
 
     pub fn entries(&self) -> HashMap<String, Vec<String>> {
