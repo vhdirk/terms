@@ -67,10 +67,10 @@ fn render_config() {
         .replace("@LOCALEDIR@", &quote(&locale_dir.to_string_lossy()))
         .replace("@PKGDATADIR@", &quote(&data_dir.to_string_lossy()))
         .replace("@RESOURCEDIR@", &quote(&out_dir))
-        .replace("@PROFILE@", &"Devel")
+        .replace("@PROFILE@", "Devel")
         .replace("@VERSION@", &quote(git_version!()));
 
-    fs::write(&config_out_path, new).unwrap();
+    fs::write(config_out_path, new).unwrap();
 
     let config_in = config_in_path.to_string_lossy();
     println!("cargo:rerun-if-changed={config_in}");
