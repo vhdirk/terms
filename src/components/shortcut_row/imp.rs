@@ -1,7 +1,6 @@
-use adw::prelude::*;
-use adw::subclass::prelude::*;
+use adw::{prelude::*, subclass::prelude::*};
 use gettextrs::gettext;
-use glib::{self, clone, Properties};
+use glib::{clone, Properties};
 use gtk::CompositeTemplate;
 use std::cell::OnceCell;
 use tracing::*;

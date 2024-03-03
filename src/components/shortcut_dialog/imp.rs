@@ -1,17 +1,9 @@
-use std::cell::Cell;
-use std::cell::OnceCell;
-use std::cell::RefCell;
+use std::cell::{Cell, OnceCell, RefCell};
 
-use adw::subclass::prelude::*;
-use gdk::prelude::*;
+use adw::{prelude::*, subclass::prelude::*};
 use gdk::KeyEvent;
-
 use gettextrs::gettext;
-
-use glib::subclass::Signal;
-use glib::Properties;
-use gtk::glib;
-use gtk::prelude::*;
+use glib::{subclass::Signal, Properties};
 use gtk::CompositeTemplate;
 use once_cell::sync::Lazy;
 use tracing::*;

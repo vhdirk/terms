@@ -7,7 +7,6 @@ use gio::prelude::*;
 use glib::translate::FromGlib;
 use glib::translate::IntoGlib;
 use glib::Properties;
-use gtk::glib;
 use gtk::graphene;
 use gtk::CompositeTemplate;
 

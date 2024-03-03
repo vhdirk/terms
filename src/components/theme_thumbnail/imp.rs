@@ -21,9 +21,7 @@ use once_cell::sync::Lazy;
 
 use std::cell::RefCell;
 
-use glib::subclass::{object::ObjectImpl, types::ObjectSubclass};
-use gtk::prelude::*;
-use gtk::subclass::prelude::*;
+use gtk::{prelude::*, subclass::prelude::*};
 
 use super::thumbnail_paintable::ThemePreviewPaintable;
 use crate::theme_provider::Theme;

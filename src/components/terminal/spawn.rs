@@ -1,3 +1,6 @@
+use async_std::{io::ReadExt, stream::StreamExt};
+use async_trait::async_trait;
+use std::future::Future;
 use std::{
     cell::Cell,
     collections::HashMap,
@@ -10,16 +13,12 @@ use std::{
 };
 
 use ashpd::flatpak;
-use async_std::{io::ReadExt, stream::StreamExt};
-use async_trait::async_trait;
-
 use glib::clone;
 use libc::FD_CLOEXEC;
-use std::future::Future;
-use terms_util::{libc_util, toolbox};
-
 use tracing::*;
-use vte::{self, TerminalExt, TerminalExtManual};
+use vte::{TerminalExt, TerminalExtManual};
+
+use terms_util::{libc_util, toolbox};
 
 use crate::error::TermsError;
 
