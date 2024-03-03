@@ -482,8 +482,7 @@ impl Terminal {
     fn on_padding_changed(&self) {
         // TODO: move to themeprovider
         if let Some(padding_provider) = self.padding_provider.borrow_mut().take() {
-            #[allow(deprecated)]
-            self.term.style_context().remove_provider(&padding_provider);
+            gtk::style_context_remove_provider_for_display(&self.obj().display(), &padding_provider);
         }
 
         let (top, right, bottom, left) = self.settings.terminal_padding();
@@ -491,8 +490,7 @@ impl Terminal {
         let provider = gtk::CssProvider::new();
         provider.load_from_string(&format!("vte-terminal {{ padding: {}px {}px {}px {}px; }}", top, right, bottom, left));
 
-        #[allow(deprecated)]
-        self.term.style_context().add_provider(&provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
+        gtk::style_context_add_provider_for_display(&self.obj().display(), &provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
         self.padding_provider.borrow_mut().replace(provider);
     }
 
