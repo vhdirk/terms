@@ -1,0 +1,1464 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the terms package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: terms\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-03 16:56+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/io.github.vhdirk.Terms.desktop.in.in:3
+#: data/io.github.vhdirk.Terms.metainfo.xml.in.in:7
+msgid "Terms"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.desktop.in.in:4
+msgid "Tiling terminal emulator"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.desktop.in.in:5
+msgid "A terminal where conditions apply"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.desktop.in.in:12
+msgid "shell;prompt;command;commandline;cmd;"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:25
+msgid "Whether or not to remember window size"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:30
+msgid "Window width"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:35
+msgid "Window height"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:48
+msgid "Whether or not to show scrollbars"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:53
+msgid "Whether overlay scrolling should be enabled"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:58
+msgid "If enabled, terminals will scroll by pixels instead of rows"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:63
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:209
+msgid "Scrollback mode"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:67
+msgid "Number of lines stored in scrollback"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:71
+msgid "Whether to scroll to the bottom when a key is pressed"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:72
+msgid "If true, pressing a key jumps the scrollbar to the bottom."
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:76
+msgid "Whether to scroll to the bottom when there's new output"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:77
+msgid ""
+"If true, whenever there's new output the terminal will scroll to the bottom."
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:82
+msgid "If enabled, terminals will render sixel escape sequences"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:87
+msgid "If enabled, floating controls will be shown in headerless mode"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:91
+msgid ""
+"Hoverable area (in pixels) at the top of the window to trigger floating "
+"controls"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:95
+msgid "Delay time before showing floating controls"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:100
+msgid "Show panel headers"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:104
+msgid "Use smaller panel headers"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:108
+msgid "Use wide panel resize handle"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:113
+msgid "Whether or not tabs should expand to fill tab bar"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:117
+msgid "Whether the headerbar should be shown or not"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:121
+msgid "Whether the tab bar should be integrated in the headerbar"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:125
+msgid ""
+"If enabled, the header bar will be colored differently for root and ssh "
+"contexts"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:129
+msgid "Whether or not to display a menu button in the headerbar"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:133
+msgid "Whether or not to reserve an area for dragging the header bar"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:138
+msgid "If enabled, uses the system font for terminal"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:142
+msgid "Font family and size"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:146
+msgid "Whether the window should inherit terminal theme's colors"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:150
+msgid "Terminal window background opacity"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:155
+msgid "The light color scheme for the terminal"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:160
+msgid "The dark color scheme for the terminal"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:165
+msgid "Style preference"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:170
+msgid "Show bold text in bright colors"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:175
+msgid "Amount of padding around terminal widgets (top, right, bottom, left)"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:180
+msgid "Terminal cell width"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:185
+msgid "Terminal cell height"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:190
+msgid "Terminal bell"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:195
+msgid "Cursor shape"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:199
+msgid "Whether or not the cursor should blink"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:203
+msgid "If enabled, ctrl+c and ctrl+v will work for copy/paste"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:207
+msgid "Whether to spawn shell in login mode"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:212
+msgid "Whether to use a custom command instead of the user's shell"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:217
+msgid "Custom command to use instead of the user's shell"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:222
+msgid ""
+"Send a desktop notification when a process is completed on an unfocussed tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:227
+msgid "Working directory mode"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:232
+msgid "Custom working directory for new terminals"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:239
+msgid ""
+"Whether clicking next on the last search result should return to the first"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:243
+msgid "Whether search should be case sensitive"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:247
+msgid "Whether search should only match entire words"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:251
+msgid "Whether search should be performed using regular expressions"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:259
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:91
+#: src/components/terminal/terminal.ui:46 src/components/window/window.ui:112
+msgid "New Window"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:260
+msgid "The shortcut to create a new tab in a new window"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:264
+msgid "WinSwitchHeaderBarMode"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:268
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:298
+#: src/components/terminal/terminal.ui:74
+msgid "Preferences"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:269
+msgid "The shortcut to show application preferences"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:273
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:13
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:274
+msgid "The shortcut to copy to clipboard"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:278
+#: data/io.github.vhdirk.Terms.gschema.xml.in:282
+msgid "Keyboard shortcut to copy selected text in terminal as HTML"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:286
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:19
+msgid "Paste from Clipboard"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:287
+msgid "The shortcut to paste from the clipboard"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:291
+msgid "Keyboard shortcut to paste text in terminal from primary selection"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:295
+msgid ""
+"Keyboard shortcut to paste text in terminal from clipboard via advanced "
+"paste dialog"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:299
+msgid "Reset Terminal"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:300
+msgid "Reset the terminal state for misbehaving clients"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:304
+msgid "Reset Terminal and Clear History"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:305
+msgid "Reset the terminal state and clear history for misbehaving clients"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:309
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:280
+msgid "Toggle Fullscreen"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:310
+msgid "The shortcut to toggle fullscreen"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:314
+msgid "WinShowHelpOverlay"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:318
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:257
+msgid "Zoom In"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:319
+msgid "The shortcut to zoom in"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:323
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:263
+msgid "Zoom Out"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:324
+msgid "The shortcut to zoom out"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:328
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:269
+msgid "Reset Zoom"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:329
+msgid "The shortcut to reset zoom"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:333
+msgid "Tab Overview"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:334
+msgid "The shortcut to show the tab overview"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:338
+#: src/components/terminal/terminal.ui:42 src/components/window/window.ui:164
+msgid "New Tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:339
+msgid "The shortcut to create a new tab in the current window"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:343
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:113
+msgid "Close Tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:344
+msgid "Shortcut to close the current tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:348
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:120
+msgid "Close Other Tabs"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:349
+msgid "Shortcut to close all tab in the window but the current one"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:353
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:134
+msgid "Rename Tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:354
+msgid "Shortcut to rename the current tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:358
+msgid "WinFocusNextTab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:362
+msgid "WinFocusPreviousTab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:366
+msgid "Focus Tab 1"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:367
+msgid "Shortcut to focus tab 1"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:371
+msgid "Focus Tab 2"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:372
+msgid "Shortcut to focus tab 2"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:376
+msgid "Focus Tab 3"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:377
+msgid "Shortcut to focus tab 3"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:381
+msgid "Focus Tab 4"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:382
+msgid "Shortcut to focus tab 4"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:386
+msgid "Focus Tab 5"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:387
+msgid "Shortcut to focus tab 5"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:391
+msgid "Focus Tab 6"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:392
+msgid "Shortcut to focus tab 6"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:396
+msgid "Focus Tab 7"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:397
+msgid "Shortcut to focus tab 7"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:401
+msgid "Focus Tab 8"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:402
+msgid "Shortcut to focus tab 8"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:406
+msgid "Focus Tab 9"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:407
+msgid "Shortcut to focus tab 9"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:411
+msgid "Focus First Tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:412
+msgid "Shortcut to focus the first tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:416
+msgid "Focus Last Tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:417
+msgid "Shortcut to focus the last tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:421
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:173
+msgid "Move Tab Left"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:422
+msgid "Shortcut to move the current tab to the left one position"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:426
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:180
+msgid "Move Tab Right"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:427
+msgid "Shortcut to move the current tab to the right one position"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:431
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:63
+msgid "Search History"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:432
+msgid "Shortcut to begin searching the terminal history"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:436
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:29
+msgid "Select All"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:437
+msgid "Shortcut to select all the entire terminal scrollback"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:441
+msgid "Select None"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:442
+msgid "Shortcut to clear the terminal selection"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:446
+msgid "Keyboard shortcut to synchronize input for the tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:450
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:127
+msgid "Undo Close Tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:451
+msgid "Undo closing of last tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:455
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:187
+msgid "Move Tab to New Window"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:456
+msgid "Shortcut to move the current tab into a new window"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:460
+msgid "Keyboard shortcut to open a previously saved tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:464
+msgid "Keyboard shortcut to save the current tab"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:468
+msgid "Popup Menu"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:469
+msgid "Shortcut to show the popup menu for the terminal"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:473
+msgid "Keyboard shortcut to add new terminal right"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:477
+msgid "Keyboard shortcut to add new terminal down"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.gschema.xml.in:481
+msgid "Keyboard shortcut to add new terminal automatically"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.metainfo.xml.in.in:8
+msgid "Terms is a tiling terminal emulator for GNOME"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.metainfo.xml.in.in:10
+msgid "Terms is an experimental tiling terminal emulator fro GNOME."
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.metainfo.xml.in.in:20
+msgid "Main Window"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.metainfo.xml.in.in:24
+msgid "Main Window Dark"
+msgstr ""
+
+#: data/io.github.vhdirk.Terms.metainfo.xml.in.in:41
+msgid "Dirk Van Haerenborgh"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:10
+msgctxt "shortcut window"
+msgid "Window"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:13
+msgctxt "shortcut window"
+msgid "New window"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:19
+msgctxt "shortcut window"
+msgid "New tab"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:25
+msgctxt "shortcut window"
+msgid "Close tab"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:31
+msgctxt "shortcut window"
+msgid "Rename tab"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:37
+msgctxt "shortcut window"
+msgid "Switch headbar mode"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:43
+msgctxt "shortcut window"
+msgid "Toggle fullscreen"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:51
+msgctxt "shortcut window"
+msgid "Terminal"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:54
+msgctxt "shortcut window"
+msgid "Search"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:60
+msgctxt "shortcut window"
+msgid "Copy"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:66
+msgctxt "shortcut window"
+msgid "Paste"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:72
+msgctxt "shortcut window"
+msgid "Zoom in"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:78
+msgctxt "shortcut window"
+msgid "Zoom out"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:84
+msgctxt "shortcut window"
+msgid "Reset zoom"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:92
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:95
+msgctxt "shortcut window"
+msgid "Focus next tab"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:101
+msgctxt "shortcut window"
+msgid "Focus previous tab"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:107
+msgctxt "shortcut window"
+msgid "Focus Tab 1"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:113
+msgctxt "shortcut window"
+msgid "Focus Tab 2"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:119
+msgctxt "shortcut window"
+msgid "Focus Tab 3"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:125
+msgctxt "shortcut window"
+msgid "Focus Tab 4"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:131
+msgctxt "shortcut window"
+msgid "Focus Tab 5"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:137
+msgctxt "shortcut window"
+msgid "Focus Tab 6"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:143
+msgctxt "shortcut window"
+msgid "Focus Tab 7"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:149
+msgctxt "shortcut window"
+msgid "Focus Tab 8"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:155
+msgctxt "shortcut window"
+msgid "Focus Tab 9"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:161
+msgctxt "shortcut window"
+msgid ""
+"Switch to last\n"
+"                  Tab"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:170
+msgctxt "shortcut window"
+msgid "General"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:173
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr ""
+
+#: data/resources/ui/help_overlay.ui:179
+msgctxt "shortcut window"
+msgid "Edit Preferences"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:12
+msgid "General"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:16
+msgid "Behavior"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:19
+msgid "Remember Window Size"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:26
+msgid "Header Bar"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:29
+msgid "Show Header Bar"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:34
+msgid "Integrate tab bar in header bar"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:52
+msgid "Show Menu Button"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:57
+msgid "Drag Area"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:58
+msgid "Enable to reserve some space on the left side to drag the window."
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:64
+msgid "Floating Controls"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:67
+msgid "Show Floating Controls"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:68
+msgid "Show floating controls when header bar is hidden."
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:74
+msgid "Floating Controls Hover Area"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:75
+msgid ""
+"Hoverable area (in pixels) at the top of the window to trigger floating "
+"controls."
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:82
+msgid "Delay Before Show Floating Controls"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:83
+msgid "Delay time (ms) before show floating controls."
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:93
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:81
+msgid "Tabs"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:96
+msgid "Expand Tabs"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:103
+msgid "Panels"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:106
+msgid "Show Panel headers"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:111
+msgid "Small Panel headers"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:116
+msgid "Use wide resize handle"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:134
+msgid "Advanced"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:176
+msgid "Danger Zone"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:179
+msgid "Reset Preferences"
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:180
+msgid ""
+"This will revert all settings back to default. Your extra themes will not be "
+"removed."
+msgstr ""
+
+#: src/components/preferences_window/preferences_window.ui:185
+msgid "Reset preferences"
+msgstr ""
+
+#: src/components/shortcut_dialog/shortcut_dialog.ui:6
+msgid "Add Shortcut"
+msgstr ""
+
+#: src/components/shortcut_dialog/shortcut_dialog.ui:28
+msgid "Cancel"
+msgstr ""
+
+#: src/components/shortcut_dialog/shortcut_dialog.ui:36
+msgid "_Set"
+msgstr ""
+
+#: src/components/shortcut_dialog/shortcut_dialog.ui:74
+msgid "This shortcut is already in use"
+msgstr ""
+
+#: src/components/shortcut_dialog/shortcut_dialog.ui:87
+msgid "Press Escape to cancel or Backspace to disable shortcut"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:6
+msgid "Shortcuts"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:10
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:7
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:70
+msgid "Terminal"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:35
+msgid "Clear Selection"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:46
+msgid "Reset"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:52
+msgid "Reset and Clear"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:73
+msgid "Show Context Menu"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:84
+msgid "New tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:85
+msgid "Open a new tab in the current window"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:92
+msgid "Open a new window"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:102
+msgid "Open Tab Overview"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:103
+msgid "Show an overview of all tabs within the window"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:114
+msgid "Close the current tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:121
+msgid "Close all tabs except the active tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:128
+msgid "Undo closing the last tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:135
+msgid "Rename the current tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:145
+msgid "Move to Previous Tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:151
+msgid "Move to Next Tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:157
+msgid "Move to First Tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:163
+msgid "Move to Last Tab"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:174
+msgid "Move the tab one position to the left"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:181
+msgid "Move the tab one position to the right"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:188
+msgid "Detach the current tab and move it to a new window"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:198
+msgid "Switch to tab 1"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:204
+msgid "Switch to tab 2"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:210
+msgid "Switch to tab 3"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:216
+msgid "Switch to tab 4"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:222
+msgid "Switch to tab 5"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:228
+msgid "Switch to tab 6"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:234
+msgid "Switch to tab 7"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:240
+msgid "Switch to tab 8"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:246
+msgid "Switch to tab 9"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:254
+msgid "Zoom"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:277
+msgid "Application"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:281
+msgid "Toggle in and out of fullscreen"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:287
+msgid "Switch header mode"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:288
+msgid "Switch header bar mode"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:299
+msgid "Show this preferences window"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:306
+msgid "Help"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:307
+msgid "Show help overlay"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:318
+msgid "Reset All Shortcuts"
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:319
+msgid ""
+"This will reset all shortcuts to their default keybindings and overwrite "
+"your config file."
+msgstr ""
+
+#: src/components/shortcuts_preferences_page/shortcuts_preferences_page.ui:323
+msgid "Reset All"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:13
+msgid "Text"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:17
+msgid "Use system font"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:23
+msgid "Font"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:35
+msgid "Cell Spacing"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:38
+msgid "Width"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:46
+msgid "Height"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:56
+msgid "Bright Bold Text"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:57
+msgid "Use bright colors for bold text."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:62
+msgid "Easy Copy &amp; Paste"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:63
+msgid "Use ctrl+c/ctrl+v for copy/paste."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:74
+msgid "Audible Bell"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:75
+msgid "If enabled, terminals might use an audible bell to indicate events."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:81
+msgid "Cursor"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:82
+msgid "Adjust cursor shape and behavior."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:85
+msgid "Cursor Shape"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:89
+msgid "Block"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:90
+msgid "IBeam"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:91
+msgid "Underline"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:99
+msgid "Cursor Blinking"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:100
+msgid "Whether or not the cursor should blink."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:104
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:289
+msgid "Follow System"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:105
+msgid "On"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:106
+msgid "Off"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:117
+msgid "Padding"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:126
+msgid "Opacity"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:127
+msgid "Terminal background opacity."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:145
+msgid "Working Directory"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:155
+msgid "Previous Tab"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:156
+msgid "Home Directory"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:157
+msgid "Custom"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:166
+msgid "Custom Working Directory"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:177
+msgid "Set to user's home"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:189
+msgid "Scrolling"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:192
+msgid "Scrollbars"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:195
+msgid "Show Scrollbars"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:200
+msgid "Use Overlay Scrolling"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:213
+msgid "Fixed Size"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:214
+msgid "Unlimited"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:215
+msgid "Disabled"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:224
+msgid "Scrollback Lines"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:233
+msgid "Scroll on keystroke"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:234
+msgid "Whether to scroll to the bottom when a key is pressed."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:240
+msgid "Scroll on output"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:241
+msgid "Whether to scroll to the bottom when there's new output."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:249
+msgid "Command"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:252
+msgid "Run Command as Login Shell"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:257
+msgid "Use Custom Command"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:262
+msgid "Custom Command"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:273
+msgid "Notification on Completed Task"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:274
+msgid ""
+"Send a desktop notification when a command is completed on an unfocused tab."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:282
+msgid "Appearance"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:285
+msgid "Application Style"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:290
+msgid "Light"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:291
+msgid "Dark"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:299
+msgid "Theme Integration"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:300
+msgid "Paint the whole app with colors from your colorscheme."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:309
+msgid "Theme"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:310
+msgid "Set your preferred theme for light and dark styles."
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:322
+msgid "Open themes folder"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:330
+msgid "Get more themes online"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:351
+msgid "Light Theme"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:357
+msgid "Dark Theme"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:365
+msgid "Only display themes for the current style"
+msgstr ""
+
+#: src/components/terminal_preferences_page/terminal_preferences_page.ui:373
+msgid ""
+"To ensure readability, \"Theme Integration\" will be disabled if you select "
+"a light color scheme while using the dark app style or a dark color scheme "
+"while using the light app style."
+msgstr ""
+
+#: src/components/terminal/terminal.ui:11
+msgid "_Copy"
+msgstr ""
+
+#: src/components/terminal/terminal.ui:12
+msgid "Copy selection from terminal to clipboard"
+msgstr ""
+
+#: src/components/terminal/terminal.ui:18
+msgid "_Paste"
+msgstr ""
+
+#: src/components/terminal/terminal.ui:19
+msgid "Paste from clipboard into the terminal"
+msgstr ""
+
+#: src/components/terminal/terminal.ui:29
+msgid "Copy Link"
+msgstr ""
+
+#: src/components/terminal/terminal.ui:34
+msgid "Open Link"
+msgstr ""
+
+#: src/components/terminal/terminal.ui:81
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: src/components/terminal/terminal.ui:85 src/components/window/window.ui:48
+msgid "About Terms"
+msgstr ""
+
+#: src/components/window/window.ui:21 src/components/window/window.ui:117
+msgid "New _Tab"
+msgstr ""
+
+#: src/components/window/window.ui:27
+msgid "New _Window"
+msgstr ""
+
+#: src/components/window/window.ui:35
+msgid "View Open Tabs"
+msgstr ""
+
+#: src/components/window/window.ui:42
+msgid "_Preferences"
+msgstr ""
+
+#: src/components/window/window.ui:52
+msgid "Quit"
+msgstr ""
+
+#: src/components/window/window.ui:62
+msgid "Move _Left"
+msgstr ""
+
+#: src/components/window/window.ui:67
+msgid "Move _Right"
+msgstr ""
+
+#: src/components/window/window.ui:72
+msgid "Move to New _Window"
+msgstr ""
+
+#: src/components/window/window.ui:78
+msgid "_Pin Tab"
+msgstr ""
+
+#: src/components/window/window.ui:83
+msgid "Un_pin Tab"
+msgstr ""
+
+#: src/components/window/window.ui:90
+msgid "_Rename Tab"
+msgstr ""
+
+#: src/components/window/window.ui:97
+msgid "Close _Other Tabs"
+msgstr ""
+
+#: src/components/window/window.ui:102
+msgid "_Close Tab"
+msgstr ""
+
+#: src/components/window/window.ui:125
+msgid "Add Terminal Right"
+msgstr ""
+
+#: src/components/window/window.ui:130
+msgid "Add Terminal Down"
+msgstr ""
+
+#: src/components/window/window.ui:179
+msgid "Menu"
+msgstr ""
+
+#: src/components/window/window.ui:200
+msgid "Show Open Tabs"
+msgstr ""
+
+#: src/twl/panel_header.ui:90
+msgid "Close Panel"
+msgstr ""
+
+#: src/twl/panel_header.ui:96
+msgid "Close"
+msgstr ""
+
+#: src/twl/panel_header.ui:97
+msgid "Close the panel"
+msgstr ""
+
+#: src/twl/style_switcher.ui:27
+msgid "Use System Colors"
+msgstr ""
+
+#: src/twl/style_switcher.ui:55
+msgid "Use Light Colors"
+msgstr ""
+
+#: src/twl/style_switcher.ui:83
+msgid "Use Dark Colors"
+msgstr ""
+
+#: src/twl/zoom_controls.ui:24 src/twl/zoom_controls.ui:30
+msgid "Zoom out"
+msgstr ""
+
+#: src/twl/zoom_controls.ui:37 src/twl/zoom_controls.ui:44
+msgid "Reset zoom"
+msgstr ""
+
+#: src/twl/zoom_controls.ui:52 src/twl/zoom_controls.ui:58
+msgid "Zoom in"
+msgstr ""
