@@ -1,4 +1,25 @@
 fallback_language = "en"
+msg_bugs_address = "vhdirk@gmail.com"
+copyright_holder = "Dirk Van Haerenborgh"
+
+extract_to_parent = true
+collate_extracted_subcrates = true
 
 [fluent]
 assets_dir = "i18n"
+
+[gettext]
+target_languages = ["nl"]
+xtr = true
+output_dir = "i18n"
+pot_dir = "i18n"
+po_dir = "i18n"
+mo_dir = "i18n"
+use_fuzzy = true
+
+xgettext = [
+    "src/**/*.ui",
+    "data/*.xml.in",
+    "data/*.xml.in.in",
+    "data/*.desktop.in.in",
+]

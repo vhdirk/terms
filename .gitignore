@@ -17,3 +17,9 @@ flatpak_app/
 
 book
 docs/book
+
+i18n/pot
+i18n/mo
+i18n/src
+i18n/data
+*.mo

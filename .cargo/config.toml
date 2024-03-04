@@ -1,5 +1,5 @@
 [build]
-#why do I need this again?
+# stuff for mold linker
 rustflags = ["--cfg", "ruma_identifiers_storage=\"Arc\""]
 
 [env]

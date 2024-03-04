@@ -582,15 +582,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f2e5af989b1955b092db01462980c0a286217f86817e12b2c09aea46bd03651"
 
 [[package]]
-name = "convert_case"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec182b0ca2f35d8fc196cf3404988fd8b8c739a4d270ff118a398feb0cbec1ca"
-dependencies = [
- "unicode-segmentation",
-]
-
-[[package]]
 name = "core-foundation-sys"
 version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2936,7 +2927,6 @@ dependencies = [
  "bitflags 2.4.2",
  "clap",
  "constcat",
- "convert_case",
  "elementtree",
  "gdk4",
  "gettext-rs",
@@ -2965,7 +2955,6 @@ dependencies = [
  "tracing-log",
  "tracing-subscriber",
  "vte4",
- "xtr",
  "zbus",
 ]
 
@@ -3102,16 +3091,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tr"
-version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21111d9e56891e526f1acf8edc6d69a8a0434240319419d33911c182f1897a76"
-dependencies = [
- "gettext-rs",
- "lazy_static",
-]
-
-[[package]]
 name = "tracing"
 version = "0.1.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3210,12 +3189,6 @@ checksum = "5c5713f0fc4b5db668a2ac63cdb7bb4469d8c9fed047b1d0292cc7b0ce2ba921"
 dependencies = [
  "tinyvec",
 ]
-
-[[package]]
-name = "unicode-segmentation"
-version = "1.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4c87d22b6e3f4a18d4d40ef354e97c90fcb14dd91d7dc0aa9d8a1172ebf7202"
 
 [[package]]
 name = "unsafe-libyaml"
@@ -3599,21 +3572,6 @@ dependencies = [
  "log",
  "mac",
  "markup5ever",
-]
-
-[[package]]
-name = "xtr"
-version = "0.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "74218d5df3b890add5589c80193a51b9630c3dc6425d53485f09743ec9d6825d"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "proc-macro2",
- "quote",
- "syn 2.0.48",
- "tr",
 ]
 
 [[package]]

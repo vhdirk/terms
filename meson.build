@@ -93,7 +93,7 @@ meson.add_dist_script(
 )
 
 subdir('data')
-subdir('po')
+subdir('i18n')
 subdir('src')
 
 summary({
