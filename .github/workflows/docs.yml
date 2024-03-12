@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.6.3
+        uses: cargo-bins/cargo-binstall@v1.6.4
       - name: Install dependencies
         run: |
           cargo binstall --no-confirm --version ${MDBOOK_VERSION} mdbook
