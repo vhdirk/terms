@@ -1745,9 +1745,9 @@ checksum = "9c198f91728a82281a64e1f4f9eeb25d82cb32a5de251c6bd1b5154d63a8e7bd"
 
 [[package]]
 name = "librsvg"
-version = "2.58.0-beta.2"
+version = "2.58.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2dbec71b512598f6b9aeb8a05fa8b46e0251550e47af95c935640f0c63857ab8"
+checksum = "de005d9589235493d0e2b62d055c0d8e368db4fb33e746dafc9400fb67b9c817"
 dependencies = [
  "cairo-rs",
  "cast",
