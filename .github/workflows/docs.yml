@@ -57,7 +57,7 @@ jobs:
       GNOME_VERSION: 45
 
     container:
-      image: ghcr.io/andyholmes/flatter/gnome:45
+      image: ghcr.io/andyholmes/flatter/gnome:46
       options: --privileged
 
     strategy:
