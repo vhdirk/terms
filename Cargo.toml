@@ -51,7 +51,7 @@ serde_yaml = "0.9.33"
 itertools = "0.12.1"
 bitflags = "2.5.0"
 async-trait = "0.1.78"
-clap = { version = "4.5.3", features = ["derive"] }
+clap = { version = "4.5.4", features = ["derive"] }
 libc = "0.2.153"
 thiserror = "1.0.58"
 anyhow = "1.0.81"
