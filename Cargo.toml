@@ -50,7 +50,7 @@ elementtree = "1.2.3"
 serde_yaml = "0.9.33"
 itertools = "0.12.1"
 bitflags = "2.5.0"
-async-trait = "0.1.79"
+async-trait = "0.1.80"
 clap = { version = "4.5.4", features = ["derive"] }
 libc = "0.2.153"
 thiserror = "1.0.58"
