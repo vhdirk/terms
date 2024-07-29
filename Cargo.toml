@@ -35,7 +35,7 @@ pango = { version = "^0.19.5" }
 gdk = { package = "gdk4", version = "^0.8.2", features = ["v4_12"] }
 gtk = { package = "gtk4", version = "^0.8", features = ["v4_12"] }
 adw = { package = "libadwaita", version = "0.6", features = ["v1_4"] }
-vte = { package = "vte4", version = "0.7.1", features = ["v0_70"]}
+vte = { package = "vte4", version = "0.8.0", features = ["v0_70"]}
 rsvg = { package = "librsvg", version = "2.58.0" }
 ashpd = { version = "0.8.1" }
 gsettings-macro = "0.2.0"
