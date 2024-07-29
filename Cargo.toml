@@ -32,7 +32,7 @@ async-channel = "2.2.1"
 glib = { version = "^0.19.5", features = ["v2_74"] }
 gio = { version = "^0.19.5" }
 pango = { version = "^0.19.5" }
-gdk = { package = "gdk4", version = "^0.8.2", features = ["v4_12"] }
+gdk = { package = "gdk4", version = "^0.9.0", features = ["v4_12"] }
 gtk = { package = "gtk4", version = "^0.8", features = ["v4_12"] }
 adw = { package = "libadwaita", version = "0.6", features = ["v1_4"] }
 vte = { package = "vte4", version = "0.7.1", features = ["v0_70"]}
