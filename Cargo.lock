@@ -2962,6 +2962,7 @@ dependencies = [
  "serde_json",
  "serde_with",
  "serde_yaml",
+ "system-deps",
  "thiserror",
  "tracing",
  "tracing-log",
