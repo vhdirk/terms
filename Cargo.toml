@@ -58,7 +58,7 @@ anyhow = "1.0.82"
 zbus = "4.2.0"
 num-traits = "0.2.18"
 approx = "0.5.1"
-nix = { version = "0.28", features = ["term", "aio", "fs", "process"] }
+nix = { version = "0.29", features = ["term", "aio", "fs", "process"] }
 system-deps = "6.2.0"
 
 [build-dependencies]
