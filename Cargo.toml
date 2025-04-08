@@ -48,7 +48,7 @@ serde_json = "1.0.116"
 rand = "0.8.5"
 elementtree = "1.2.3"
 serde_yaml = "0.9.33"
-itertools = "0.12.1"
+itertools = "0.14.0"
 bitflags = "2.5.0"
 async-trait = "0.1.80"
 clap = { version = "4.5.4", features = ["derive"] }
